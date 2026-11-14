@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en" data-theme="wasp">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Wasp Ecosystem | pixel apps &amp; UI assets by Larry W.S.</title>
+<meta name="description" content="Wasp Ecosystem by Larry W.S.: retro pixel apps and interactive UI asset packs. Product previews on Pinterest, downloads on Gumroad.">
+<meta property="og:title" content="Wasp Ecosystem | pixel apps &amp; UI assets">
+<meta property="og:description" content="Retro pixel apps and interactive UI asset packs by Larry W.S.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#07070b">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%2307070b'/%3E%3Cpath fill='%23b6ff00' d='M3 6h4v2h2V6h4v3h-2v2H9V9H7v2H5V9H3z'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#07070b;--panel:#0e0f16;--panel2:#151724;--ink:#e9ffd2;--dim:#8a97a8;--accent:#b6ff00;--accent2:#ff2bd6;--line:#2d3752;--head:"Silkscreen","Courier New",monospace;--body:"VT323","Courier New",monospace;--scan:.35;--n:6px}
+[data-theme=lofi]{--bg:#241914;--panel:#3a2b24;--panel2:#46352c;--ink:#f6ead7;--dim:#c3a98f;--accent:#e8a05c;--accent2:#ff8f7a;--line:#5b463a;--scan:.12}
+[data-theme=cassette]{--bg:#f4efe0;--panel:#ebe4cf;--panel2:#fbf8ee;--ink:#1b1b1d;--dim:#6b6455;--accent:#c1121f;--accent2:#1d3a9a;--line:#8c8472;--scan:.06}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font:22px/1.25 var(--body);min-height:100svh;padding:env(safe-area-inset-top,0) env(safe-area-inset-right,0) env(safe-area-inset-bottom,0) env(safe-area-inset-left,0);transition:background .3s,color .3s}
+[data-theme=wasp] body{background:radial-gradient(120% 70% at 50% -10%,#16203a,#07070b 62%)}
+.scan{position:fixed;inset:0;pointer-events:none;opacity:var(--scan);background:repeating-linear-gradient(0deg,rgba(0,0,0,.4) 0 2px,transparent 2px 4px);z-index:9}
+.wrap{max-width:560px;margin:0 auto;padding:26px 16px 44px;position:relative;z-index:1}
+.px{clip-path:polygon(0 var(--n),var(--n) var(--n),var(--n) 0,calc(100% - var(--n)) 0,calc(100% - var(--n)) var(--n),100% var(--n),100% calc(100% - var(--n)),calc(100% - var(--n)) calc(100% - var(--n)),calc(100% - var(--n)) 100%,var(--n) 100%,var(--n) calc(100% - var(--n)),0 calc(100% - var(--n)))}
+.hero{text-align:center;margin-bottom:20px}
+.avatar{width:128px;height:128px;margin:0 auto 12px;display:grid;place-items:center;background:var(--accent);padding:4px;cursor:pointer;animation:bob 2.4s steps(4) infinite;-webkit-tap-highlight-color:transparent}
+.avatar .in{width:100%;height:100%;background:var(--panel);display:grid;place-items:center}
+.avatar svg{width:92px;height:auto}
+.avatar.buzz{animation:buzz .35s steps(6)}
+@keyframes bob{50%{transform:translateY(-8px)}}
+@keyframes buzz{25%{transform:translate(-6px,2px) rotate(-6deg)}50%{transform:translate(6px,-2px) rotate(6deg)}75%{transform:translate(-4px,0) rotate(-3deg)}}
+h1{font:700 26px/1.15 var(--head);letter-spacing:.06em;text-transform:uppercase}
+.by{color:var(--accent);font-size:24px;margin-top:2px}
+.tag{color:var(--dim);margin-top:2px}
+.bars{display:flex;gap:4px;justify-content:center;align-items:flex-end;height:30px;margin:14px 0 4px}
+.bars i{width:8px;background:var(--accent);animation:eq .9s steps(5) infinite alternate;height:6px}
+.bars i:nth-child(3n){animation-duration:.6s;background:var(--accent2)}.bars i:nth-child(2n){animation-duration:1.2s}
+@keyframes eq{to{height:30px}}
+.chips{display:flex;gap:8px;justify-content:center;margin-top:10px;flex-wrap:wrap}
+.chip{font:12px var(--head);padding:7px 12px;background:var(--panel);color:var(--ink);border:2px solid var(--line);cursor:pointer;text-transform:uppercase}
+.chip[aria-pressed=true]{background:var(--accent);color:var(--bg);border-color:var(--accent)}
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:20px 0 14px}
+.tab{font:13px var(--head);padding:12px 4px;background:var(--panel);color:var(--dim);border:2px solid var(--line);cursor:pointer;text-transform:uppercase;transition:transform .1s}
+.tab[aria-selected=true]{background:var(--panel2);color:var(--accent);border-color:var(--accent);transform:translateY(-3px)}
+.view[hidden]{display:none}
+.view{display:grid;gap:14px;animation:in .25s steps(4)}
+@keyframes in{from{opacity:0;transform:translateY(8px)}}
+.cart{background:var(--line);padding:3px}
+.cart>.body{background:var(--panel);padding:14px;display:grid;grid-template-columns:76px 1fr;gap:14px;align-items:start}
+.emb{width:76px;height:76px;background:var(--panel2);display:grid;place-items:center}
+.emb svg{width:60px;height:60px;fill:var(--accent)}
+.cart h3{font:700 15px/1.2 var(--head);text-transform:uppercase}
+.cart p{color:var(--dim);margin:4px 0 8px}
+.meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.price{font:700 16px var(--head);color:var(--accent)}
+.badge{font:11px var(--head);padding:3px 7px;background:var(--accent2);color:#fff;text-transform:uppercase}
+.badge.soon{background:var(--line);color:var(--ink)}
+.acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.btn{display:inline-block;font:12px var(--head);padding:10px 14px;background:var(--accent);color:var(--bg);text-decoration:none;text-transform:uppercase;border:0;cursor:pointer;box-shadow:inset -3px -3px 0 rgba(0,0,0,.28),inset 3px 3px 0 rgba(255,255,255,.22)}
+.btn.ghost{background:var(--panel2);color:var(--accent);box-shadow:inset 0 0 0 2px var(--accent)}
+.btn:active{transform:translate(2px,2px)}
+.slot{border:3px dashed var(--line);padding:16px;text-align:center;color:var(--dim)}
+.slot b{font:12px var(--head);color:var(--accent);display:block;margin-bottom:4px}
+.card{background:var(--line);padding:3px}.card>div{background:var(--panel);padding:14px}
+.contact{display:grid;gap:10px}
+.contact .btn{display:flex;justify-content:space-between;align-items:center;padding:14px;font-size:13px}
+.contact small{font:20px var(--body);opacity:.75;text-transform:none}
+footer{text-align:center;color:var(--dim);margin-top:28px;font-size:20px}
+.fx{position:fixed;z-index:30;pointer-events:none;font:700 14px var(--head);color:var(--accent);text-shadow:2px 2px 0 var(--bg);animation:rise 1s steps(8) forwards;transform:translateX(-50%)}
+@keyframes rise{to{opacity:0;margin-top:-70px}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="scan"></div>
+<main class="wrap">
+  <header class="hero">
+    <div class="avatar px" id="avatar" role="button" tabindex="0" aria-label="Tap the wasp"><div class="in" id="wasp"></div></div>
+    <h1 id="brand"></h1>
+    <p class="by" id="by"></p>
+    <p class="tag" id="tagline"></p>
+    <div class="bars" aria-hidden="true" id="bars"></div>
+    <div class="chips" role="group" aria-label="Choose a look">
+      <button class="chip px" data-t="wasp" aria-pressed="true">Wasp</button>
+      <button class="chip px" data-t="lofi" aria-pressed="false">Lofi</button>
+      <button class="chip px" data-t="cassette" aria-pressed="false">Cassette</button>
+    </div>
+  </header>
+
+  <div class="tabs" role="tablist">
+    <button class="tab px" role="tab" id="t-shop" aria-selected="true" data-v="shop">Shop</button>
+    <button class="tab px" role="tab" id="t-apps" aria-selected="false" data-v="apps">Apps</button>
+    <button class="tab px" role="tab" id="t-talk" aria-selected="false" data-v="talk">Talk</button>
+  </div>
+
+  <section class="view" id="shop" role="tabpanel" aria-labelledby="t-shop"></section>
+  <section class="view" id="apps" role="tabpanel" aria-labelledby="t-apps" hidden></section>
+  <section class="view" id="talk" role="tabpanel" aria-labelledby="t-talk" hidden></section>
+
+  <footer>
+    <p id="foot"></p>
+    <p>&copy; 2026 Larry W.S. All rights reserved.</p>
+  </footer>
+</main>
+
+<script>
+/* ===================  EDIT ONLY THIS BLOCK  =================== */
+const CONFIG = {
+  brand: "Wasp Ecosystem",
+  by: "by Larry W.S.",
+  tagline: "Pixel apps and interactive UI assets",
+  whatsapp: "254115779863",                         // digits only
+  whatsappMsg: "Hi Larry! I found you through your website.",
+  email: "waspecosystem@gmail.com",
+  pinterest: "https://www.pinterest.com/Larrysmyl/",
+  gumroad: "https://simiyuwafula.gumroad.com",
+  products: [
+    { title: "Wasp UI Kit", price: "$24",
+      desc: "Music-themed, beat-reactive UI kit: Lofi Record Cat, Chrono Gamer and Glitch Cyber Wasp. Instant theme switching, light HTML, CSS and JS.",
+      tags: ["UI kit", "3 themes"], buy: "https://simiyuwafula.gumroad.com/l/wfhvif",
+      pin: "https://www.pinterest.com/Larrysmyl/" }          // later: paste this product's Pinterest pin link
+    // add more: { title:"", price:"", desc:"", tags:[""], buy:"", pin:"" },
+  ],
+  apps: [
+    { title: "WASP Player", status: "In testing", desc: "A pixel music player with 10 retro themes: a wasp that eats the bars, a nodding teddy, tape, vinyl and radio." },
+    { title: "Ambience app", status: "In the lab", desc: "Calm sounds with a little pixel buddy. Rain, fire and a lofi cat who talks you down." }
+  ],
+  footer: "Made by hand, one pixel at a time."
+};
+/* ============================================================== */
+
+const $ = s => document.querySelector(s);
+const WASP = '<svg viewBox="-1 -1 28 18" shape-rendering="crispEdges" fill="var(--accent)"><path d="M10 0h2v1h-2zM13 0h2v1h-2zM9 1h5v1H9zM9 2h5v1H9zM8 3h7v1H8zM6 5h3v1H6zM5 6h5v1H5zM4 7h8v1H4zM3 8h10v1H3zM3 9h12v1H3zM4 10h11v1H4zM5 11h9v1H5zM6 12h3v1H6zM12 12h3v1h-3zM19 4h2v1h-2zM17 5h4v1h-4zM15 6h7v1h-7zM14 7h8v1h-8zM15 8h6v1h-6zM17 9h3v1h-3z"/><circle cx="19" cy="7" r=".9" fill="var(--bg)"/></svg>';
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function emblem(name){                                  // pixel emblem made from the product name
+  let h = 2166136261; for (const ch of name) h = Math.imul(h ^ ch.charCodeAt(0), 16777619) >>> 0;
+  let r = h || 1, rnd = () => (r = Math.imul(r ^ (r >>> 15), 2246822507) >>> 0, r / 4294967296), p = "";
+  for (let y = 0; y < 8; y++){ const L = [0,1,2,3].map(() => rnd() < .5); [...L, ...L.slice().reverse()].forEach((on, x) => { if (on) p += `M${x} ${y}h1v1h-1z`; }); }
+  return `<svg viewBox="0 0 8 8" shape-rendering="crispEdges"><path d="${p}"/></svg>`;
+}
+
+function build(){
+  document.title = CONFIG.brand + " | pixel apps & UI assets by Larry W.S.";
+  $("#brand").textContent = CONFIG.brand; $("#by").textContent = CONFIG.by; $("#tagline").textContent = CONFIG.tagline;
+  $("#foot").textContent = CONFIG.footer; $("#wasp").innerHTML = WASP;
+  $("#bars").innerHTML = Array.from({length: 14}, (_, i) => `<i style="animation-delay:${(i * .07).toFixed(2)}s"></i>`).join("");
+
+  $("#shop").innerHTML = CONFIG.products.map(p => `
+    <article class="cart px"><div class="body px">
+      <div class="emb px">${emblem(p.title)}</div>
+      <div><h3>${esc(p.title)}</h3><p>${esc(p.desc)}</p>
+        <div class="meta"><span class="price">${esc(p.price)}</span>${(p.tags || []).map(t => `<span class="badge soon">${esc(t)}</span>`).join("")}</div>
+        <div class="acts"><a class="btn px" href="${esc(p.buy)}" target="_blank" rel="noopener">Get it</a><a class="btn ghost px" href="${esc(p.pin)}" target="_blank" rel="noopener">Preview on Pinterest</a></div>
+      </div></div></article>`).join("") +
+    `<div class="slot px"><b>INSERT NEXT PRODUCT</b>More packs are being drawn. Follow on Pinterest to see them first.</div>`;
+
+  $("#apps").innerHTML = CONFIG.apps.map(a => `
+    <article class="cart px"><div class="body px">
+      <div class="emb px">${emblem(a.title)}</div>
+      <div><h3>${esc(a.title)}</h3><p>${esc(a.desc)}</p><div class="meta"><span class="badge">${esc(a.status)}</span></div></div>
+    </div></article>`).join("");
+
+  const wa = "https://wa.me/" + CONFIG.whatsapp.replace(/\D/g, "") + "?text=" + encodeURIComponent(CONFIG.whatsappMsg);
+  $("#talk").innerHTML = `
+    <div class="card px"><div class="px">Questions, custom pixel work or support? Say hi.</div></div>
+    <div class="contact">
+      <a class="btn px" href="${wa}" target="_blank" rel="noopener">WhatsApp <small>+${esc(CONFIG.whatsapp)}</small></a>
+      <a class="btn ghost px" href="mailto:${esc(CONFIG.email)}">Email <small>${esc(CONFIG.email)}</small></a>
+      <a class="btn ghost px" href="${esc(CONFIG.pinterest)}" target="_blank" rel="noopener">Pinterest <small>@Larrysmyl</small></a>
+      <a class="btn ghost px" href="${esc(CONFIG.gumroad)}" target="_blank" rel="noopener">Gumroad <small>all downloads</small></a>
+    </div>`;
+}
+
+function setTheme(t){
+  document.documentElement.dataset.theme = t;
+  document.querySelectorAll(".chip").forEach(c => c.setAttribute("aria-pressed", c.dataset.t === t));
+  $("meta[name=theme-color]").content = getComputedStyle(document.body).backgroundColor;
+  try { localStorage.setItem("we-theme", t); } catch (e) {}
+}
+function show(v){
+  document.querySelectorAll(".tab").forEach(t => t.setAttribute("aria-selected", t.dataset.v === v));
+  document.querySelectorAll(".view").forEach(s => s.hidden = s.id !== v);
+}
+function say(text, x, y){ const f = document.createElement("span"); f.className = "fx"; f.textContent = text; f.style.left = x + "px"; f.style.top = y + "px"; document.body.appendChild(f); setTimeout(() => f.remove(), 1000); }
+
+const LINES = ["BZZT!", "BZZZZ!", "FEED ME BARS!", "ANGRY WASP!", "THAT TICKLES!"];
+let taps = [];
+function poke(e){
+  const a = $("#avatar"), now = Date.now(), r = a.getBoundingClientRect();
+  taps = taps.filter(t => now - t < 4000).concat(now);
+  a.classList.remove("buzz"); void a.offsetWidth; a.classList.add("buzz");
+  say(taps.length >= 10 ? "OKAY OKAY, STOP!" : LINES[taps.length % LINES.length], r.left + r.width / 2, r.top);
+  if (taps.length >= 10) taps = [];
+}
+$("#avatar").addEventListener("click", poke);
+$("#avatar").addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); poke(); } });
+document.addEventListener("click", e => {
+  const c = e.target.closest(".chip"); if (c) setTheme(c.dataset.t);
+  const t = e.target.closest(".tab"); if (t) show(t.dataset.v);
+});
+
+build();
+try { const s = localStorage.getItem("we-theme"); if (s) setTheme(s); } catch (e) {}
+</script>
+</body>
+</html>
