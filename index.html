@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Wasp Ecosystem | pixel apps &amp; UI assets by Larry W.S.</title>
-<meta name="description" content="Wasp Ecosystem by Larry W.S.: retro pixel apps and interactive UI asset packs. Product previews on Pinterest, downloads on Gumroad.">
+<meta name="description" content="Wasp Ecosystem by Larry W.S. (Larry’s Cove): pixels, UI, UX and ambience. Retro pixel apps, interactive UI kits and scenes. Previews on Pinterest, downloads on Gumroad.">
 <meta property="og:title" content="Wasp Ecosystem | pixel apps &amp; UI assets">
 <meta property="og:description" content="Retro pixel apps and interactive UI asset packs by Larry W.S.">
 <meta property="og:type" content="website">
@@ -13,7 +13,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%2307070b'/%3E%3Cpath fill='%23b6ff00' d='M3 6h4v2h2V6h4v3h-2v2H9V9H7v2H5V9H3z'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=VT323&family=Press+Start+2P&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#07070b;--panel:#0e0f16;--panel2:#151724;--ink:#e9ffd2;--dim:#8a97a8;--accent:#b6ff00;--accent2:#ff2bd6;--line:#2d3752;--head:"Silkscreen","Courier New",monospace;--body:"VT323","Courier New",monospace;--scan:.35;--n:6px}
 [data-theme=lofi]{--bg:#241914;--panel:#3a2b24;--panel2:#46352c;--ink:#f6ead7;--dim:#c3a98f;--accent:#e8a05c;--accent2:#ff8f7a;--line:#5b463a;--scan:.12}
@@ -71,6 +71,19 @@ h1{font:700 26px/1.15 var(--head);letter-spacing:.06em;text-transform:uppercase}
 footer{text-align:center;color:var(--dim);margin-top:28px;font-size:20px}
 .fx{position:fixed;z-index:30;pointer-events:none;font:700 14px var(--head);color:var(--accent);text-shadow:2px 2px 0 var(--bg);animation:rise 1s steps(8) forwards;transform:translateX(-50%)}
 @keyframes rise{to{opacity:0;margin-top:-70px}}
+.cover{position:relative;aspect-ratio:16/9;overflow:hidden;background:#0d0719}
+.cover canvas{position:absolute;inset:0;width:100%;height:100%;image-rendering:pixelated;cursor:pointer}
+.cui{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;pointer-events:none;text-align:center;font-family:"Press Start 2P","Courier New",monospace}
+.cui h2{margin:5.5% 0 0;font-weight:400;font-size:min(5.6vw,30px);line-height:1.2;color:#fff1c9;text-shadow:.07em .07em 0 #2a1450,.14em .14em 0 #120a24}
+.csub{margin:1.6% 0 0;font-size:clamp(6px,1.9vw,11px);color:#7fe6ff;text-shadow:2px 2px 0 #2a1450}
+.cchip{position:absolute;bottom:5%;display:flex;align-items:center;gap:1.2em;padding:.8em 1.1em;background:#150d33;border:3px solid #fff1c9;box-shadow:4px 4px 0 #000;color:#fff1c9;font-size:clamp(5px,1.6vw,9px)}
+.ceq{display:flex;gap:3px;align-items:flex-end;height:1.8em}.ceq i{display:block;width:.5em;background:#ff7aa8;animation:cb .9s steps(4) infinite}
+.ceq i:nth-child(2){background:#7fe6ff;animation-delay:-.3s}.ceq i:nth-child(3){animation-delay:-.6s}.ceq i:nth-child(4){background:#7fe6ff;animation-delay:-.15s}
+@keyframes cb{0%{height:20%}25%{height:100%}50%{height:50%}75%{height:80%}100%{height:20%}}
+.cbar{width:7em;height:.7em;border:2px solid #fff1c9;padding:1px}.cbar b{display:block;height:100%;width:40%;background:#ff7aa8;animation:cp 12s steps(14) infinite}
+@keyframes cp{from{width:0}to{width:100%}}
+.hero .avatar{width:136px;height:136px;margin:-66px auto 12px;position:relative;z-index:2}
+.avatar canvas{width:100%;height:100%;image-rendering:pixelated;display:block}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -78,7 +91,10 @@ footer{text-align:center;color:var(--dim);margin-top:28px;font-size:20px}
 <div class="scan"></div>
 <main class="wrap">
   <header class="hero">
-    <div class="avatar px" id="avatar" role="button" tabindex="0" aria-label="Tap the wasp"><div class="in" id="wasp"></div></div>
+    <div class="cover px"><canvas id="cove" width="320" height="180" aria-label="Pixel art cove at dusk with a wasp flying over the water"></canvas>
+      <div class="cui"><h2>LARRY’S COVE</h2><p class="csub">pixels, UI, UX and ambience</p>
+        <div class="cchip"><div class="ceq"><i></i><i></i><i></i><i></i></div><span>WASP.exe: cove ambience</span><div class="cbar"><b></b></div></div></div></div>
+    <div class="avatar px" id="avatar" role="button" tabindex="0" aria-label="Tap the lighthouse"><div class="in"><canvas id="pfp" width="64" height="64"></canvas></div></div>
     <h1 id="brand"></h1>
     <p class="by" id="by"></p>
     <p class="tag" id="tagline"></p>
@@ -123,7 +139,13 @@ const CONFIG = {
       tags: ["UI kit", "3 themes"], buy: "https://simiyuwafula.gumroad.com/l/wfhvif",
       pin: "https://pin.it/1QHsNIx9b",                         // this product's Pinterest pin
       demo: "https://simiyuwafula347-wq.github.io/wasp-ui-kit-demo/" }   // live demo people can test (leave "" to hide)
-    // add more: { title:"", price:"", desc:"", tags:[""], buy:"", pin:"" },
+    ,{ title: "Glass Rainy Season Kit", price: "Soon",
+      desc: "Frosted-glass storm player: silent lightning, a cheeky cat who tells you to close the window, a snail slime-trail progress bar and puddle buttons.",
+      tags: ["UI kit", "storm"], buy: "", pin: "", demo: "rainy-season/" },
+    { title: "Puddle Day", price: "Soon",
+      desc: "A calm pixel scene in a retro window: a girl, her gold cat, an umbrella and the rain, with a synth and lofi ambience player.",
+      tags: ["pixel scene", "ambience"], buy: "", pin: "", demo: "puddle-day/" }
+    // add more: { title:"", price:"", desc:"", tags:[""], buy:"", pin:"", demo:"" },
   ],
   apps: [
     { title: "WASP Player", status: "In testing", desc: "A pixel music player with 10 retro themes: a wasp that eats the bars, a nodding teddy, tape, vinyl and radio." },
@@ -147,7 +169,7 @@ function emblem(name){                                  // pixel emblem made fro
 function build(){
   document.title = CONFIG.brand + " | pixel apps & UI assets by Larry W.S.";
   $("#brand").textContent = CONFIG.brand; $("#by").textContent = CONFIG.by; $("#tagline").textContent = CONFIG.tagline;
-  $("#foot").textContent = CONFIG.footer; $("#wasp").innerHTML = WASP;
+  $("#foot").textContent = CONFIG.footer;
   $("#bars").innerHTML = Array.from({length: 14}, (_, i) => `<i style="animation-delay:${(i * .07).toFixed(2)}s"></i>`).join("");
 
   $("#shop").innerHTML = CONFIG.products.map(p => `
@@ -155,7 +177,7 @@ function build(){
       <div class="emb px">${emblem(p.title)}</div>
       <div><h3>${esc(p.title)}</h3><p>${esc(p.desc)}</p>
         <div class="meta"><span class="price">${esc(p.price)}</span>${(p.tags || []).map(t => `<span class="badge soon">${esc(t)}</span>`).join("")}</div>
-        <div class="acts"><a class="btn px" href="${esc(p.buy)}" target="_blank" rel="noopener">Get it</a>${p.demo ? `<a class="btn ghost px" href="${esc(p.demo)}" target="_blank" rel="noopener">Try live demo</a>` : ""}<a class="btn ghost px" href="${esc(p.pin)}" target="_blank" rel="noopener">Preview on Pinterest</a></div>
+        <div class="acts">${p.buy ? `<a class="btn px" href="${esc(p.buy)}" target="_blank" rel="noopener">Get it</a>` : ""}${p.demo ? `<a class="${p.buy ? "btn ghost" : "btn"} px" href="${esc(p.demo)}" target="_blank" rel="noopener">Try live demo</a>` : ""}${p.pin ? `<a class="btn ghost px" href="${esc(p.pin)}" target="_blank" rel="noopener">Preview on Pinterest</a>` : ""}</div>
       </div></div></article>`).join("") +
     `<div class="slot px"><b>INSERT NEXT PRODUCT</b>More packs are being drawn. Follow on Pinterest to see them first.</div>`;
 
@@ -188,7 +210,7 @@ function show(v){
 }
 function say(text, x, y){ const f = document.createElement("span"); f.className = "fx"; f.textContent = text; f.style.left = x + "px"; f.style.top = y + "px"; document.body.appendChild(f); setTimeout(() => f.remove(), 1000); }
 
-const LINES = ["BZZT!", "BZZZZ!", "FEED ME BARS!", "ANGRY WASP!", "THAT TICKLES!"];
+const LINES = ["BEAM ON!", "SHIP AHOY!", "MIND THE ROCKS!", "BZZT!", "STILL WATERS..."];
 let taps = [];
 function poke(e){
   const a = $("#avatar"), now = Date.now(), r = a.getBoundingClientRect();
@@ -204,6 +226,120 @@ document.addEventListener("click", e => {
   const t = e.target.closest(".tab"); if (t) show(t.dataset.v);
 });
 
+(function(){
+
+const N=64,cv=document.getElementById('pfp'),g=cv.getContext('2d');
+let seed=7;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
+const px=(x,y,c)=>{if(x<0||y<0||x>=N||y>=N)return;g.fillStyle=c;g.fillRect(x|0,y|0,1,1)};
+const rect=(x,y,w,h,c)=>{for(let j=0;j<h;j++)for(let i=0;i<w;i++)px(x+i,y+j,c)};
+const HZ=40;
+// sky
+const sky=['#0b1026','#111a3a','#1a2750','#25376b','#34508a','#4a6fa5'];
+for(let y=0;y<HZ;y++){const t=y/HZ*6,i=Math.min(5,Math.floor(t)),f=t-Math.floor(t);
+  for(let x=0;x<N;x++){px(x,y,(f>.75&&(x+y)%2==0&&i<5)?sky[i+1]:sky[i]);}}
+// stars
+for(let k=0;k<30;k++){const x=Math.floor(rnd()*N),y=Math.floor(rnd()*26);
+  if(Math.hypot(x-42,y-15)<10)continue;px(x,y,rnd()>.8?'#ffd166':'#fff6d6');}
+// lighthouse beam
+for(let x=14;x<40;x++){const h=Math.floor((x-14)*.14)+1;
+  for(let y=18-h;y<=18+h;y++)if((x+y)%2==0&&y<HZ)px(x,y,'#d9d6a0');}
+// moon + glow
+for(let y=0;y<N;y++)for(let x=0;x<N;x++){const d=Math.hypot(x-42,y-15);
+  if(d<6.2)px(x,y,'#fff3c4');else if(d<9.5&&(x+y)%2==0)px(x,y,'#46598f');}
+[[40,13],[44,16],[41,18],[43,12]].forEach(([x,y])=>px(x,y,'#e3d28f'));
+// water
+const wc=['#12304a','#0f2a40','#0c2236','#091a2b'];
+for(let y=HZ;y<N;y++)rect(0,y,N,1,wc[Math.min(3,Math.floor((y-HZ)/6))]);
+rect(0,HZ,N,1,'#2f5f80');
+for(let k=0;k<26;k++){const y=HZ+2+Math.floor(rnd()*21),x=Math.floor(rnd()*N);rect(x,y,2+Math.floor(rnd()*3),1,'#24506d');}
+[[38,8],[39,6],[40,6],[40,4],[41,4],[41,2]].forEach(([x,w],i)=>{});
+[[41,43,9],[42,45,7],[43,47,6],[44,49,4],[45,51,3]].forEach(([x,y,w])=>rect(x-Math.floor(w/2)+1,y-2,w,1,y<46?'#fff3c4':'#c9c08a'));
+// cliffs
+for(let x=0;x<N;x++){
+  let top=-1,bot=64;
+  if(x<26){top=x<16?31:x<20?35:x<23?38:41;bot=x<8?64:x<14?58:x<20?52:47;}
+  else if(x>=44){top=x>=58?28:x>=53?31:x>=49?35:39;bot=x>=56?64:x>=51?59:x>=47?53:48;}
+  if(top<0)continue;
+  rect(x,top,1,bot-top,'#070b16');px(x,top,'#1a2644');
+  if((x*7)%5==0)px(x,top+3,'#10182c');
+}
+// lighthouse
+for(let y=19;y<=31;y++){const c=Math.floor((y-19)/3)%2?'#c8553d':'#e8e2d0';rect(9,y,5,1,c);}
+rect(8,18,7,1,'#1a1d29');rect(9,17,5,1,'#ffd166');rect(9,16,5,1,'#fff3c4');rect(8,15,7,1,'#c8553d');rect(10,14,3,1,'#c8553d');px(11,13,'#c8553d');
+px(11,24,'#1a1d29');px(11,25,'#1a1d29');
+// lighthouse glow on rock
+px(8,31,'#ffd166');
+// boat
+rect(28,45,9,1,'#7a4a2e');rect(29,46,7,1,'#5a3320');
+rect(32,38,1,7,'#c9b896');
+for(let y=39;y<=43;y++)rect(33,y,y-38,1,'#e8e2d0');
+px(28,44,'#ffd166');px(27,44,'#8a6a2a');px(29,44,'#8a6a2a');
+px(28,48,'#ffd166');px(28,50,'#a8832e');
+rect(30,47,5,1,'#0a1a2a');
+
+ try{document.querySelector("link[rel=icon]").href=cv.toDataURL("image/png")}catch(e){}
+})();
+(function(){
+
+const c=document.getElementById('cove'),x=c.getContext('2d');
+const W=320,H=180,HZ=108;
+const sky=['#150d33','#241450','#38206a','#562a80','#82378a','#bd4f86','#f08a7a'];
+let seed=7;const rnd=()=>(seed=seed*16807%2147483647)/2147483647;
+function R(col,a,b,w,h){x.fillStyle=col;x.fillRect(a|0,b|0,w,h)}
+function layer(fn){const o=document.createElement('canvas');o.width=W;o.height=H;const g=x;const cx=o.getContext('2d');
+  const old=x;fn(cx);return o}
+function mk(fn){const o=document.createElement('canvas');o.width=W;o.height=H;fn(o.getContext('2d'));return o}
+const A=mk(g=>{
+  const bh=HZ/7;
+  for(let y=0;y<HZ;y++){const b=Math.min(6,(y/bh)|0),pos=y-b*bh;
+    for(let px=0;px<W;px++){let k=b;if(pos>bh-3&&b<6&&(px+y)%2)k=b+1;g.fillStyle=sky[k];g.fillRect(px,y,1,1)}}
+  g.fillStyle='#ffe9a8';
+  for(let dy=-14;dy<=14;dy++){const w=Math.round(Math.sqrt(196-dy*dy));g.fillRect(232-w,38+dy,w*2,1)}
+  g.fillStyle='#e2c27a';[[-6,-4,3],[4,2,4],[-3,7,2],[6,-8,2]].forEach(([a,b,s])=>g.fillRect(232+a,38+b,s,s));
+});
+const B=mk(g=>{
+  for(let px=0;px<W;px++){
+    let top=null;
+    if(px<100)top=70+Math.round(px*0.72/3)*3;
+    else if(px>222)top=84+Math.round((319-px)*0.72/3)*3;
+    if(top!==null){g.fillStyle='#0e0720';g.fillRect(px,top,1,H-top);g.fillStyle='#2f1a5e';g.fillRect(px,top,1,1)}
+  }
+  // little pixel pines on the left cliff
+  [[8,62],[20,68],[34,76]].forEach(([a,b])=>{g.fillStyle='#0e0720';for(let i=0;i<4;i++)g.fillRect(a-2-i*2+2,b+i*4,5+i*4-2,4);g.fillRect(a,b+16,2,4)});
+  // lantern on the right cliff
+  g.fillStyle='#ffd23f';g.fillRect(262,86,3,4);g.fillStyle='#0e0720';g.fillRect(263,90,1,10);
+});
+const stars=Array.from({length:45},()=>({x:rnd()*W|0,y:rnd()*70|0,p:rnd()*6}));
+const wb=['#2a1a66','#231659','#1c1250','#150d40'];
+const P={k:'#1a1020',Y:'#ffd23f',w:'#cfeeff',E:'#ff4d6d'};
+const F=[["..ww.......",".wwww......","kYYkYYkkkk.","kYYkYYkkEk.",".k..k..kk.."],
+         ["...........","...........","kYYkYYkkkk.","kYYkYYkkEk.","wwww.k..kk."]];
+const N=[".###",".#..",".#..","##..","##.."];
+function spr(rows,pal,ox,oy,s,flip){rows.forEach((r,j)=>{for(let i=0;i<r.length;i++){const ch=r[i];if(ch==='.')continue;
+  const ii=flip?r.length-1-i:i;R(typeof pal==='string'?pal:pal[ch],ox+ii*s,oy+j*s,s,s)}})}
+let notes=[],last=0,spawn=0;
+function burst(n,px,py){for(let i=0;i<n;i++)notes.push({x:px,y:py,vx:(Math.random()-.5)*30,vy:-12-Math.random()*20,c:Math.random()<.5?'#ff7aa8':'#7fe6ff',l:3})}
+c.addEventListener('pointerdown',e=>{const r=c.getBoundingClientRect();burst(9,(e.clientX-r.left)/r.width*W,(e.clientY-r.top)/r.height*H)});
+const still=matchMedia('(prefers-reduced-motion:reduce)').matches;
+function frame(ms){
+  const t=still?2:ms/1000,dt=Math.min(.05,t-last);last=t;
+  x.drawImage(A,0,0);
+  stars.forEach(s=>{if(((t*1.5+s.p)|0)%3)R('#fff1c9',s.x,s.y,1,1)});
+  for(let y=HZ;y<H;y++)R(wb[Math.min(3,((y-HZ)/18)|0)],0,y,W,1);
+  for(let y=HZ+1;y<H;y+=3){for(let k=0;k<7;k++){const px=(k*47+y*13+t*(6+(y-HZ)*.25))%(W+20)-10;R('#6a55c0',px,y,5+((y-HZ)/12|0),1)}}
+  for(let y=HZ+1;y<H-10;y+=2){const w=Math.max(2,14-((y-HZ)>>2)),sh=Math.round(Math.sin(t*2+y*.6)*2);R('#ffe9a8',232-w/2+sh,y,w,1)}
+  x.drawImage(B,0,0);
+  const wx=160+86*Math.sin(t*.6),wy=64+14*Math.sin(t*1.3),flip=Math.cos(t*.6)<0;
+  spawn+=dt;if(spawn>.55){spawn=0;notes.push({x:wx,y:wy,vx:(flip?8:-8),vy:-9,c:Math.random()<.5?'#ff7aa8':'#7fe6ff',l:3})}
+  R('rgba(0,0,0,.25)',wx,HZ+30+ (wy-64)*0.3,22,2);
+  spr(F[((t*14)|0)%2],P,wx-11,wy,2,flip);
+  notes=notes.filter(n=>(n.l-=dt)>0);
+  notes.forEach(n=>{n.x+=n.vx*dt+Math.sin(t*4+n.y)*.15;n.y+=n.vy*dt;spr(N,n.c,n.x,n.y,1.6,false)});
+  requestAnimationFrame(frame)
+}
+requestAnimationFrame(frame);
+
+})();
 build();
 try { const s = localStorage.getItem("we-theme"); if (s) setTheme(s); } catch (e) {}
 </script>
