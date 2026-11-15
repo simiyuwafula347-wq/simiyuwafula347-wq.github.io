@@ -121,7 +121,8 @@ const CONFIG = {
     { title: "Wasp UI Kit", price: "$24",
       desc: "Music-themed, beat-reactive UI kit: Lofi Record Cat, Chrono Gamer and Glitch Cyber Wasp. Instant theme switching, light HTML, CSS and JS.",
       tags: ["UI kit", "3 themes"], buy: "https://simiyuwafula.gumroad.com/l/wfhvif",
-      pin: "https://www.pinterest.com/Larrysmyl/" }          // later: paste this product's Pinterest pin link
+      pin: "https://pin.it/1QHsNIx9b",                         // this product's Pinterest pin
+      demo: "https://simiyuwafula347-wq.github.io/wasp-ui-kit-demo/" }   // live demo people can test (leave "" to hide)
     // add more: { title:"", price:"", desc:"", tags:[""], buy:"", pin:"" },
   ],
   apps: [
@@ -154,7 +155,7 @@ function build(){
       <div class="emb px">${emblem(p.title)}</div>
       <div><h3>${esc(p.title)}</h3><p>${esc(p.desc)}</p>
         <div class="meta"><span class="price">${esc(p.price)}</span>${(p.tags || []).map(t => `<span class="badge soon">${esc(t)}</span>`).join("")}</div>
-        <div class="acts"><a class="btn px" href="${esc(p.buy)}" target="_blank" rel="noopener">Get it</a><a class="btn ghost px" href="${esc(p.pin)}" target="_blank" rel="noopener">Preview on Pinterest</a></div>
+        <div class="acts"><a class="btn px" href="${esc(p.buy)}" target="_blank" rel="noopener">Get it</a>${p.demo ? `<a class="btn ghost px" href="${esc(p.demo)}" target="_blank" rel="noopener">Try live demo</a>` : ""}<a class="btn ghost px" href="${esc(p.pin)}" target="_blank" rel="noopener">Preview on Pinterest</a></div>
       </div></div></article>`).join("") +
     `<div class="slot px"><b>INSERT NEXT PRODUCT</b>More packs are being drawn. Follow on Pinterest to see them first.</div>`;
 
