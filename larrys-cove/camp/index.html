@@ -51,6 +51,7 @@
   <button id="dev-jump">JUMP [N]</button>
   <button id="dev-speed">SPEED x1</button>
   <button id="dev-mute">MUTE [M]</button>
+  <button id="dev-mel">MELODY: ON</button>
   <button id="dev-sleep">SLEEP: OFF</button>
 </div>
 <pre id="err"></pre>
@@ -369,7 +370,7 @@ function sample(t){
 
 // ---------- audio: warm pads, soft guitar arpeggios, crickets, an owl, a little wind ----------
 const Aud = (function(){
-  let ctx, master, pre, echoIn, padFlt, padGain, crO, crG, owO, owG;
+  let ctx, master, pre, echoIn, padFlt, padGain, crO, crG, owO, owG, aurG; const aurO = [];
   const pads = [];
   let nextBar = 0, barIdx = 0, muted = false, on = false, vol = 1, night = 0;
   let onHoot = null;
@@ -377,6 +378,21 @@ const Aud = (function(){
   const mtof = n => 440*Math.pow(2,(n-69)/12);
   const CH = [[40,47,52,55,59],[48,52,55,60,64],[43,50,55,59,62],[50,54,57,62,64]];   // Em  C  G  Dadd9
   const PENT = [64,67,69,71,74,76];
+  // CAMPFIRE THEME (guitar): [seconds into the bar, midi, length] over Em - C - G - Dadd9. A folk tune that settles back into Em.
+  const THEME = [
+    [[0,71,2.2],[2,69,1.4],[3.5,67,2.0],[6,71,1.6]],
+    [[0,72,2.2],[2,71,1.4],[3.5,67,2.0],[5.5,64,1.4],[7,67,1.0]],
+    [[0,74,2.2],[2,71,1.4],[3.5,67,1.6],[5,71,1.6],[6.5,74,1.4]],
+    [[0,76,2.2],[2,74,1.6],[3.5,71,1.4],[5,69,1.6],[6.5,66,1.4]]
+  ];
+  // THE AURORA THEME (glass voice): slow, high and open. One phrase per chord.
+  const AURORA = [
+    [[0,83,2.6],[2.5,88,2.6],[5,86,2.8]],
+    [[0,84,2.6],[2.5,88,2.6],[5,91,2.8]],
+    [[0,86,2.6],[2.5,91,2.6],[5,95,3.2]],
+    [[0,93,2.6],[2.5,91,2.6],[5,88,3.2]]
+  ];
+  let story = {night:0,aurora:0,fire:1}, melodyOn = true;
 
   function osc(type,f){ const o = ctx.createOscillator(); o.type = type; o.frequency.value = f; o.start(); return o; }
   function noiseBuf(){
@@ -404,6 +420,14 @@ const Aud = (function(){
     padFlt.connect(padGain); padGain.connect(pre);
     const ps = ctx.createGain(); ps.gain.value = 0.2; padGain.connect(ps); ps.connect(echoIn);
     for(let i=0;i<5;i++){ const o = osc(i%2?'triangle':'sine',110); o.detune.value = (i%2?5:-5); o.connect(padFlt); pads.push(o); }
+
+    // aurora choir: three soft voices with a slow vibrato, silent until the lights appear
+    aurG = ctx.createGain(); aurG.gain.value = 0.0001;
+    const af = ctx.createBiquadFilter(); af.type = 'lowpass'; af.frequency.value = 1700;
+    aurG.connect(af); af.connect(pre);
+    const as2 = ctx.createGain(); as2.gain.value = 0.55; aurG.connect(as2); as2.connect(echoIn);
+    for(let i=0;i<3;i++){ const o = osc('sine',440); o.detune.value = (i-1)*7; o.connect(aurG); aurO.push(o); }
+    const vb = osc('sine',5.1), vg = ctx.createGain(); vg.gain.value = 9; vb.connect(vg); aurO.forEach(o=>vg.connect(o.detune));
 
     // soft wind
     const wb = ctx.createBufferSource(); wb.buffer = noiseBuf(); wb.loop = true; wb.start(0,Math.random()*2);
@@ -438,6 +462,24 @@ const Aud = (function(){
     if(echo){ const e = ctx.createGain(); e.gain.value = echo; g.connect(e); e.connect(echoIn); }
     o.start(t); o.stop(t+len+0.05);
   }
+  function gtr(f,t,v,len,echo){                                   // plucked string + a quick octave partial for body
+    pluck(f,t,v,len,echo);
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = 'sine'; o.frequency.value = f*2;
+    g.gain.setValueAtTime(0.0001,t); g.gain.linearRampToValueAtTime(v*0.35,t+0.004); g.gain.exponentialRampToValueAtTime(0.0001,t+Math.min(len,0.5));
+    o.connect(g); g.connect(pre); o.start(t); o.stop(t+0.55);
+  }
+  function glass(f,t,v,len,echo){                                 // glass-harmonica bell: slow attack, bell-like inharmonic partials
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001,t); g.gain.linearRampToValueAtTime(v,t+0.05); g.gain.exponentialRampToValueAtTime(0.0001,t+len);
+    [[1,1],[2.76,0.28],[5.4,0.1]].forEach(([r,a])=>{
+      if(f*r>9000) return;
+      const o = ctx.createOscillator(), og = ctx.createGain();
+      o.type = 'sine'; o.frequency.value = f*r; og.gain.value = a; o.connect(og); og.connect(g); o.start(t); o.stop(t+len+0.05);
+    });
+    g.connect(pre);
+    if(echo){ const e = ctx.createGain(); e.gain.value = echo; g.connect(e); e.connect(echoIn); }
+  }
   function chirps(t0){
     for(let g=0;g<8;g++){
       const tg = t0 + g + Math.random()*0.6;
@@ -465,10 +507,25 @@ const Aud = (function(){
     const ch = CH[barIdx%4];
     pads.forEach((o,k)=>o.frequency.setTargetAtTime(mtof(ch[k]),t0,1.0));
     padFlt.frequency.setTargetAtTime(750+250*(1-night),t0,2.0);
-    [0,2,3,4,3,2,1,2].forEach((idx,i)=>{
-      if(Math.random()<0.78) pluck(mtof(ch[idx]+12+(idx===0?12:0)),t0+i*1.0+(i%2?0.05:0),0.035,1.6,0.5);
-    });
-    pluck(mtof(PENT[Math.floor(Math.random()*PENT.length)]+12),t0+1+Math.random()*6,0.022,2.2,0.55);
+    aurO.forEach((o,k)=>o.frequency.setTargetAtTime(mtof(ch[k+1]+12),t0,1.5));
+    if(melodyOn){
+      const bar = THEME[barIdx%4], loop = Math.floor(barIdx/4)%3;
+      let vel = 0.038, dens = 1;
+      if(story.night>0.6){ vel = 0.032; dens = 0.82; }
+      if(story.aurora>0.3){ vel = 0.028; dens = 0.7; }                         // the guitar steps back so the lights can sing
+      if(story.night<0.3 && story.fire<0.9){ vel = 0.04; dens = 1; }           // dawn
+      bar.forEach((n,i)=>{
+        if(i>0 && Math.random()>dens) return;
+        if(loop===1 && i>0 && Math.random()<0.2) return;                        // loop 2: a few rests
+        gtr(mtof(n[1]),t0+n[0]+Math.random()*0.04,vel,n[2]+0.4,0.45);
+        if(loop===2 && i===bar.length-1) gtr(mtof(n[1]+12),t0+n[0]+0.3,vel*0.55,n[2],0.5);   // loop 3: an octave echo
+      });
+      if(story.aurora>0.25){                                                    // the magic: glass bells over the chord
+        const au = AURORA[barIdx%4];
+        au.forEach((n,i)=>glass(mtof(n[1]),t0+n[0]+0.1,0.012+0.02*story.aurora,n[2],0.75));
+      }
+    }
+    if(Math.random()<0.5) pluck(mtof(PENT[Math.floor(Math.random()*PENT.length)]+12),t0+1+Math.random()*6,0.02,2.2,0.55);   // rare spark
     if(night>0.3) chirps(t0);
     if(night>0.5 && Math.random()<0.13) hoot(t0);
     barIdx++;
@@ -477,11 +534,16 @@ const Aud = (function(){
   function shimmer(){
     if(!on) return;
     const t = ctx.currentTime+0.05;
-    [88,91,95,100].forEach((n,i)=>pluck(mtof(n),t+i*0.16,0.025,2.2,0.6));
+    [84,88,91,95,100].forEach((n,i)=>glass(mtof(n),t+i*0.14,0.022,2.4,0.7));
   }
+  function setStory(k){
+    story = {night:k.night,aurora:k.aurora,fire:k.fire};
+    if(on) aurG.gain.setTargetAtTime(melodyOn ? 0.0001+0.022*k.aurora : 0.0001, ctx.currentTime, 1.5);
+  }
+  function toggleMelody(){ melodyOn = !melodyOn; if(on && !melodyOn) aurG.gain.setTargetAtTime(0.0001,ctx.currentTime,0.4); return melodyOn; }
   function setVol(v){ vol = v; if(on) master.gain.setTargetAtTime(muted?0:LEVEL*v,ctx.currentTime,0.4); }
   function toggleMute(){ muted = !muted; if(on) master.gain.setTargetAtTime(muted?0:LEVEL*vol,ctx.currentTime,0.1); return muted; }
-  return { start, shimmer, setVol, toggleMute, setNight:v=>{night=v;}, set onHoot(f){onHoot=f;} };
+  return { start, shimmer, setVol, toggleMute, setStory, toggleMelody, setNight:v=>{night=v;}, set onHoot(f){onHoot=f;} };
 })();
 
 // ---------- WebGL ----------
@@ -559,7 +621,7 @@ function frame(now){
     gl.uniform1f(L.u_fx,s.fx); gl.uniform1f(L.u_fmode,s.fmode); gl.uniform1f(L.u_fdir,s.fdir); gl.uniform1f(L.u_fswing,s.fsw);
     gl.uniform3fv(L.u_skyTop,k.skyTop); gl.uniform3fv(L.u_skyBot,k.skyBot); gl.uniform3fv(L.u_glow,k.glow);
     gl.drawArrays(gl.TRIANGLES,0,3);
-    if(now-lastAud>400){ lastAud = now; Aud.setNight(k.night); Aud.setVol(sl); }
+    if(now-lastAud>400){ lastAud = now; Aud.setNight(k.night); Aud.setStory(k); Aud.setVol(sl); }
   }
   requestAnimationFrame(frame);
 }
@@ -579,6 +641,7 @@ function jump(){ const n = JUMPS.find(t=>t>clk+1); clk = n===undefined ? 0 : n; 
 $('dev-jump').addEventListener('click',jump);
 $('dev-speed').addEventListener('click',()=>{ speed = speed===1 ? 10 : 1; $('dev-speed').textContent = 'SPEED x'+speed; });
 $('dev-mute').addEventListener('click',()=>{ $('dev-mute').textContent = Aud.toggleMute() ? 'UNMUTE [M]' : 'MUTE [M]'; });
+$('dev-mel').addEventListener('click',()=>{ $('dev-mel').textContent = 'MELODY: '+(Aud.toggleMelody()?'ON':'OFF'); });
 $('dev-sleep').addEventListener('click',()=>{
   const opts = [0,15,30,60], i = (opts.indexOf(sleepLen/60000)+1)%opts.length, m = opts[i];
   sleepLen = m*60000; sleepEnd = m ? Date.now()+sleepLen : 0;
