@@ -155,7 +155,7 @@ const CONFIG = {
   ],
   apps: [
     { title: "WASP Player", status: "In testing", desc: "A pixel music player with 10 retro themes: a wasp that eats the bars, a nodding teddy, tape, vinyl and radio." },
-    { title: "Ambience app", status: "In the lab", desc: "Calm sounds with a little pixel buddy. Rain, fire and a lofi cat who talks you down." }
+    { title: "Ambience", status: "Early preview", desc: "Three pixel worlds, each a 200-second story with live-generated sound: a beach at sunset, a rainy window with a cat, a campfire cabin with a fox, an owl and an aurora. Sleep timer built in.", demo: "larrys-cove/" }
   ],
   footer: "Made by hand, one pixel at a time."
 };
@@ -190,7 +190,7 @@ function build(){
   $("#apps").innerHTML = CONFIG.apps.map(a => `
     <article class="cart px"><div class="body px">
       <div class="emb px">${emblem(a.title)}</div>
-      <div><h3>${esc(a.title)}</h3><p>${esc(a.desc)}</p><div class="meta"><span class="badge">${esc(a.status)}</span></div></div>
+      <div><h3>${esc(a.title)}</h3><p>${esc(a.desc)}</p><div class="meta"><span class="badge">${esc(a.status)}</span></div>${a.demo ? `<div class="acts"><a class="btn px" href="${esc(a.demo)}" target="_blank" rel="noopener">Open preview</a></div>` : ""}</div>
     </div></article>`).join("");
 
   const wa = "https://wa.me/" + CONFIG.whatsapp.replace(/\D/g, "") + "?text=" + encodeURIComponent(CONFIG.whatsappMsg);

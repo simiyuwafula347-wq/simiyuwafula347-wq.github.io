@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Rainy Window</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%;background:#04060b;overflow:hidden;font-family:"Courier New",monospace;color:#a8ffef;
+    user-select:none;-webkit-user-select:none;touch-action:manipulation}
+  body{display:flex;align-items:center;justify-content:center}
+  #frame{width:min(96vw,calc(96vh * 1.7778));aspect-ratio:16/9;border:4px solid #1f3140;
+    box-shadow:0 0 0 4px #04060b,0 0 0 6px #14212d,0 0 40px rgba(80,170,200,.18);background:#000}
+  canvas{display:block;width:100%;height:100%;image-rendering:pixelated}
+  .overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:10;padding:20px;
+    background:rgba(4,6,11,.8);transition:opacity 1.2s ease}
+  .overlay.hide{opacity:0;pointer-events:none;visibility:hidden;transition:opacity 1.2s ease,visibility 0s 1.2s}
+  .box{padding:26px 36px;background:#07101a;border:4px solid #38c2f2;text-align:center;
+    box-shadow:0 0 0 4px #07101a,0 0 0 8px #1a5a6e,0 0 40px rgba(56,194,242,.4)}
+  h2{font-size:clamp(.9rem,4.4vw,1.4rem);letter-spacing:.26em;margin-bottom:20px;color:#c9f4ff;text-shadow:0 0 10px #38c2f2}
+  .sub{font-size:.7rem;letter-spacing:.2em;opacity:.55;margin-top:16px}
+  button{background:#0c2233;color:#7df9ff;border:3px solid #38c2f2;padding:10px 28px;font-family:inherit;font-size:1rem;letter-spacing:.25em;cursor:pointer}
+  button:active{transform:translateY(2px)}
+  #home{position:fixed;left:8px;top:6px;z-index:30;color:#38c2f2;opacity:.12;font-size:18px;text-decoration:none;padding:4px 8px}
+  #home:hover{opacity:.7}
+  #devdot{position:fixed;right:6px;bottom:6px;width:12px;height:12px;border:1px solid #38c2f2;opacity:.1;cursor:pointer;z-index:30}
+  #devdot:hover{opacity:.5}
+  #dev{position:fixed;right:8px;bottom:26px;z-index:30;display:none;background:rgba(3,8,16,.9);border:1px solid #1a5a6e;
+    padding:8px 10px;font-size:11px;letter-spacing:.08em;line-height:1.7}
+  #dev.on{display:block}
+  #dev button{padding:3px 8px;font-size:11px;letter-spacing:.1em;margin:2px 2px 0 0;border-width:1px}
+  #err{position:fixed;inset:0;z-index:50;display:none;padding:20px;background:#000;color:#ff8a8a;font-size:12px;white-space:pre-wrap;overflow:auto}
+</style>
+</head>
+<body>
+
+<div id="frame"><canvas id="gl" width="160" height="90"></canvas></div>
+<a id="home" href="../index.html" title="back to the cove">&lsaquo;</a>
+
+<div id="start" class="overlay">
+  <div class="box">
+    <h2>RAINY WINDOW</h2>
+    <button id="btn-start">BEGIN</button>
+    <div class="sub">HEADPHONES RECOMMENDED</div>
+  </div>
+</div>
+
+<div id="devdot" title="controls (S)"></div>
+<div id="dev">
+  <div id="devinfo">--</div>
+  <button id="dev-jump">JUMP [N]</button>
+  <button id="dev-speed">SPEED x1</button>
+  <button id="dev-mute">MUTE [M]</button>
+  <button id="dev-sleep">SLEEP: OFF</button>
+</div>
+<pre id="err"></pre>
+
+<script id="vs" type="x-shader/x-vertex">
+attribute vec2 a_pos;
+void main(){ gl_Position = vec4(a_pos, 0.0, 1.0); }
+</script>
+
+<script id="fs" type="x-shader/x-fragment">
+precision highp float;
+
+uniform float u_time, u_storm, u_flash, u_night, u_rainbow, u_fade, u_walk, u_wx, u_car, u_cat, u_bx, u_bolt, u_beam;
+uniform vec3 u_skyTop, u_skyBot;
+
+float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123); }
+float noise(vec2 p){
+  vec2 i = floor(p); vec2 f = fract(p);
+  vec2 u = f * f * (3.0 - 2.0 * f);
+  return mix(mix(hash(i), hash(i + vec2(1.0, 0.0)), u.x),
+             mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), u.x), u.y);
+}
+float fbm(vec2 p){
+  float v = 0.0; float a = 0.5;
+  for (int i = 0; i < 4; i++){ v += a * noise(p); p = p * 2.03 + vec2(1.7, 9.2); a *= 0.5; }
+  return v;
+}
+float bayer2(vec2 a){ a = floor(a); return fract(a.x / 2.0 + a.y * a.y * 0.75); }
+float bayer4(vec2 a){ return bayer2(0.5 * a) * 0.25 + bayer2(a); }
+float rect(vec2 q, vec2 lo, vec2 sz){
+  vec2 a = step(lo, q);
+  vec2 b = 1.0 - step(lo + sz, q);
+  return a.x * a.y * b.x * b.y;
+}
+
+void main(){
+  vec2 px = floor(gl_FragCoord.xy);
+  float x = px.x;
+  float y = px.y;
+  float t = u_time;
+
+  // ---------------- the room ----------------
+  float stripe = step(0.5, fract(x / 6.0));
+  vec3 col = vec3(0.17, 0.10, 0.11) * (0.86 + 0.14 * stripe);
+  float lg = exp(-length((px - vec2(8.0, 28.0)) * vec2(1.0, 1.15)) * 0.045);
+  col = col * (0.45 + 0.9 * lg) + vec3(0.55, 0.32, 0.12) * lg * 0.3;
+  col += vec3(0.45, 0.5, 0.75) * u_flash * 0.22;
+  col = mix(col, vec3(0.09, 0.06, 0.07), rect(px, vec2(0.0, 0.0), vec2(160.0, 6.0)));
+  vec3 wood = vec3(0.33, 0.20, 0.11) * (0.55 + 0.5 * lg) + vec3(0.3, 0.33, 0.5) * u_flash * 0.25;
+  col = mix(col, wood * 0.8, rect(px, vec2(16.0, 14.0), vec2(128.0, 74.0)));
+  col = mix(col, wood, rect(px, vec2(12.0, 10.0), vec2(136.0, 8.0)));
+  col = mix(col, wood * 1.3, rect(px, vec2(12.0, 17.0), vec2(136.0, 1.0)));
+  col = mix(col, wood * 0.55, rect(px, vec2(14.0, 8.0), vec2(132.0, 2.0)));
+
+  // ---------------- through the window ----------------
+  float win = rect(px, vec2(20.0, 18.0), vec2(120.0, 66.0));
+  if (win > 0.5){
+    float wy = clamp((y - 18.0) / 66.0, 0.0, 1.0);
+    vec3 wc = mix(u_skyBot, u_skyTop, pow(wy, 0.75));
+    float cn = fbm(vec2(floor(x / 2.0) * 0.075 + t * 0.012, floor(y / 2.0) * 0.13 + 3.0));
+    float cm = smoothstep(0.38, 0.72, cn) * (0.35 + 0.65 * u_storm);
+    vec3 cloudC = mix(u_skyBot * 1.15 + 0.10, u_skyTop * 0.45 + 0.02, u_storm);
+    wc = mix(wc, cloudC, cm * 0.9);
+    wc += vec3(0.45, 0.5, 0.78) * u_flash * (0.5 + 0.5 * wy);
+    wc += vec3(0.9) * step(0.992, hash(px)) * u_night * (1.0 - u_storm) * smoothstep(0.3, 0.8, wy);
+
+    // rainbow after the storm
+    float rb = (length(px - vec2(52.0, 6.0)) - 40.0) / 14.0;
+    float rbm = step(0.0, rb) * (1.0 - step(1.0, rb)) * step(24.0, y);
+    vec3 rcol = clamp(abs(mod((1.0 - rb) * 4.2 + vec3(0.0, 4.0, 2.0), 6.0) - 3.0) - 1.0, 0.0, 1.0);
+    wc += rcol * rbm * 0.42 * u_rainbow;
+
+    // lightning bolt
+    float bxx = u_bx + floor(sin(y * 0.55 + u_bx) * 2.5) + floor(hash(vec2(floor(y / 5.0), 9.0)) * 3.0);
+    wc = mix(wc, vec3(0.95, 0.95, 1.0), step(abs(x - bxx), 0.5) * step(46.0, y) * u_bolt);
+
+    // far skyline
+    float fcx = floor(x / 8.0);
+    float ftop = 44.0 + floor(hash(vec2(fcx, 1.0)) * 14.0);
+    vec3 farC = mix(u_skyBot * 0.75, vec3(0.04, 0.06, 0.13), 0.7) + vec3(0.5, 0.55, 0.8) * u_flash * 0.15;
+    wc = mix(wc, farC, step(y, ftop));
+
+    // radio tower + the beam
+    float tw = rect(px, vec2(118.0, 40.0), vec2(2.0, 30.0)) + rect(px, vec2(115.0, 40.0), vec2(8.0, 1.0)) + rect(px, vec2(116.0, 52.0), vec2(6.0, 1.0));
+    wc = mix(wc, vec3(0.03, 0.04, 0.08), clamp(tw, 0.0, 1.0));
+    vec3 bc = mix(vec3(0.10, 1.0, 0.55), vec3(0.15, 0.60, 1.0), 0.5 + 0.5 * sin(y * 0.12 - t * 1.5));
+    float bdx = abs(x - 118.5 + sin(y * 0.25 - t * 5.0) * 0.4);
+    float bp = (0.8 + 0.2 * sin(t * 4.0)) * u_beam;
+    wc += bc * (exp(-bdx * 1.0) * 1.1 + exp(-bdx * 0.22) * 0.45) * step(70.0, y) * bp;
+    wc += bc * exp(-length(px - vec2(118.5, 70.0)) * 0.3) * u_beam;
+
+    // mid buildings with lit windows
+    float mcx = floor((x + 5.0) / 11.0);
+    float mh = 32.0 + floor(hash(vec2(mcx, 5.0)) * 20.0);
+    vec3 mC = mix(u_skyBot * 0.35, vec3(0.03, 0.04, 0.09), 0.8) + vec3(0.5, 0.55, 0.8) * u_flash * 0.1;
+    vec2 cell = vec2(floor(x / 3.0), floor((y - 18.0) / 4.0));
+    float lit = step(0.74, hash(cell + floor(t * 0.03))) * step(26.0, y) * step(y, mh - 2.0);
+    float wmask = step(fract(x / 3.0), 0.67) * step(fract((y - 18.0) / 4.0), 0.6);
+    mC = mix(mC, vec3(1.0, 0.78, 0.42) * (0.35 + 0.65 * u_night), lit * wmask);
+    wc = mix(wc, mC, step(y, mh));
+
+    // street
+    vec3 road = vec3(0.045, 0.055, 0.09) + u_skyBot * 0.1;
+    vec3 walk = vec3(0.10, 0.11, 0.17) + u_skyBot * 0.1;
+    wc = mix(wc, walk, step(y, 25.0));
+    wc = mix(wc, road, step(y, 21.0));
+    float refl = 0.0;
+    for (int i = 0; i < 2; i++){
+      float lx = 40.0 + 60.0 * float(i);
+      wc = mix(wc, vec3(0.03, 0.04, 0.08), rect(px, vec2(lx, 25.0), vec2(1.0, 17.0)) + rect(px, vec2(lx, 42.0), vec2(5.0, 1.0)));
+      wc = mix(wc, vec3(1.0, 0.85, 0.5), rect(px, vec2(lx + 3.0, 41.0), vec2(3.0, 1.0)));
+      float lamp = (0.25 + 0.75 * u_night);
+      wc += vec3(1.0, 0.8, 0.45) * exp(-length(px - vec2(lx + 4.5, 41.0)) * 0.1) * lamp * 0.7;
+      refl += exp(-abs(x - (lx + 4.0)) * 0.2) * lamp;
+    }
+    float wet = step(y, 21.0) * step(18.0, y);
+    wc += vec3(1.0, 0.8, 0.45) * refl * wet * (0.2 + 0.4 * u_storm) * (0.5 + 0.5 * hash(px + floor(t * 3.0)));
+
+    // the bus
+    vec2 cq = px - vec2(floor(u_car), 18.0);
+    float bodyM = rect(cq, vec2(0.0, 2.0), vec2(16.0, 7.0));
+    wc = mix(wc, vec3(0.14, 0.40, 0.36), bodyM);
+    wc = mix(wc, vec3(1.0, 0.82, 0.45), rect(cq, vec2(1.0, 5.0), vec2(14.0, 2.0)) * step(fract((cq.x - 1.0) / 4.0), 0.7));
+    wc = mix(wc, vec3(0.02), rect(cq, vec2(2.0, 1.0), vec2(3.0, 2.0)) + rect(cq, vec2(11.0, 1.0), vec2(3.0, 2.0)));
+    wc += vec3(1.0, 0.9, 0.55) * exp(-length(vec2((cq.x - 17.0) * 0.5, cq.y - 4.0)) * 0.3) * 0.6;
+    wc += vec3(1.0, 0.85, 0.5) * exp(-abs(cq.x - 25.0) * 0.05) * wet * step(16.0, cq.x) * 0.2;
+
+    // the walker with the umbrella
+    vec2 wq = px - vec2(floor(u_wx), 22.0);
+    float opn = step(0.2, u_storm);
+    float sw = step(0.0, sin(u_walk));
+    wc = mix(wc, vec3(0.05, 0.05, 0.09), rect(wq, vec2(sw, 0.0), vec2(1.0, 3.0)) + rect(wq, vec2(1.0 - sw, 0.0), vec2(1.0, 3.0)));
+    wc = mix(wc, vec3(0.22, 0.50, 0.70), rect(wq, vec2(0.0, 3.0), vec2(2.0, 4.0)));
+    wc = mix(wc, vec3(0.95, 0.75, 0.6), rect(wq, vec2(0.0, 7.0), vec2(2.0, 2.0)));
+    wc = mix(wc, vec3(0.9, 0.25, 0.35), (rect(wq, vec2(-4.0, 10.0), vec2(10.0, 1.0)) + rect(wq, vec2(-3.0, 11.0), vec2(8.0, 1.0)) + rect(wq, vec2(-1.0, 12.0), vec2(4.0, 1.0))) * opn);
+    wc = mix(wc, vec3(0.2), rect(wq, vec2(1.0, 9.0), vec2(1.0, 2.0)) * opn);
+    wc = mix(wc, vec3(0.9, 0.25, 0.35), rect(wq, vec2(2.0, 3.0), vec2(1.0, 4.0)) * (1.0 - opn));
+
+    // rain: two layers + splashes
+    float cc = floor(x / 2.0);
+    float rOn = step(hash(vec2(cc, 3.0)), u_storm * 0.85 + 0.04);
+    float ry = 84.0 - mod(t * (22.0 + hash(vec2(cc, 2.0)) * 38.0) + hash(vec2(cc, 7.0)) * 120.0, 100.0);
+    float rl = 4.0 + hash(vec2(cc, 9.0)) * 7.0;
+    float colm = step(fract(x / 2.0), 0.5);
+    wc = mix(wc, vec3(0.62, 0.76, 0.95), rOn * step(ry, y) * step(y, ry + rl) * colm * 0.5);
+    wc = mix(wc, vec3(0.92, 0.97, 1.0), rOn * step(abs(y - ry), 0.5) * colm * 0.7);
+    float c2 = floor((x + 1.0) / 3.0);
+    float r2On = step(hash(vec2(c2, 13.0)), u_storm * 0.6 + 0.02);
+    float r2y = 84.0 - mod(t * (12.0 + hash(vec2(c2, 12.0)) * 20.0) + hash(vec2(c2, 17.0)) * 120.0, 100.0);
+    wc = mix(wc, vec3(0.5, 0.62, 0.8), r2On * step(r2y, y) * step(y, r2y + 4.0) * step(fract((x + 1.0) / 3.0), 0.34) * 0.35);
+    wc += vec3(0.5, 0.6, 0.8) * step(0.985, hash(vec2(x, floor(t * 10.0) + y * 3.0))) * step(y, 23.0) * u_storm * 0.6;
+
+    // glass: faint fog + sliding drops
+    wc = mix(wc, vec3(0.55, 0.62, 0.75) * (0.4 + 0.6 * wy), 0.06);
+    for (int i = 0; i < 7; i++){
+      float fi = float(i);
+      float h = hash(vec2(fi, 4.0));
+      float dxp = 22.0 + floor(h * 112.0);
+      float ph = mod(t * (1.2 + hash(vec2(fi, 5.0)) * 2.2) + h * 70.0, 70.0);
+      float dyp = 82.0 - ph;
+      float on = step(fi, u_storm * 7.0 - 0.5);
+      float dr = rect(px, vec2(dxp, dyp), vec2(2.0, 3.0));
+      float tr = rect(px, vec2(dxp, dyp + 3.0), vec2(1.0, 12.0)) * step(0.5, fract(y * 0.5));
+      wc = mix(wc, wc * 1.7 + 0.12, dr * on * 0.85);
+      wc = mix(wc, wc * 1.25 + 0.04, tr * on * 0.5);
+    }
+
+    // window bars
+    vec3 bar = wood * 0.9;
+    wc = mix(wc, bar, rect(px, vec2(79.0, 18.0), vec2(2.0, 66.0)) + rect(px, vec2(20.0, 50.0), vec2(120.0, 2.0)));
+    col = wc;
+  }
+
+  // ---------------- on the sill ----------------
+  // lamp
+  col = mix(col, vec3(0.20, 0.12, 0.08), rect(px, vec2(5.0, 18.0), vec2(5.0, 2.0)) + rect(px, vec2(7.0, 20.0), vec2(1.0, 6.0)));
+  col = mix(col, vec3(1.0, 0.78, 0.45), rect(px, vec2(3.0, 26.0), vec2(9.0, 5.0)));
+
+  // mug + steam
+  col = mix(col, vec3(0.72, 0.76, 0.82), rect(px, vec2(30.0, 18.0), vec2(6.0, 6.0)) + rect(px, vec2(36.0, 19.0), vec2(1.0, 3.0)));
+  col = mix(col, vec3(0.25, 0.14, 0.09), rect(px, vec2(31.0, 23.0), vec2(4.0, 1.0)));
+  for (int i = 0; i < 3; i++){
+    float fi = float(i);
+    float s = mod(t * 4.0 + fi * 7.0, 11.0);
+    vec2 sp = vec2(32.0 + fi * 2.0 + floor(sin(t * 1.3 + fi * 2.0) * 1.6), 25.0 + s);
+    col = mix(col, vec3(0.8, 0.85, 0.95), rect(px, sp, vec2(1.0, 1.0)) * (1.0 - s / 11.0) * step(bayer4(px), 0.7));
+  }
+
+  // plant
+  float fr = floor(sin(t * 0.8) * 0.9 + 0.5);
+  col = mix(col, vec3(0.60, 0.30, 0.20), rect(px, vec2(124.0, 18.0), vec2(8.0, 6.0)));
+  col = mix(col, vec3(0.16, 0.48, 0.28), rect(px, vec2(127.0, 24.0), vec2(2.0, 9.0)) + rect(px, vec2(122.0 + fr, 28.0), vec2(5.0, 2.0)) + rect(px, vec2(129.0 + fr, 31.0), vec2(5.0, 2.0)) + rect(px, vec2(124.0, 33.0), vec2(3.0, 2.0)));
+
+  // the cat
+  vec2 cp = px - vec2(96.0, 18.0);
+  float tl = floor(sin(t * 1.6) * 1.5);
+  float catM = rect(cp, vec2(0.0, 0.0), vec2(14.0, 8.0)) + rect(cp, vec2(1.0, 8.0), vec2(10.0, 2.0))
+             + rect(cp, vec2(10.0 + u_cat, 5.0), vec2(7.0, 6.0))
+             + rect(cp, vec2(10.0 + u_cat, 11.0), vec2(2.0, 2.0)) + rect(cp, vec2(15.0 + u_cat, 11.0), vec2(2.0, 2.0))
+             + rect(cp, vec2(-2.0 + tl, 0.0), vec2(2.0, 5.0)) + rect(cp, vec2(-3.0 + tl, 4.0), vec2(1.0, 3.0));
+  vec3 catC = vec3(0.07, 0.06, 0.09) + vec3(0.3, 0.34, 0.55) * u_flash * 0.5 + vec3(0.12, 0.07, 0.05) * step(0.5, fract(cp.y * 0.5)) * 0.4;
+  col = mix(col, catC, clamp(catM, 0.0, 1.0));
+  float blink = step(0.1, fract(t / 4.3));
+  float eyeOpen = u_cat * blink;
+  col = mix(col, vec3(1.0, 0.85, 0.3), (rect(cp, vec2(12.0 + u_cat, 8.0), vec2(1.0, 2.0)) + rect(cp, vec2(15.0 + u_cat, 8.0), vec2(1.0, 2.0))) * eyeOpen);
+  col = mix(col, vec3(0.02), (rect(cp, vec2(12.0, 8.0), vec2(2.0, 1.0)) + rect(cp, vec2(15.0, 8.0), vec2(2.0, 1.0))) * (1.0 - u_cat) * 0.0);
+
+  // finishing: vignette, fade, Bayer dithering + palette quantisation
+  vec2 p = (px + 0.5) / vec2(160.0, 90.0) - 0.5;
+  col *= 1.0 - 0.45 * dot(p, p);
+  col *= u_fade;
+  const float LV = 14.0;
+  col += (bayer4(px) - 0.47) / LV;
+  col = floor(clamp(col, 0.0, 1.0) * LV) / LV;
+  gl_FragColor = vec4(col, 1.0);
+}
+</script>
+
+<script>
+(function(){
+'use strict';
+
+const CYCLE = 200;
+const clamp = (x,a=0,b=1)=>Math.max(a,Math.min(b,x));
+const sstep = (a,b,x)=>{const t=clamp((x-a)/(b-a));return t*t*(3-2*t);};
+const $ = id => document.getElementById(id);
+
+// storm over the night, then a clear pink dawn with a rainbow
+const KEYS = [
+  {t:0,   skyTop:[.14,.16,.30],skyBot:[.50,.40,.50],storm:.45,night:.35,rainbow:0,beam:0},
+  {t:40,  skyTop:[.06,.07,.16],skyBot:[.22,.20,.34],storm:.7, night:.75,rainbow:0,beam:.6},
+  {t:80,  skyTop:[.03,.04,.10],skyBot:[.10,.11,.22],storm:.95,night:1,  rainbow:0,beam:1},
+  {t:120, skyTop:[.03,.04,.10],skyBot:[.10,.11,.22],storm:1,  night:1,  rainbow:0,beam:1},
+  {t:150, skyTop:[.05,.07,.15],skyBot:[.18,.20,.32],storm:.5, night:.9, rainbow:0,beam:.8},
+  {t:175, skyTop:[.20,.25,.45],skyBot:[.80,.55,.55],storm:.1, night:.3, rainbow:0,beam:0},
+  {t:195, skyTop:[.35,.58,.88],skyBot:[1,.82,.68],  storm:0,  night:0,  rainbow:1,beam:0},
+  {t:200, skyTop:[.35,.58,.88],skyBot:[1,.82,.68],  storm:0,  night:0,  rainbow:1,beam:0}
+];
+function sample(t){
+  let i = 0; while(i<KEYS.length-2 && t>=KEYS[i+1].t) i++;
+  const a = KEYS[i], b = KEYS[i+1], u = sstep(a.t,b.t,t), o = {};
+  for(const k in a){
+    if(k==='t') continue;
+    o[k] = Array.isArray(a[k]) ? a[k].map((v,j)=>v+(b[k][j]-v)*u) : a[k]+(b[k]-a[k])*u;
+  }
+  return o;
+}
+
+// ---------- audio: warm pads + rain + distant thunder + sparse electric-piano bells ----------
+const Aud = (function(){
+  let ctx, master, pre, echoIn, padFlt, padGain, rainG, roofG, thG, thF;
+  const pads = [];
+  let nextBar = 0, barIdx = 0, muted = false, on = false, vol = 1, night = 0;
+  const LEVEL = 0.6;
+  const mtof = n => 440*Math.pow(2,(n-69)/12);
+  const CH = [[48,55,59,62,64],[45,55,59,60,64],[41,57,60,64,67],[43,53,59,62,64]];   // Cmaj9 Am9 Fmaj9 G13
+  const PENT = [72,74,76,79,81,84];
+
+  function osc(type,f){ const o = ctx.createOscillator(); o.type = type; o.frequency.value = f; o.start(); return o; }
+  function noiseBuf(brown){
+    const len = ctx.sampleRate*4, b = ctx.createBuffer(1,len,ctx.sampleRate), d = b.getChannelData(0); let l = 0;
+    for(let i=0;i<len;i++){ const w = Math.random()*2-1; if(brown){ l = (l+0.02*w)/1.02; d[i] = l*3.5; } else d[i] = w; }
+    return b;
+  }
+  function loopSrc(buf,rate){ const s = ctx.createBufferSource(); s.buffer = buf; s.loop = true; s.playbackRate.value = rate; s.start(0,Math.random()*2); return s; }
+  function lfo(freq,depth,param){ const o = osc('sine',freq), g = ctx.createGain(); g.gain.value = depth; o.connect(g); g.connect(param); }
+
+  function start(){
+    ctx = new (window.AudioContext||window.webkitAudioContext)({latencyHint:'playback'});
+    if(ctx.state==='suspended') ctx.resume();
+    pre = ctx.createGain();
+    master = ctx.createGain(); master.gain.value = 0;
+    const comp = ctx.createDynamicsCompressor();
+    comp.threshold.value = -20; comp.ratio.value = 6; comp.knee.value = 20; comp.attack.value = 0.01; comp.release.value = 0.3;
+    pre.connect(master); master.connect(comp); comp.connect(ctx.destination);
+
+    echoIn = ctx.createGain();
+    const dl = ctx.createDelay(1.5); dl.delayTime.value = 0.5;
+    const fb = ctx.createGain(); fb.gain.value = 0.36;
+    const ef = ctx.createBiquadFilter(); ef.type = 'lowpass'; ef.frequency.value = 2000;
+    echoIn.connect(dl); dl.connect(ef); ef.connect(fb); fb.connect(dl); ef.connect(pre);
+
+    padFlt = ctx.createBiquadFilter(); padFlt.type = 'lowpass'; padFlt.frequency.value = 900; padFlt.Q.value = 0.3;
+    padGain = ctx.createGain(); padGain.gain.value = 0.028;
+    padFlt.connect(padGain); padGain.connect(pre);
+    const ps = ctx.createGain(); ps.gain.value = 0.2; padGain.connect(ps); ps.connect(echoIn);
+    for(let i=0;i<5;i++){ const o = osc(i%2?'triangle':'sine',110); o.detune.value = (i%2?5:-5); o.connect(padFlt); pads.push(o); }
+
+    const white = noiseBuf(false), brown = noiseBuf(true);
+    // rain on the glass: soft hiss + a body of low patter, both follow the storm
+    const rf = ctx.createBiquadFilter(); rf.type = 'bandpass'; rf.frequency.value = 2600; rf.Q.value = 0.35;
+    rainG = ctx.createGain(); rainG.gain.value = 0.01;
+    loopSrc(white,1.0).connect(rf); rf.connect(rainG); rainG.connect(pre);
+    const rb = ctx.createBiquadFilter(); rb.type = 'lowpass'; rb.frequency.value = 700;
+    roofG = ctx.createGain(); roofG.gain.value = 0.02;
+    loopSrc(brown,1.3).connect(rb); rb.connect(roofG); roofG.connect(pre);
+    lfo(0.07,0.004,rainG.gain);
+    // thunder channel (silent until triggered)
+    thF = ctx.createBiquadFilter(); thF.type = 'lowpass'; thF.frequency.value = 300; thF.Q.value = 0.4;
+    thG = ctx.createGain(); thG.gain.value = 0;
+    loopSrc(brown,0.7).connect(thF); thF.connect(thG); thG.connect(pre);
+    const tg2 = ctx.createGain(); tg2.gain.value = 0.25; thG.connect(tg2); tg2.connect(echoIn);
+
+    master.gain.setTargetAtTime(LEVEL*vol,ctx.currentTime,1.0);
+    nextBar = ctx.currentTime+0.2; on = true;
+    setInterval(tick,200);
+  }
+  function bell(f,t,v,len,echo){
+    const o = ctx.createOscillator(), o2 = ctx.createOscillator(), g = ctx.createGain(), g2 = ctx.createGain();
+    o.type = 'sine'; o.frequency.value = f; o2.type = 'sine'; o2.frequency.value = f*2.0; g2.gain.value = 0.25;
+    g.gain.setValueAtTime(0.0001,t);
+    g.gain.linearRampToValueAtTime(v,t+0.01);
+    g.gain.exponentialRampToValueAtTime(0.0001,t+len);
+    o.connect(g); o2.connect(g2); g2.connect(g); g.connect(pre);
+    if(echo){ const e = ctx.createGain(); e.gain.value = echo; g.connect(e); e.connect(echoIn); }
+    o.start(t); o2.start(t); o.stop(t+len+0.05); o2.stop(t+len+0.05);
+  }
+  function scheduleBar(t0){
+    const ch = CH[barIdx%4];
+    pads.forEach((o,k)=>o.frequency.setTargetAtTime(mtof(ch[k]),t0,1.0));
+    padFlt.frequency.setTargetAtTime(700+night*0+400*(1-night),t0,2.0);
+    // gentle lofi arpeggio
+    [0,2,4,3,2,4,1,3].forEach((idx,i)=>{
+      if(Math.random()<0.62) bell(mtof(ch[idx]+12),t0+i*1.0+(i%2?0.06:0),0.034,1.8,0.45);
+    });
+    if(Math.random()<0.7) bell(mtof(PENT[Math.floor(Math.random()*PENT.length)]),t0+1+Math.random()*6,0.026,2.6,0.5);
+    barIdx++;
+  }
+  function tick(){ while(on && nextBar < ctx.currentTime+1.5){ scheduleBar(nextBar); nextBar += 8; } }
+  function setStorm(s,n){
+    night = n;
+    if(!on) return;
+    const t = ctx.currentTime;
+    rainG.gain.setTargetAtTime(0.012+0.075*s, t, 0.8);
+    roofG.gain.setTargetAtTime(0.022+0.11*s, t, 0.8);
+  }
+  function thunder(delay,big){
+    if(!on) return;
+    const t = ctx.currentTime + delay;
+    const peak = 0.32*(0.5+0.5*big);
+    thG.gain.cancelScheduledValues(t);
+    thG.gain.setValueAtTime(0.0001,t);
+    thG.gain.linearRampToValueAtTime(peak,t+0.12);
+    thG.gain.setTargetAtTime(0.0001,t+0.4,1.1);
+    thF.frequency.setValueAtTime(420,t);
+    thF.frequency.exponentialRampToValueAtTime(90,t+3.5);
+  }
+  function setVol(v){ vol = v; if(on) master.gain.setTargetAtTime(muted?0:LEVEL*v,ctx.currentTime,0.4); }
+  function toggleMute(){ muted = !muted; if(on) master.gain.setTargetAtTime(muted?0:LEVEL*vol,ctx.currentTime,0.1); return muted; }
+  return { start, thunder, setStorm, setVol, toggleMute };
+})();
+
+// ---------- WebGL ----------
+const canvas = $('gl');
+const gl = canvas.getContext('webgl',{antialias:false,alpha:false});
+function fail(m){ const e=$('err'); e.style.display='block'; e.textContent=m; }
+if(!gl){ fail('WebGL is not available in this browser.'); return; }
+function mk(type,src){
+  const s = gl.createShader(type); gl.shaderSource(s,src); gl.compileShader(s);
+  if(!gl.getShaderParameter(s,gl.COMPILE_STATUS)) fail('Shader error:\n'+gl.getShaderInfoLog(s));
+  return s;
+}
+const prog = gl.createProgram();
+gl.attachShader(prog,mk(gl.VERTEX_SHADER,$('vs').textContent));
+gl.attachShader(prog,mk(gl.FRAGMENT_SHADER,$('fs').textContent));
+gl.linkProgram(prog);
+if(!gl.getProgramParameter(prog,gl.LINK_STATUS)) fail('Link error:\n'+gl.getProgramInfoLog(prog));
+gl.useProgram(prog);
+const buf = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER,buf);
+gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1, 3,-1, -1,3]),gl.STATIC_DRAW);
+const aPos = gl.getAttribLocation(prog,'a_pos');
+gl.enableVertexAttribArray(aPos);
+gl.vertexAttribPointer(aPos,2,gl.FLOAT,false,0,0);
+gl.viewport(0,0,160,90);
+const L = {};
+['u_time','u_storm','u_flash','u_night','u_rainbow','u_fade','u_walk','u_wx','u_car','u_cat','u_bx','u_bolt','u_beam',
+ 'u_skyTop','u_skyBot'].forEach(n=>L[n]=gl.getUniformLocation(prog,n));
+
+// ---------- story ----------
+let clk = 0, running = false, speed = 1;
+let boltAt = -99, boltX = 80, nextBolt = 66, sleepLen = 0, sleepEnd = 0;
+const AWAKE = [[12,48],[96,124],[162,198]];
+
+function bolt(){
+  boltAt = performance.now()/1000; boltX = 28 + Math.random()*90;
+  Aud.thunder(0.5+Math.random()*2.2, Math.random());
+}
+
+let last = performance.now(), lastDraw = 0, lastAud = 0;
+function frame(now){
+  const dt = Math.min(0.1,(now-last)/1000); last = now;
+  if(running) clk = (clk + dt*speed) % CYCLE;
+  if(now-lastDraw >= 33){
+    lastDraw = now;
+    const k = sample(clk);
+    if(running && clk>=nextBolt && clk<142){ bolt(); nextBolt = clk + 6 + Math.random()*11; }
+    if(clk<60) nextBolt = Math.max(nextBolt,66);
+    const d = now/1000 - boltAt;
+    const flash = d<0 ? 0 : Math.max(Math.exp(-d*7), d>0.18 ? 0.7*Math.exp(-(d-0.18)*9) : 0);
+    let cat = 0;
+    for(const a of AWAKE) if(clk>=a[0]&&clk<a[1]) cat = 1;
+    if(d>0 && d<4) cat = 1;
+    const wx = ((clk*2.6 - 20) % 400 + 400) % 400 - 10;
+    const car = ((clk*9) % 360) - 30;
+    let sl = 1;
+    if(sleepEnd){ sl = clamp((sleepEnd-Date.now())/(sleepLen*0.3),0,1); }
+
+    gl.uniform1f(L.u_time,now/1000);
+    gl.uniform1f(L.u_storm,k.storm);
+    gl.uniform1f(L.u_flash,flash);
+    gl.uniform1f(L.u_night,k.night);
+    gl.uniform1f(L.u_rainbow,k.rainbow);
+    gl.uniform1f(L.u_beam,k.beam);
+    gl.uniform1f(L.u_fade,running ? Math.min(sstep(0,1.5,clk),1-sstep(198.5,200,clk))*sl : 0.9);
+    gl.uniform1f(L.u_walk,wx*0.7);
+    gl.uniform1f(L.u_wx,wx);
+    gl.uniform1f(L.u_car,car);
+    gl.uniform1f(L.u_cat,cat);
+    gl.uniform1f(L.u_bx,boltX);
+    gl.uniform1f(L.u_bolt,d>=0&&d<0.2?1:0);
+    gl.uniform3fv(L.u_skyTop,k.skyTop); gl.uniform3fv(L.u_skyBot,k.skyBot);
+    gl.drawArrays(gl.TRIANGLES,0,3);
+    if(now-lastAud>400){ lastAud = now; Aud.setStorm(k.storm,k.night); Aud.setVol(sl); }
+  }
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+
+// ---------- UI ----------
+$('btn-start').addEventListener('click',()=>{
+  try{ Aud.start(); }catch(e){ console.warn('audio unavailable',e); }
+  $('start').classList.add('hide');
+  running = true; clk = 0;
+});
+const dev = $('dev');
+const toggleDev = ()=>dev.classList.toggle('on');
+$('devdot').addEventListener('click',toggleDev);
+const JUMPS = [0,40,80,120,150,175];
+function jump(){ const n = JUMPS.find(t=>t>clk+1); clk = n===undefined ? 0 : n; nextBolt = Math.max(clk,66); }
+$('dev-jump').addEventListener('click',jump);
+$('dev-speed').addEventListener('click',()=>{ speed = speed===1 ? 10 : 1; $('dev-speed').textContent = 'SPEED x'+speed; });
+$('dev-mute').addEventListener('click',()=>{ $('dev-mute').textContent = Aud.toggleMute() ? 'UNMUTE [M]' : 'MUTE [M]'; });
+$('dev-sleep').addEventListener('click',()=>{
+  const opts = [0,15,30,60], i = (opts.indexOf(sleepLen/60000)+1)%opts.length, m = opts[i];
+  sleepLen = m*60000; sleepEnd = m ? Date.now()+sleepLen : 0;
+  $('dev-sleep').textContent = m ? 'SLEEP: '+m+' MIN' : 'SLEEP: OFF';
+});
+addEventListener('keydown',e=>{
+  const k = e.key.toLowerCase();
+  if(k==='s') toggleDev(); else if(k==='n') jump(); else if(k==='m') $('dev-mute').click();
+});
+setInterval(()=>{ if(dev.classList.contains('on')) $('devinfo').textContent = 'TIME '+clk.toFixed(0)+'/'+CYCLE+'s'; },250);
+window.__seek = t=>{ running = true; $('start').classList.add('hide'); clk = t; nextBolt = 9999; };
+window.__bolt = bolt;
+
+})();
+</script>
+</body>
+</html>
