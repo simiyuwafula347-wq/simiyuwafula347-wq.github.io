@@ -83,6 +83,8 @@ footer{text-align:center;color:var(--dim);margin-top:28px;font-size:20px}
 .cbar{width:7em;height:.7em;border:2px solid #fff1c9;padding:1px}.cbar b{display:block;height:100%;width:40%;background:#ff7aa8;animation:cp 12s steps(14) infinite}
 @keyframes cp{from{width:0}to{width:100%}}
 .hero .avatar{width:136px;height:136px;margin:-66px auto 12px;position:relative;z-index:2}
+.shots{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:10px}.shots img{width:100%;display:block;image-rendering:pixelated;border:3px solid var(--line)}
+.shots:has(img:only-child){grid-template-columns:1fr}
 .avatar canvas{width:100%;height:100%;image-rendering:pixelated;display:block}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
@@ -134,28 +136,34 @@ const CONFIG = {
   pinterest: "https://www.pinterest.com/Larrysmyl/",
   gumroad: "https://simiyuwafula.gumroad.com",
   products: [
-    { title: "Wasp UI Kit", price: "$24",
-      desc: "Music-themed, beat-reactive UI kit: Lofi Record Cat, Chrono Gamer and Glitch Cyber Wasp. Instant theme switching, light HTML, CSS and JS.",
-      tags: ["UI kit", "3 themes"], buy: "https://simiyuwafula.gumroad.com/l/wfhvif",
-      pin: "https://pin.it/1QHsNIx9b",                         // this product's Pinterest pin
-      demo: "https://simiyuwafula347-wq.github.io/wasp-ui-kit-demo/" }   // live demo people can test (leave "" to hide)
-    ,{ title: "Glass Rainy Season Kit", price: "$15",
+    { title: "Larry’s Cove Ambience: all six worlds", price: "$24",
+      desc: "Six pixel worlds, each a 200-second story with music and sound generated live: beach, rainy window, campfire cabin, firefly dungeon, blue forest and a green-sun oasis. Pixel Beach is free to play here. The bundle costs about the price of three singles.",
+      note: "Singles: Pixel Beach free · Rainy Window pay what you want · Campfire Cabin, Firefly Dungeon and Green Sun Oasis $6 each · Blue Forest is bundle-only for now.",
+      tags: ["6 worlds", "bundle"], buy: "", pin: "https://pin.it/6p7mOwx59", demo: "ambience/", demoLabel: "Play Pixel Beach free",
+      shots: ["ambience/thumbs/beach.png","ambience/thumbs/rain.png","ambience/thumbs/camp.png","ambience/thumbs/dungeon.png","ambience/thumbs/forest.png","ambience/thumbs/oasis.png"] },
+    { title: "Abyss Sonar Kit", price: "$15",
+      desc: "A deep-sea music player UI: a pixel sonar scope that sweeps with the beat, an anglerfish that opens its jaw on the kick, brass buttons and a depth-line progress bar. Load your own audio and it finds the beat.",
+      tags: ["UI kit", "beat-synced"], buy: "", pin: "", shots: ["img/abyss-sonar.jpg"] },
+    { title: "Wasp UI Kit", price: "Free",
+      desc: "Three beat-synced player themes in plain HTML, CSS and JS: Lofi Record Cat, Chrono Gamer and Glitch Cyber Wasp. Instant theme switching, light and easy to recolour.",
+      tags: ["UI kit", "3 themes"], buy: "https://simiyuwafula.gumroad.com/l/wfhvif", pin: "https://pin.it/1QHsNIx9b" },
+    { title: "Glass Rainy Season Kit", price: "Pay what you want",
       desc: "Frosted-glass storm player: silent lightning, a cheeky cat who tells you to close the window, a snail slime-trail progress bar and puddle buttons.",
-      tags: ["UI kit", "storm"], buy: "https://simiyuwafula.gumroad.com/l/vmlwem", pin: "https://pin.it/6p7mOwx59", demo: "rainy-season/" },
+      tags: ["UI kit", "storm"], buy: "https://simiyuwafula.gumroad.com/l/vmlwem", pin: "https://pin.it/6p7mOwx59" },
     { title: "Puddle Day", price: "Pay what you want",
       desc: "A calm pixel scene in a retro window: a girl, her gold cat, an umbrella and the rain, with a synth and lofi ambience player.",
-      tags: ["pixel scene", "ambience"], buy: "https://simiyuwafula.gumroad.com/l/olitib", pin: "https://pin.it/6p7mOwx59", demo: "puddle-day/" },
-    { title: "Muscovy Duck Kit", price: "Soon",
+      tags: ["pixel scene", "ambience"], buy: "https://simiyuwafula.gumroad.com/l/olitib", pin: "https://pin.it/6p7mOwx59" },
+    { title: "Muscovy Duck Kit", price: "Pay what you want",
       desc: "A cosy player with a Muscovy duck that preens and shakes its tail when you tap it, and a progress bar made of feathers that straighten and glow as the song plays.",
-      tags: ["UI kit", "feathers"], buy: "", pin: "", demo: "muscovy-duck/" },
-    { title: "Blurred City Puddle-Jump Kit", price: "Soon",
+      tags: ["UI kit", "feathers"], buy: "", pin: "" },
+    { title: "Blurred City Puddle-Jump Kit", price: "Pay what you want",
       desc: "Out-of-focus city lights, a pixel girl in a clear raincoat and yellow gumboots who splashes into a puddle on the beat, and a ripple-ring playhead that pulses with the music.",
-      tags: ["UI kit", "lo-fi city"], buy: "", pin: "", demo: "puddle-jump/" },
-    // add more: { title:"", price:"", desc:"", tags:[""], buy:"", pin:"", demo:"" },
+      tags: ["UI kit", "lo-fi city"], buy: "", pin: "https://pin.it/6p7mOwx59" }
+    // add more: { title:"", price:"", desc:"", tags:[""], buy:"", pin:"", shots:["img/x.jpg"] },
   ],
   apps: [
     { title: "WASP Player", status: "In testing", desc: "A pixel music player with 10 retro themes: a wasp that eats the bars, a nodding teddy, tape, vinyl and radio." },
-    { title: "Ambience", status: "Early preview", desc: "Three pixel worlds, each a 200-second story with live-generated sound: a beach at sunset, a rainy window with a cat, a campfire cabin with a fox, an owl and an aurora. Sleep timer built in.", demo: "larrys-cove/" }
+    { title: "Ambience", status: "Beach is free", desc: "Six pixel worlds with live-generated music. Play the Pixel Beach free; the others are on Gumroad.", demo: "ambience/" }
   ],
   footer: "Made by hand, one pixel at a time."
 };
@@ -181,9 +189,9 @@ function build(){
   $("#shop").innerHTML = CONFIG.products.map(p => `
     <article class="cart px"><div class="body px">
       <div class="emb px">${emblem(p.title)}</div>
-      <div><h3>${esc(p.title)}</h3><p>${esc(p.desc)}</p>
+      <div><h3>${esc(p.title)}</h3><p>${esc(p.desc)}</p>${p.note ? `<p style="font-size:19px;color:var(--accent)">${esc(p.note)}</p>` : ""}
         <div class="meta"><span class="price">${esc(p.price)}</span>${(p.tags || []).map(t => `<span class="badge soon">${esc(t)}</span>`).join("")}</div>
-        <div class="acts">${p.buy ? `<a class="btn px" href="${esc(p.buy)}" target="_blank" rel="noopener">Get it</a>` : ""}${p.demo ? `<a class="${p.buy ? "btn ghost" : "btn"} px" href="${esc(p.demo)}" target="_blank" rel="noopener">Try live demo</a>` : ""}${p.pin ? `<a class="btn ghost px" href="${esc(p.pin)}" target="_blank" rel="noopener">Preview on Pinterest</a>` : ""}</div>
+        ${p.shots ? `<div class="shots">${p.shots.map(s => `<img src="${esc(s)}" alt="" loading="lazy">`).join("")}</div>` : ""}<div class="acts">${p.buy ? `<a class="btn px" href="${esc(p.buy)}" target="_blank" rel="noopener">Get it</a>` : ""}${p.demo ? `<a class="${p.buy ? "btn ghost" : "btn"} px" href="${esc(p.demo)}" target="_blank" rel="noopener">${esc(p.demoLabel || "Try live demo")}</a>` : ""}${p.pin ? `<a class="btn ghost px" href="${esc(p.pin)}" target="_blank" rel="noopener">Preview on Pinterest</a>` : ""}</div>
       </div></div></article>`).join("") +
     `<div class="slot px"><b>INSERT NEXT PRODUCT</b>More packs are being drawn. Follow on Pinterest to see them first.</div>`;
 
