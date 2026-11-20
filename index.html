@@ -1,361 +1,179 @@
-<!doctype html>
-<html lang="en" data-theme="wasp">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Larry’s Cove | pixels, UI, UX and ambience by Larry W.S.</title>
-<meta name="description" content="Larry’s Cove by Larry W.S.: pixels, UI, UX and ambience. Retro pixel apps, interactive UI kits and calm scenes. Previews on Pinterest, downloads on Gumroad.">
-<meta property="og:title" content="Larry’s Cove | pixels, UI, UX and ambience">
-<meta property="og:description" content="Retro pixel apps, interactive UI kits and calm scenes by Larry W.S.">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Larry Simiyu — Studio</title>
+<meta name="description" content="Larry Simiyu's studio: pixel ambience worlds with live-generated music, music player UI kits, free tools and a small journal. Downloads on Gumroad and itch.io.">
+<meta property="og:title" content="Larry Simiyu — Studio">
+<meta property="og:description" content="Pixel ambience worlds, music player kits and a small journal. Made slowly in Kenya.">
 <meta property="og:type" content="website">
-<meta name="theme-color" content="#07070b">
 <meta name="p:domain_verify" content="b5708490a8556c5d6b23076bd192b31a"/>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%2307070b'/%3E%3Cpath fill='%23b6ff00' d='M3 6h4v2h2V6h4v3h-2v2H9V9H7v2H5V9H3z'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23040b14'/%3E%3Cpath fill='%234deeea' d='M6 3h3v1h1v1H8v1H7v4h1v1h2v1H9v1H6v-1H5v-1H4V5h1V4h1z'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=VT323&family=Press+Start+2P&display=swap" rel="stylesheet">
-<style>
-:root{--bg:#07070b;--panel:#0e0f16;--panel2:#151724;--ink:#e9ffd2;--dim:#8a97a8;--accent:#b6ff00;--accent2:#ff2bd6;--line:#2d3752;--head:"Silkscreen","Courier New",monospace;--body:"VT323","Courier New",monospace;--scan:.35;--n:6px}
-[data-theme=lofi]{--bg:#241914;--panel:#3a2b24;--panel2:#46352c;--ink:#f6ead7;--dim:#c3a98f;--accent:#e8a05c;--accent2:#ff8f7a;--line:#5b463a;--scan:.12}
-[data-theme=cassette]{--bg:#f4efe0;--panel:#ebe4cf;--panel2:#fbf8ee;--ink:#1b1b1d;--dim:#6b6455;--accent:#c1121f;--accent2:#1d3a9a;--line:#8c8472;--scan:.06}
-*{box-sizing:border-box;margin:0}
-html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--ink);font:22px/1.25 var(--body);min-height:100svh;padding:env(safe-area-inset-top,0) env(safe-area-inset-right,0) env(safe-area-inset-bottom,0) env(safe-area-inset-left,0);transition:background .3s,color .3s}
-[data-theme=wasp] body{background:radial-gradient(120% 70% at 50% -10%,#16203a,#07070b 62%)}
-.scan{position:fixed;inset:0;pointer-events:none;opacity:var(--scan);background:repeating-linear-gradient(0deg,rgba(0,0,0,.4) 0 2px,transparent 2px 4px);z-index:9}
-.wrap{max-width:560px;margin:0 auto;padding:26px 16px 44px;position:relative;z-index:1}
-.px{clip-path:polygon(0 var(--n),var(--n) var(--n),var(--n) 0,calc(100% - var(--n)) 0,calc(100% - var(--n)) var(--n),100% var(--n),100% calc(100% - var(--n)),calc(100% - var(--n)) calc(100% - var(--n)),calc(100% - var(--n)) 100%,var(--n) 100%,var(--n) calc(100% - var(--n)),0 calc(100% - var(--n)))}
-.hero{text-align:center;margin-bottom:20px}
-.avatar{width:128px;height:128px;margin:0 auto 12px;display:grid;place-items:center;background:var(--accent);padding:4px;cursor:pointer;animation:bob 2.4s steps(4) infinite;-webkit-tap-highlight-color:transparent}
-.avatar .in{width:100%;height:100%;background:var(--panel);display:grid;place-items:center}
-.avatar svg{width:92px;height:auto}
-.avatar.buzz{animation:buzz .35s steps(6)}
-@keyframes bob{50%{transform:translateY(-8px)}}
-@keyframes buzz{25%{transform:translate(-6px,2px) rotate(-6deg)}50%{transform:translate(6px,-2px) rotate(6deg)}75%{transform:translate(-4px,0) rotate(-3deg)}}
-h1{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-.by{color:var(--accent);font-size:24px;margin-top:2px}
-.tag{color:var(--dim);margin-top:2px}
-.bars{display:flex;gap:4px;justify-content:center;align-items:flex-end;height:30px;margin:14px 0 4px}
-.bars i{width:8px;background:var(--accent);animation:eq .9s steps(5) infinite alternate;height:6px}
-.bars i:nth-child(3n){animation-duration:.6s;background:var(--accent2)}.bars i:nth-child(2n){animation-duration:1.2s}
-@keyframes eq{to{height:30px}}
-.chips{display:flex;gap:8px;justify-content:center;margin-top:10px;flex-wrap:wrap}
-.chip{font:12px var(--head);padding:7px 12px;background:var(--panel);color:var(--ink);border:2px solid var(--line);cursor:pointer;text-transform:uppercase}
-.chip[aria-pressed=true]{background:var(--accent);color:var(--bg);border-color:var(--accent)}
-.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:20px 0 14px}
-.tab{font:13px var(--head);padding:12px 4px;background:var(--panel);color:var(--dim);border:2px solid var(--line);cursor:pointer;text-transform:uppercase;transition:transform .1s}
-.tab[aria-selected=true]{background:var(--panel2);color:var(--accent);border-color:var(--accent);transform:translateY(-3px)}
-.view[hidden]{display:none}
-.view{display:grid;gap:14px;animation:in .25s steps(4)}
-@keyframes in{from{opacity:0;transform:translateY(8px)}}
-.cart{background:var(--line);padding:3px}
-.cart>.body{background:var(--panel);padding:14px;display:grid;grid-template-columns:76px 1fr;gap:14px;align-items:start}
-.emb{width:76px;height:76px;background:var(--panel2);display:grid;place-items:center}
-.emb svg{width:60px;height:60px;fill:var(--accent)}
-.cart h3{font:700 15px/1.2 var(--head);text-transform:uppercase}
-.cart p{color:var(--dim);margin:4px 0 8px}
-.meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.price{font:700 16px var(--head);color:var(--accent)}
-.badge{font:11px var(--head);padding:3px 7px;background:var(--accent2);color:#fff;text-transform:uppercase}
-.badge.soon{background:var(--line);color:var(--ink)}
-.acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-.btn{display:inline-block;font:12px var(--head);padding:10px 14px;background:var(--accent);color:var(--bg);text-decoration:none;text-transform:uppercase;border:0;cursor:pointer;box-shadow:inset -3px -3px 0 rgba(0,0,0,.28),inset 3px 3px 0 rgba(255,255,255,.22)}
-.btn.ghost{background:var(--panel2);color:var(--accent);box-shadow:inset 0 0 0 2px var(--accent)}
-.btn:active{transform:translate(2px,2px)}
-.slot{border:3px dashed var(--line);padding:16px;text-align:center;color:var(--dim)}
-.slot b{font:12px var(--head);color:var(--accent);display:block;margin-bottom:4px}
-.card{background:var(--line);padding:3px}.card>div{background:var(--panel);padding:14px}
-.contact{display:grid;gap:10px}
-.contact .btn{display:flex;justify-content:space-between;align-items:center;padding:14px;font-size:13px}
-.contact small{font:20px var(--body);opacity:.75;text-transform:none}
-footer{text-align:center;color:var(--dim);margin-top:28px;font-size:20px}
-.fx{position:fixed;z-index:30;pointer-events:none;font:700 14px var(--head);color:var(--accent);text-shadow:2px 2px 0 var(--bg);animation:rise 1s steps(8) forwards;transform:translateX(-50%)}
-@keyframes rise{to{opacity:0;margin-top:-70px}}
-.cover{position:relative;aspect-ratio:16/9;overflow:hidden;background:#0d0719}
-.cover canvas{position:absolute;inset:0;width:100%;height:100%;image-rendering:pixelated;cursor:pointer}
-.cui{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;pointer-events:none;text-align:center;font-family:"Press Start 2P","Courier New",monospace}
-.cui h2{margin:5.5% 0 0;font-weight:400;font-size:min(5.6vw,30px);line-height:1.2;color:#fff1c9;text-shadow:.07em .07em 0 #2a1450,.14em .14em 0 #120a24}
-.csub{margin:1.6% 0 0;font-size:clamp(6px,1.9vw,11px);color:#7fe6ff;text-shadow:2px 2px 0 #2a1450}
-.cchip{position:absolute;bottom:5%;display:flex;align-items:center;gap:1.2em;padding:.8em 1.1em;background:#150d33;border:3px solid #fff1c9;box-shadow:4px 4px 0 #000;color:#fff1c9;font-size:clamp(5px,1.6vw,9px)}
-.ceq{display:flex;gap:3px;align-items:flex-end;height:1.8em}.ceq i{display:block;width:.5em;background:#ff7aa8;animation:cb .9s steps(4) infinite}
-.ceq i:nth-child(2){background:#7fe6ff;animation-delay:-.3s}.ceq i:nth-child(3){animation-delay:-.6s}.ceq i:nth-child(4){background:#7fe6ff;animation-delay:-.15s}
-@keyframes cb{0%{height:20%}25%{height:100%}50%{height:50%}75%{height:80%}100%{height:20%}}
-.cbar{width:7em;height:.7em;border:2px solid #fff1c9;padding:1px}.cbar b{display:block;height:100%;width:40%;background:#ff7aa8;animation:cp 12s steps(14) infinite}
-@keyframes cp{from{width:0}to{width:100%}}
-.hero .avatar{width:136px;height:136px;margin:-66px auto 12px;position:relative;z-index:2}
-.shots{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:10px}.shots img{width:100%;display:block;image-rendering:pixelated;border:3px solid var(--line)}
-.shots:has(img:only-child){grid-template-columns:1fr}
-.avatar canvas{width:100%;height:100%;image-rendering:pixelated;display:block}
-@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
-</style>
+<link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Caveat:wght@600;700&family=Press+Start+2P&family=VT323&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
 </head>
-<body>
-<div class="scan"></div>
-<main class="wrap">
-  <header class="hero">
-    <div class="cover px"><canvas id="cove" width="320" height="180" aria-label="Pixel art cove at dusk with a wasp flying over the water"></canvas>
-      <div class="cui"><h2>LARRY’S COVE</h2><p class="csub">pixels, UI, UX and ambience</p>
-        <div class="cchip"><div class="ceq"><i></i><i></i><i></i><i></i></div><span>WASP.exe: cove ambience</span><div class="cbar"><b></b></div></div></div></div>
-    <div class="avatar px" id="avatar" role="button" tabindex="0" aria-label="Tap the lighthouse"><div class="in"><canvas id="pfp" width="64" height="64"></canvas></div></div>
-    <h1 id="brand"></h1>
-    <p class="by" id="by"></p>
-    <p class="tag" id="tagline"></p>
-    <div class="bars" aria-hidden="true" id="bars"></div>
-    <div class="chips" role="group" aria-label="Choose a look">
-      <button class="chip px" data-t="wasp" aria-pressed="true">Wasp</button>
-      <button class="chip px" data-t="lofi" aria-pressed="false">Lofi</button>
-      <button class="chip px" data-t="cassette" aria-pressed="false">Cassette</button>
-    </div>
-  </header>
+<body data-root="">
 
-  <div class="tabs" role="tablist">
-    <button class="tab px" role="tab" id="t-shop" aria-selected="true" data-v="shop">Shop</button>
-    <button class="tab px" role="tab" id="t-apps" aria-selected="false" data-v="apps">Apps</button>
-    <button class="tab px" role="tab" id="t-talk" aria-selected="false" data-v="talk">Talk</button>
+<header class="hero" id="top">
+  <div class="hero-bg"></div>
+  <div class="clock" aria-label="Local time in Nairobi"><b id="clockTime">--:--</b><small id="clockPlace">Nairobi</small></div>
+  <div class="wrap">
+    <div class="pfp" aria-label="Profile picture">
+      LS
+      <img src="pfp.jpg" alt="Larry Simiyu" onerror="if(!this.dataset.t){this.dataset.t=1;this.src='pfp.png'}else{this.remove()}">
+    </div>
+    <div class="hero-text" data-title="WELCOME.EXE">
+      <h1>Larry Simiyu</h1>
+      <p id="intro"></p>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+<section class="mid" id="about">
+  <div class="col">
+    <div class="box wob daily" data-title="DAILY_WORDS.EXE">
+      <div class="label">Daily words</div>
+      <blockquote id="dwText">…</blockquote>
+      <cite id="dwBy"></cite><br>
+      <button class="btn alt again" id="dwNext" type="button">another one ↻</button>
+    </div>
+
+    <div class="box" id="what" data-title="WHAT_I_DO.EXE">
+      <h2>What I do</h2>
+      <ul class="dolist" id="doList"></ul>
+      <a class="btn" href="#projects">Browse the shop →</a>
+    </div>
   </div>
 
-  <section class="view" id="shop" role="tabpanel" aria-labelledby="t-shop"></section>
-  <section class="view" id="apps" role="tabpanel" aria-labelledby="t-apps" hidden></section>
-  <section class="view" id="talk" role="tabpanel" aria-labelledby="t-talk" hidden></section>
+  <div class="col">
+    <div class="right-top">
+      <a class="btn" href="about.html">About me</a>
+      <a class="btn alt" href="journal.html">Journal</a>
+    </div>
 
-  <footer>
-    <p id="foot"></p>
-    <p>&copy; 2026 Larry’s Cove by Larry W.S. All rights reserved.</p>
-  </footer>
+    <a class="box player featured" href="ambience/beach/" data-title="PLAY_FREE.EXE">
+      <img src="ambience/thumbs/beach.png" alt="Pixel Beach: a girl and her dog on the shore at sunset">
+      <div class="meta">
+        <small>Free to play · music made live in your browser</small>
+        <div class="title">Pixel Beach</div>
+      </div>
+      <span class="go" aria-hidden="true">▶</span>
+    </a>
+
+    <div>
+      <div class="themes" role="group" aria-label="Choose a theme">
+        <button class="theme-card" data-set-theme="paper" aria-pressed="true" type="button">
+          <div class="sw sw-paper">✎</div><span>Theme 1<br>Paper drawing</span>
+        </button>
+        <button class="theme-card" data-set-theme="pixel" aria-pressed="false" type="button">
+          <div class="sw sw-pixel">▦</div><span>Theme 2<br>Modern pixel</span>
+        </button>
+        <button class="theme-card" data-set-theme="muscovy" aria-pressed="false" type="button">
+          <div class="sw sw-muscovy">🦆</div><span>Theme 3<br>Muscovy</span>
+        </button>
+      </div>
+      <div class="box wob thanks"><b>Thanks for visiting.</b> Switch the theme above and the whole studio changes its clothes.</div>
+    </div>
+  </div>
+</section>
+
+<section id="projects">
+  <h2>The shop <small style="font-size:.5em;opacity:.7">(and shelf)</small></h2>
+  <div class="chips" id="chips" role="group" aria-label="Jump to a board"></div>
+  <div class="nav">
+    <button id="prev" type="button" aria-label="Previous">‹</button>
+    <button id="next" type="button" aria-label="Next">›</button>
+  </div>
+  <div class="shelf-wrap"><div class="shelf" id="shelf"></div></div>
+</section>
+
+<section id="skills">
+  <h2>Skills</h2>
+  <div class="skills" id="skillList"></div>
+</section>
+
+<section id="contact">
+  <h2>Get in touch</h2>
+  <div class="contact">
+    <div class="box" data-title="CONNECT.EXE">
+      <p>Ask a question, leave feedback, talk about a collaboration, or just say hi.</p>
+      <div class="links" id="linkList"></div>
+    </div>
+    <form class="box review" id="reviewForm" data-title="MESSAGE.EXE">
+      <label for="rType">What is this about?</label>
+      <select id="rType"><option>Question about a product</option><option>Feedback on my work</option><option>Collaboration</option><option>Just saying hi</option></select>
+      <label for="rName">Your name</label>
+      <input id="rName" required autocomplete="name">
+      <label for="rMsg">Message</label>
+      <textarea id="rMsg" required></textarea>
+      <button class="btn" type="submit">Send via email →</button>
+    </form>
+  </div>
+</section>
 </main>
 
+<footer data-footer></footer>
+
+<a class="wa" id="waFloat" href="#" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+  <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.9 5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.200zm4.500-6.100c-.2-.1-1.500-.7-1.700-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.200-.3.200-.5.100a6.700 6.700 0 0 1-3.300-2.900c-.2-.4.200-.4.700-1.300.1-.2 0-.3 0-.5l-.8-1.800c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.200c0 1.300.9 2.500 1 2.700.1.200 1.900 2.900 4.600 4 1.700.7 2.400.8 3.300.7.500-.1 1.500-.6 1.700-1.200.2-.6.200-1.100.2-1.200-.1-.2-.3-.2-.6-.4z"/></svg>
+</a>
+
+<script src="data.js"></script>
+<script src="studio.js"></script>
 <script>
-/* ===================  EDIT ONLY THIS BLOCK  =================== */
-const CONFIG = {
-  brand: "Larry’s Cove",
-  by: "by Larry W.S.",
-  tagline: "Pixels, UI, UX and ambience",
-  whatsapp: "254115779863",                         // digits only
-  whatsappMsg: "Hi Larry! I found you through your website.",
-  email: "waspecosystem@gmail.com",
-  pinterest: "https://www.pinterest.com/Larrysmyl/",
-  gumroad: "https://simiyuwafula.gumroad.com",
-  products: [
-    { title: "Larry’s Cove Ambience: all six worlds", price: "$24",
-      desc: "Six pixel worlds, each a 200-second story with music and sound generated live: beach, rainy window, campfire cabin, firefly dungeon, blue forest and a green-sun oasis. Pixel Beach is free to play here. The bundle costs about the price of three singles.",
-      note: "Singles: Pixel Beach free · Rainy Window pay what you want · Campfire Cabin, Firefly Dungeon and Green Sun Oasis $6 each · Blue Forest is bundle-only for now.",
-      tags: ["6 worlds", "bundle"], buy: "", pin: "https://pin.it/6p7mOwx59", demo: "ambience/", demoLabel: "Play Pixel Beach free",
-      shots: ["ambience/thumbs/beach.png","ambience/thumbs/rain.png","ambience/thumbs/camp.png","ambience/thumbs/dungeon.png","ambience/thumbs/forest.png","ambience/thumbs/oasis.png"] },
-    { title: "Abyss Sonar Kit", price: "$15",
-      desc: "A deep-sea music player UI: a pixel sonar scope that sweeps with the beat, an anglerfish that opens its jaw on the kick, brass buttons and a depth-line progress bar. Load your own audio and it finds the beat.",
-      tags: ["UI kit", "beat-synced"], buy: "", pin: "", shots: ["img/abyss-sonar.jpg"] },
-    { title: "Wasp UI Kit", price: "Free",
-      desc: "Three beat-synced player themes in plain HTML, CSS and JS: Lofi Record Cat, Chrono Gamer and Glitch Cyber Wasp. Instant theme switching, light and easy to recolour.",
-      tags: ["UI kit", "3 themes"], buy: "https://simiyuwafula.gumroad.com/l/wfhvif", pin: "https://pin.it/1QHsNIx9b" },
-    { title: "Glass Rainy Season Kit", price: "Pay what you want",
-      desc: "Frosted-glass storm player: silent lightning, a cheeky cat who tells you to close the window, a snail slime-trail progress bar and puddle buttons.",
-      tags: ["UI kit", "storm"], buy: "https://simiyuwafula.gumroad.com/l/vmlwem", pin: "https://pin.it/6p7mOwx59" },
-    { title: "Puddle Day", price: "Pay what you want",
-      desc: "A calm pixel scene in a retro window: a girl, her gold cat, an umbrella and the rain, with a synth and lofi ambience player.",
-      tags: ["pixel scene", "ambience"], buy: "https://simiyuwafula.gumroad.com/l/olitib", pin: "https://pin.it/6p7mOwx59" },
-    { title: "Muscovy Duck Kit", price: "Pay what you want",
-      desc: "A cosy player with a Muscovy duck that preens and shakes its tail when you tap it, and a progress bar made of feathers that straighten and glow as the song plays.",
-      tags: ["UI kit", "feathers"], buy: "", pin: "" },
-    { title: "Blurred City Puddle-Jump Kit", price: "Pay what you want",
-      desc: "Out-of-focus city lights, a pixel girl in a clear raincoat and yellow gumboots who splashes into a puddle on the beat, and a ripple-ring playhead that pulses with the music.",
-      tags: ["UI kit", "lo-fi city"], buy: "", pin: "https://pin.it/6p7mOwx59" }
-    // add more: { title:"", price:"", desc:"", tags:[""], buy:"", pin:"", shots:["img/x.jpg"] },
-  ],
-  apps: [
-    { title: "WASP Player", status: "In testing", desc: "A pixel music player with 10 retro themes: a wasp that eats the bars, a nodding teddy, tape, vinyl and radio." },
-    { title: "Ambience", status: "Beach is free", desc: "Six pixel worlds with live-generated music. Play the Pixel Beach free; the others are on Gumroad.", demo: "ambience/" }
-  ],
-  footer: "Made by hand, one pixel at a time."
+/* ---- fill from data.js ---- */
+$("#intro").textContent = SITE.intro;
+$("#doList").innerHTML = SITE.doing.map(d => `<li>${esc(d)}</li>`).join("");
+$("#skillList").innerHTML = SITE.skills.map(s => `<span>${esc(s)}</span>`).join("");
+$("#waFloat").href = waLink();
+$("#linkList").innerHTML = [
+  ["✉️", "Email", SITE.email, "mailto:" + SITE.email],
+  ["💬", "WhatsApp", "+" + SITE.whatsapp, waLink()],
+  ["🛒", "Gumroad", "simiyuwafula", SITE.gumroad],
+  ["🎮", "itch.io", "larrysmyl", SITE.itch],
+  ["📌", "Pinterest", "Larrysmyl", SITE.pinterest]
+].map(([i, n, h, u]) => `<a href="${esc(u)}"${u.startsWith("http") ? ' target="_blank" rel="noopener"' : ""}>${i} ${n} <em>${esc(h)}</em></a>`).join("");
+
+/* ---- clock ---- */
+$("#clockPlace").textContent = SITE.place;
+const tick = () => $("#clockTime").textContent = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", timeZone: SITE.timezone });
+tick(); setInterval(tick, 15000);
+
+/* ---- daily words ---- */
+let dw = Math.floor(Date.now() / 864e5) % DAILY.length;
+const showDaily = () => { $("#dwText").textContent = DAILY[dw].t; $("#dwBy").textContent = DAILY[dw].by; };
+$("#dwNext").onclick = () => { dw = (dw + 1) % DAILY.length; showDaily(); };
+showDaily();
+
+/* ---- shelf ---- */
+const shelf = $("#shelf"), chips = $("#chips");
+const lum = h => { const n = parseInt(h.slice(1), 16); return (.299 * (n >> 16) + .587 * ((n >> 8) & 255) + .114 * (n & 255)) / 255; };
+shelf.insertAdjacentHTML("beforeend", `<div class="board cover" style="--c:#8a8a72;--i:-1;--fg:#1f2016"><span class="name">SHELF_01–${String(BOARDS.length).padStart(2, "0")}</span><span><span class="meta2">Studio files:</span><span class="meta2">Worlds · Kits · Notes</span><span class="open">FILE_01//</span></span></div>`);
+BOARDS.forEach((b, i) => {
+  const el = document.createElement("a");
+  el.className = "board"; el.href = b.page; el.id = "board-" + i;
+  el.style.cssText = `--c:${b.color};--i:${i};--off:${(i % 3) * 34}px;--fg:${lum(b.color) > .6 ? "#2a2823" : "#f4efe2"}`;
+  el.innerHTML = `<span class="code">CODE_${String(i + 1).padStart(3, "0")} //</span>
+    <span class="name">${esc(b.name)}</span>
+    <span><span class="meta2">${esc(b.blurb)}</span><span class="meta2">${esc(b.count)}</span><span class="open">open →</span></span>`;
+  shelf.appendChild(el);
+  const c = document.createElement("a");
+  c.className = "chip"; c.href = b.page; c.textContent = b.name;
+  chips.appendChild(c);
+});
+$("#prev").onclick = () => shelf.scrollBy({ left: -420, behavior: "smooth" });
+$("#next").onclick = () => shelf.scrollBy({ left: 420, behavior: "smooth" });
+
+/* ---- contact form → opens the visitor's email app ---- */
+$("#reviewForm").onsubmit = e => {
+  e.preventDefault();
+  const subj = encodeURIComponent($("#rType").value + " — from " + $("#rName").value);
+  location.href = `mailto:${SITE.email}?subject=${subj}&body=${encodeURIComponent($("#rMsg").value)}`;
 };
-/* ============================================================== */
-
-const $ = s => document.querySelector(s);
-const WASP = '<svg viewBox="-1 -1 28 18" shape-rendering="crispEdges" fill="var(--accent)"><path d="M10 0h2v1h-2zM13 0h2v1h-2zM9 1h5v1H9zM9 2h5v1H9zM8 3h7v1H8zM6 5h3v1H6zM5 6h5v1H5zM4 7h8v1H4zM3 8h10v1H3zM3 9h12v1H3zM4 10h11v1H4zM5 11h9v1H5zM6 12h3v1H6zM12 12h3v1h-3zM19 4h2v1h-2zM17 5h4v1h-4zM15 6h7v1h-7zM14 7h8v1h-8zM15 8h6v1h-6zM17 9h3v1h-3z"/><circle cx="19" cy="7" r=".9" fill="var(--bg)"/></svg>';
-const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-
-function emblem(name){                                  // pixel emblem made from the product name
-  let h = 2166136261; for (const ch of name) h = Math.imul(h ^ ch.charCodeAt(0), 16777619) >>> 0;
-  let r = h || 1, rnd = () => (r = Math.imul(r ^ (r >>> 15), 2246822507) >>> 0, r / 4294967296), p = "";
-  for (let y = 0; y < 8; y++){ const L = [0,1,2,3].map(() => rnd() < .5); [...L, ...L.slice().reverse()].forEach((on, x) => { if (on) p += `M${x} ${y}h1v1h-1z`; }); }
-  return `<svg viewBox="0 0 8 8" shape-rendering="crispEdges"><path d="${p}"/></svg>`;
-}
-
-function build(){
-  document.title = CONFIG.brand + " | pixels, UI, UX and ambience by Larry W.S.";
-  $("#brand").textContent = CONFIG.brand; $("#by").textContent = CONFIG.by; $("#tagline").textContent = CONFIG.tagline;
-  $("#foot").textContent = CONFIG.footer;
-  $("#bars").innerHTML = Array.from({length: 14}, (_, i) => `<i style="animation-delay:${(i * .07).toFixed(2)}s"></i>`).join("");
-
-  $("#shop").innerHTML = CONFIG.products.map(p => `
-    <article class="cart px"><div class="body px">
-      <div class="emb px">${emblem(p.title)}</div>
-      <div><h3>${esc(p.title)}</h3><p>${esc(p.desc)}</p>${p.note ? `<p style="font-size:19px;color:var(--accent)">${esc(p.note)}</p>` : ""}
-        <div class="meta"><span class="price">${esc(p.price)}</span>${(p.tags || []).map(t => `<span class="badge soon">${esc(t)}</span>`).join("")}</div>
-        ${p.shots ? `<div class="shots">${p.shots.map(s => `<img src="${esc(s)}" alt="" loading="lazy">`).join("")}</div>` : ""}<div class="acts">${p.buy ? `<a class="btn px" href="${esc(p.buy)}" target="_blank" rel="noopener">Get it</a>` : ""}${p.demo ? `<a class="${p.buy ? "btn ghost" : "btn"} px" href="${esc(p.demo)}" target="_blank" rel="noopener">${esc(p.demoLabel || "Try live demo")}</a>` : ""}${p.pin ? `<a class="btn ghost px" href="${esc(p.pin)}" target="_blank" rel="noopener">Preview on Pinterest</a>` : ""}</div>
-      </div></div></article>`).join("") +
-    `<div class="slot px"><b>INSERT NEXT PRODUCT</b>More packs are being drawn. Follow on Pinterest to see them first.</div>`;
-
-  $("#apps").innerHTML = CONFIG.apps.map(a => `
-    <article class="cart px"><div class="body px">
-      <div class="emb px">${emblem(a.title)}</div>
-      <div><h3>${esc(a.title)}</h3><p>${esc(a.desc)}</p><div class="meta"><span class="badge">${esc(a.status)}</span></div>${a.demo ? `<div class="acts"><a class="btn px" href="${esc(a.demo)}" target="_blank" rel="noopener">Open preview</a></div>` : ""}</div>
-    </div></article>`).join("");
-
-  const wa = "https://wa.me/" + CONFIG.whatsapp.replace(/\D/g, "") + "?text=" + encodeURIComponent(CONFIG.whatsappMsg);
-  $("#talk").innerHTML = `
-    <div class="card px"><div class="px">Questions, custom pixel work or support? Say hi.</div></div>
-    <div class="contact">
-      <a class="btn px" href="${wa}" target="_blank" rel="noopener">WhatsApp <small>+${esc(CONFIG.whatsapp)}</small></a>
-      <a class="btn ghost px" href="mailto:${esc(CONFIG.email)}">Email <small>${esc(CONFIG.email)}</small></a>
-      <a class="btn ghost px" href="${esc(CONFIG.pinterest)}" target="_blank" rel="noopener">Pinterest <small>@Larrysmyl</small></a>
-      <a class="btn ghost px" href="${esc(CONFIG.gumroad)}" target="_blank" rel="noopener">Gumroad <small>all downloads</small></a>
-    </div>`;
-}
-
-function setTheme(t){
-  document.documentElement.dataset.theme = t;
-  document.querySelectorAll(".chip").forEach(c => c.setAttribute("aria-pressed", c.dataset.t === t));
-  $("meta[name=theme-color]").content = getComputedStyle(document.body).backgroundColor;
-  try { localStorage.setItem("we-theme", t); } catch (e) {}
-}
-function show(v){
-  document.querySelectorAll(".tab").forEach(t => t.setAttribute("aria-selected", t.dataset.v === v));
-  document.querySelectorAll(".view").forEach(s => s.hidden = s.id !== v);
-}
-function say(text, x, y){ const f = document.createElement("span"); f.className = "fx"; f.textContent = text; f.style.left = x + "px"; f.style.top = y + "px"; document.body.appendChild(f); setTimeout(() => f.remove(), 1000); }
-
-const LINES = ["BEAM ON!", "SHIP AHOY!", "MIND THE ROCKS!", "BZZT!", "STILL WATERS..."];
-let taps = [];
-function poke(e){
-  const a = $("#avatar"), now = Date.now(), r = a.getBoundingClientRect();
-  taps = taps.filter(t => now - t < 4000).concat(now);
-  a.classList.remove("buzz"); void a.offsetWidth; a.classList.add("buzz");
-  say(taps.length >= 10 ? "OKAY OKAY, STOP!" : LINES[taps.length % LINES.length], r.left + r.width / 2, r.top);
-  if (taps.length >= 10) taps = [];
-}
-$("#avatar").addEventListener("click", poke);
-$("#avatar").addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); poke(); } });
-document.addEventListener("click", e => {
-  const c = e.target.closest(".chip"); if (c) setTheme(c.dataset.t);
-  const t = e.target.closest(".tab"); if (t) show(t.dataset.v);
-});
-
-(function(){
-
-const N=64,cv=document.getElementById('pfp'),g=cv.getContext('2d');
-let seed=7;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
-const px=(x,y,c)=>{if(x<0||y<0||x>=N||y>=N)return;g.fillStyle=c;g.fillRect(x|0,y|0,1,1)};
-const rect=(x,y,w,h,c)=>{for(let j=0;j<h;j++)for(let i=0;i<w;i++)px(x+i,y+j,c)};
-const HZ=40;
-// sky
-const sky=['#0b1026','#111a3a','#1a2750','#25376b','#34508a','#4a6fa5'];
-for(let y=0;y<HZ;y++){const t=y/HZ*6,i=Math.min(5,Math.floor(t)),f=t-Math.floor(t);
-  for(let x=0;x<N;x++){px(x,y,(f>.75&&(x+y)%2==0&&i<5)?sky[i+1]:sky[i]);}}
-// stars
-for(let k=0;k<30;k++){const x=Math.floor(rnd()*N),y=Math.floor(rnd()*26);
-  if(Math.hypot(x-42,y-15)<10)continue;px(x,y,rnd()>.8?'#ffd166':'#fff6d6');}
-// lighthouse beam
-for(let x=14;x<40;x++){const h=Math.floor((x-14)*.14)+1;
-  for(let y=18-h;y<=18+h;y++)if((x+y)%2==0&&y<HZ)px(x,y,'#d9d6a0');}
-// moon + glow
-for(let y=0;y<N;y++)for(let x=0;x<N;x++){const d=Math.hypot(x-42,y-15);
-  if(d<6.2)px(x,y,'#fff3c4');else if(d<9.5&&(x+y)%2==0)px(x,y,'#46598f');}
-[[40,13],[44,16],[41,18],[43,12]].forEach(([x,y])=>px(x,y,'#e3d28f'));
-// water
-const wc=['#12304a','#0f2a40','#0c2236','#091a2b'];
-for(let y=HZ;y<N;y++)rect(0,y,N,1,wc[Math.min(3,Math.floor((y-HZ)/6))]);
-rect(0,HZ,N,1,'#2f5f80');
-for(let k=0;k<26;k++){const y=HZ+2+Math.floor(rnd()*21),x=Math.floor(rnd()*N);rect(x,y,2+Math.floor(rnd()*3),1,'#24506d');}
-[[38,8],[39,6],[40,6],[40,4],[41,4],[41,2]].forEach(([x,w],i)=>{});
-[[41,43,9],[42,45,7],[43,47,6],[44,49,4],[45,51,3]].forEach(([x,y,w])=>rect(x-Math.floor(w/2)+1,y-2,w,1,y<46?'#fff3c4':'#c9c08a'));
-// cliffs
-for(let x=0;x<N;x++){
-  let top=-1,bot=64;
-  if(x<26){top=x<16?31:x<20?35:x<23?38:41;bot=x<8?64:x<14?58:x<20?52:47;}
-  else if(x>=44){top=x>=58?28:x>=53?31:x>=49?35:39;bot=x>=56?64:x>=51?59:x>=47?53:48;}
-  if(top<0)continue;
-  rect(x,top,1,bot-top,'#070b16');px(x,top,'#1a2644');
-  if((x*7)%5==0)px(x,top+3,'#10182c');
-}
-// lighthouse
-for(let y=19;y<=31;y++){const c=Math.floor((y-19)/3)%2?'#c8553d':'#e8e2d0';rect(9,y,5,1,c);}
-rect(8,18,7,1,'#1a1d29');rect(9,17,5,1,'#ffd166');rect(9,16,5,1,'#fff3c4');rect(8,15,7,1,'#c8553d');rect(10,14,3,1,'#c8553d');px(11,13,'#c8553d');
-px(11,24,'#1a1d29');px(11,25,'#1a1d29');
-// lighthouse glow on rock
-px(8,31,'#ffd166');
-// boat
-rect(28,45,9,1,'#7a4a2e');rect(29,46,7,1,'#5a3320');
-rect(32,38,1,7,'#c9b896');
-for(let y=39;y<=43;y++)rect(33,y,y-38,1,'#e8e2d0');
-px(28,44,'#ffd166');px(27,44,'#8a6a2a');px(29,44,'#8a6a2a');
-px(28,48,'#ffd166');px(28,50,'#a8832e');
-rect(30,47,5,1,'#0a1a2a');
-
- try{document.querySelector("link[rel=icon]").href=cv.toDataURL("image/png")}catch(e){}
-})();
-(function(){
-
-const c=document.getElementById('cove'),x=c.getContext('2d');
-const W=320,H=180,HZ=108;
-const sky=['#150d33','#241450','#38206a','#562a80','#82378a','#bd4f86','#f08a7a'];
-let seed=7;const rnd=()=>(seed=seed*16807%2147483647)/2147483647;
-function R(col,a,b,w,h){x.fillStyle=col;x.fillRect(a|0,b|0,w,h)}
-function layer(fn){const o=document.createElement('canvas');o.width=W;o.height=H;const g=x;const cx=o.getContext('2d');
-  const old=x;fn(cx);return o}
-function mk(fn){const o=document.createElement('canvas');o.width=W;o.height=H;fn(o.getContext('2d'));return o}
-const A=mk(g=>{
-  const bh=HZ/7;
-  for(let y=0;y<HZ;y++){const b=Math.min(6,(y/bh)|0),pos=y-b*bh;
-    for(let px=0;px<W;px++){let k=b;if(pos>bh-3&&b<6&&(px+y)%2)k=b+1;g.fillStyle=sky[k];g.fillRect(px,y,1,1)}}
-  g.fillStyle='#ffe9a8';
-  for(let dy=-14;dy<=14;dy++){const w=Math.round(Math.sqrt(196-dy*dy));g.fillRect(232-w,38+dy,w*2,1)}
-  g.fillStyle='#e2c27a';[[-6,-4,3],[4,2,4],[-3,7,2],[6,-8,2]].forEach(([a,b,s])=>g.fillRect(232+a,38+b,s,s));
-});
-const B=mk(g=>{
-  for(let px=0;px<W;px++){
-    let top=null;
-    if(px<100)top=70+Math.round(px*0.72/3)*3;
-    else if(px>222)top=84+Math.round((319-px)*0.72/3)*3;
-    if(top!==null){g.fillStyle='#0e0720';g.fillRect(px,top,1,H-top);g.fillStyle='#2f1a5e';g.fillRect(px,top,1,1)}
-  }
-  // little pixel pines on the left cliff
-  [[8,62],[20,68],[34,76]].forEach(([a,b])=>{g.fillStyle='#0e0720';for(let i=0;i<4;i++)g.fillRect(a-2-i*2+2,b+i*4,5+i*4-2,4);g.fillRect(a,b+16,2,4)});
-  // lantern on the right cliff
-  g.fillStyle='#ffd23f';g.fillRect(262,86,3,4);g.fillStyle='#0e0720';g.fillRect(263,90,1,10);
-});
-const stars=Array.from({length:45},()=>({x:rnd()*W|0,y:rnd()*70|0,p:rnd()*6}));
-const wb=['#2a1a66','#231659','#1c1250','#150d40'];
-const P={k:'#1a1020',Y:'#ffd23f',w:'#cfeeff',E:'#ff4d6d'};
-const F=[["..ww.......",".wwww......","kYYkYYkkkk.","kYYkYYkkEk.",".k..k..kk.."],
-         ["...........","...........","kYYkYYkkkk.","kYYkYYkkEk.","wwww.k..kk."]];
-const N=[".###",".#..",".#..","##..","##.."];
-function spr(rows,pal,ox,oy,s,flip){rows.forEach((r,j)=>{for(let i=0;i<r.length;i++){const ch=r[i];if(ch==='.')continue;
-  const ii=flip?r.length-1-i:i;R(typeof pal==='string'?pal:pal[ch],ox+ii*s,oy+j*s,s,s)}})}
-let notes=[],last=0,spawn=0;
-function burst(n,px,py){for(let i=0;i<n;i++)notes.push({x:px,y:py,vx:(Math.random()-.5)*30,vy:-12-Math.random()*20,c:Math.random()<.5?'#ff7aa8':'#7fe6ff',l:3})}
-c.addEventListener('pointerdown',e=>{const r=c.getBoundingClientRect();burst(9,(e.clientX-r.left)/r.width*W,(e.clientY-r.top)/r.height*H)});
-const still=matchMedia('(prefers-reduced-motion:reduce)').matches;
-function frame(ms){
-  const t=still?2:ms/1000,dt=Math.min(.05,t-last);last=t;
-  x.drawImage(A,0,0);
-  stars.forEach(s=>{if(((t*1.5+s.p)|0)%3)R('#fff1c9',s.x,s.y,1,1)});
-  for(let y=HZ;y<H;y++)R(wb[Math.min(3,((y-HZ)/18)|0)],0,y,W,1);
-  for(let y=HZ+1;y<H;y+=3){for(let k=0;k<7;k++){const px=(k*47+y*13+t*(6+(y-HZ)*.25))%(W+20)-10;R('#6a55c0',px,y,5+((y-HZ)/12|0),1)}}
-  for(let y=HZ+1;y<H-10;y+=2){const w=Math.max(2,14-((y-HZ)>>2)),sh=Math.round(Math.sin(t*2+y*.6)*2);R('#ffe9a8',232-w/2+sh,y,w,1)}
-  x.drawImage(B,0,0);
-  const wx=160+86*Math.sin(t*.6),wy=64+14*Math.sin(t*1.3),flip=Math.cos(t*.6)<0;
-  spawn+=dt;if(spawn>.55){spawn=0;notes.push({x:wx,y:wy,vx:(flip?8:-8),vy:-9,c:Math.random()<.5?'#ff7aa8':'#7fe6ff',l:3})}
-  R('rgba(0,0,0,.25)',wx,HZ+30+ (wy-64)*0.3,22,2);
-  spr(F[((t*14)|0)%2],P,wx-11,wy,2,flip);
-  notes=notes.filter(n=>(n.l-=dt)>0);
-  notes.forEach(n=>{n.x+=n.vx*dt+Math.sin(t*4+n.y)*.15;n.y+=n.vy*dt;spr(N,n.c,n.x,n.y,1.6,false)});
-  requestAnimationFrame(frame)
-}
-requestAnimationFrame(frame);
-
-})();
-build();
-try { const s = localStorage.getItem("we-theme"); if (s) setTheme(s); } catch (e) {}
 </script>
 </body>
 </html>

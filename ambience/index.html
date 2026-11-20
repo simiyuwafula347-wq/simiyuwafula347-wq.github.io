@@ -30,7 +30,7 @@
 </head>
 <body>
 <main class="wrap">
-  <p class="kick">Larry&rsquo;s Cove</p>
+  <p class="kick"><a href="../index.html" style="color:inherit;text-decoration:none">&lsaquo; Larry&rsquo;s Studio</a> &middot; Larry&rsquo;s Cove</p>
   <h1>Ambience</h1>
   <p class="sub">Pick a pixel world. Let it play. Fall asleep to it.</p>
 
@@ -65,7 +65,7 @@
 </main>
 <script>
 /* Paste your Gumroad links here (leave "" until they exist) */
-const BUY={rain:"",camp:"",dungeon:"",forest:"",oasis:"",bundle:""};
+const BUY={rain:"",camp:"",dungeon:"",forest:"",oasis:"",bundle:"https://simiyuwafula.gumroad.com/l/yxzyof"};
 document.querySelectorAll(".card.locked").forEach(c=>{const u=BUY[c.dataset.w];if(u){c.href=u}else{c.addEventListener("click",e=>e.preventDefault());c.title="On Gumroad soon"}});
 const b=document.getElementById("bundle");if(BUY.bundle){b.href=BUY.bundle}else{b.classList.add("soon");b.textContent="All six worlds, $24: on Gumroad soon"}
 </script>

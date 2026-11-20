@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>About — Larry Simiyu</title>
+<meta name="description" content="About Larry Simiyu: vet by training, builder, writer and composer by habit, in Kenya.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23040b14'/%3E%3Cpath fill='%234deeea' d='M6 3h3v1h1v1H8v1H7v4h1v1h2v1H9v1H6v-1H5v-1H4V5h1V4h1z'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Caveat:wght@600;700&family=Press+Start+2P&family=VT323&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-root="">
+<div class="wrap">
+  <nav class="topbar">
+    <a class="btn alt" href="index.html">← Studio home</a>
+    <div class="themes-mini" role="group" aria-label="Choose a theme">
+      <button class="icon-btn" data-set-theme="paper" type="button">Paper</button>
+      <button class="icon-btn" data-set-theme="pixel" type="button">Pixel</button>
+      <button class="icon-btn" data-set-theme="muscovy" type="button">Muscovy</button>
+    </div>
+  </nav>
+  <header class="page-hero" style="--c:#8a8a72"><div class="box" data-title="ABOUT_ME.EXE"><div class="code">CODE_000 //</div><h1>About me</h1><p>Vet by training. Builder, writer and composer by habit.</p></div></header>
+  <section class="aboutgrid">
+    <div class="box" data-title="ABOUT.EXE"><div class="pfp small" aria-hidden="true">LS<img src="pfp.jpg" alt="" onerror="if(!this.dataset.t){this.dataset.t=1;this.src='pfp.png'}else{this.remove()}"></div><div id="aboutText"></div></div>
+    <div class="box" data-title="FIND_ME.EXE"><h2>Find me</h2><div class="links" id="linkList"></div></div>
+  </section>
+  <div class="box wob greet" id="greet" data-title="HELLO.EXE"></div>
+  <footer data-footer></footer>
+</div>
+<script src="data.js"></script>
+<script src="studio.js"></script>
+<script>$("#aboutText").innerHTML = SITE.about.map(p => `<p>${inl(p)}</p>`).join("");
+$("#linkList").innerHTML = [
+  ["✉️", "Email", SITE.email, "mailto:" + SITE.email], ["💬", "WhatsApp", "+" + SITE.whatsapp, waLink()],
+  ["🛒", "Gumroad", "simiyuwafula", SITE.gumroad], ["🎮", "itch.io", "larrysmyl", SITE.itch], ["📌", "Pinterest", "Larrysmyl", SITE.pinterest]
+].map(([i, n, h, u]) => `<a href="${esc(u)}"${u.startsWith("http") ? ' target="_blank" rel="noopener"' : ""}>${i} ${n} <em>${esc(h)}</em></a>`).join("");</script>
+</body>
+</html>
