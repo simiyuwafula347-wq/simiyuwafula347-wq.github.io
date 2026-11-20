@@ -420,3 +420,6 @@ a.chip{text-decoration:none;display:inline-block}
 .item.prod h3{font-size:calc(1.7rem * var(--head-size))}
 [data-theme="pixel"] .item.prod h3{font-size:1rem;line-height:1.5}
 .item .pill{font-size:.75em}
+
+.theme-card .sw{overflow:hidden}
+.sw-muscovy img{width:100%;height:100%;object-fit:cover;image-rendering:pixelated;display:block}

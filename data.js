@@ -64,7 +64,7 @@ const KITS = [
     desc: "Frosted-glass storm player: silent lightning, a cheeky cat who tells you to close the window, a snail slime-trail progress bar and puddle buttons." },
   { title: "Puddle Day", price: "Pay what you want", tags: ["pixel scene", "ambience"], buy: "https://simiyuwafula.gumroad.com/l/olitib", pin: "https://pin.it/5O2d1ehEC",
     desc: "A calm pixel scene in a retro window: a girl, her gold cat, an umbrella and the rain, with a synth and lofi ambience player." },
-  { title: "Muscovy Duck Kit", price: "Pay what you want", tags: ["UI kit", "feathers"], buy: "", pin: "",
+  { title: "Muscovy Duck Kit", price: "Pay what you want", tags: ["UI kit", "feathers"], shots: ["img/muscovy-duck.png"], buy: "", pin: "",
     desc: "A cosy player with a Muscovy duck that preens and shakes its tail when you tap it, and a progress bar made of feathers that straighten and glow as the song plays." },
   { title: "Blurred City Puddle-Jump Kit", price: "Pay what you want", tags: ["UI kit", "lo-fi city"], buy: "", pin: "https://pin.it/5O2d1ehEC",
     desc: "Out-of-focus city lights, a pixel girl in a clear raincoat and yellow gumboots who splashes into a puddle on the beat, and a ripple-ring playhead that pulses with the music." }
