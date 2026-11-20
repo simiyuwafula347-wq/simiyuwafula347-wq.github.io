@@ -424,3 +424,8 @@ a.chip{text-decoration:none;display:inline-block}
 .theme-card .sw{overflow:hidden}
 .theme-card .sw img{width:100%;height:100%;object-fit:cover;image-rendering:pixelated;display:block}
 .sw-paper img{image-rendering:auto}
+
+/* PIXEL theme: lift the dark profile photo off the dark panels */
+[data-theme="pixel"] .pfp{border-color:var(--accent);box-shadow:0 0 0 3px #12112a,0 0 0 6px var(--accent),0 0 28px 6px rgba(143,168,255,.55)}
+[data-theme="pixel"] .pfp img{filter:brightness(1.3) contrast(1.05) saturate(1.1)}
+[data-theme="pixel"] .pfp.small{box-shadow:0 0 0 3px #12112a,0 0 0 5px var(--accent),0 0 18px 4px rgba(143,168,255,.5)}
