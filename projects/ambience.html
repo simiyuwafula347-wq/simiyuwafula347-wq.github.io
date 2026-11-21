@@ -6,7 +6,7 @@
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ambience — Larry Simiyu</title>
-<meta name="description" content="Six pixel worlds with music generated live in your browser. Pixel Beach is free to play.">
+<meta name="description" content="Seven pixel worlds with music generated live in your browser. Pixel Beach is free to play.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23040b14'/%3E%3Cpath fill='%234deeea' d='M6 3h3v1h1v1H8v1H7v4h1v1h2v1H9v1H6v-1H5v-1H4V5h1V4h1z'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Caveat:wght@600;700&family=Press+Start+2P&family=VT323&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
@@ -22,22 +22,13 @@
       <button class="icon-btn" data-set-theme="muscovy" type="button">Muscovy</button>
     </div>
   </nav>
-  <header class="page-hero" style="--c:#7d8aa3"><div class="box" data-title="AMBIENCE.EXE"><div class="code">CODE_001 //</div><h1>Ambience</h1><p>Six pixel worlds, each a 200-second story. The music and sound are generated live in your browser. Let one play. Fall asleep to it.</p></div></header>
-  <section>
-    <div class="box bundle" data-title="THE_BUNDLE.EXE">
-      <div><h2>All six worlds, <span id="bp"></span></h2>
-      <p>About the price of three singles. Pixel Beach stays free to play right here.</p></div>
-      <div class="row" id="bundleActs"></div>
-    </div>
-  </section>
+  <header class="page-hero" style="--c:#7d8aa3"><div class="box" data-title="AMBIENCE.EXE"><div class="code">CODE_001 //</div><h1>Ambience</h1><p>Seven pixel worlds, each a 200-second story. The music and sound are generated live in your browser. Pixel Beach is free to play here. The rest are on itch.io.</p></div></header>
   <section><div class="cards" id="worlds"></div></section>
   <div class="box wob greet" id="greet" data-title="HELLO.EXE"></div>
   <footer data-footer></footer>
 </div>
 <script src="../data.js"></script>
 <script src="../studio.js"></script>
-<script>$("#bp").textContent = BUNDLE.price;
-$("#bundleActs").innerHTML = `<a class="btn" href="${esc(BUNDLE.buy)}" target="_blank" rel="noopener">Get the bundle</a><a class="btn alt" href="${esc(BUNDLE.pin)}" target="_blank" rel="noopener">Preview on Pinterest</a>`;
-$("#worlds").innerHTML = WORLDS.map(worldCard).join("");</script>
+<script>$("#worlds").innerHTML = WORLDS.map(worldCard).join("");</script>
 </body>
 </html>

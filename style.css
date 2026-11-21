@@ -418,3 +418,10 @@ a.chip{text-decoration:none;display:inline-block}
 /* PIXEL theme: lift the dark profile photo off the dark panels */
 [data-theme="pixel"] .pfp{border-color:var(--accent);box-shadow:0 0 0 3px #12112a,0 0 0 6px var(--accent),0 0 28px 6px rgba(143,168,255,.55)}
 [data-theme="pixel"] .pfp.small{box-shadow:0 0 0 3px #12112a,0 0 0 5px var(--accent),0 0 18px 4px rgba(143,168,255,.5)}
+
+/* coming-soon picture thumbs and portrait template pins */
+.item.soon .thumb{overflow:hidden;padding:0}
+.item.soon .thumb img{width:100%;height:100%;object-fit:cover;display:block;position:static}
+.shots img[src*="tpl-"]:not([src*="orbit"]){object-position:50% 68%}
+.item.soon .thumb:has(img){height:190px}
+.item.soon .thumb img{object-position:50% 45%}

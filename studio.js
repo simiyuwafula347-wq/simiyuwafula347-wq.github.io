@@ -42,7 +42,7 @@ function itemCard(p) {
   if (p.play) acts.push(`<a class="btn" href="${esc(ROOT + p.play)}">Play free</a>`);
   if (p.buy) acts.push(`<a class="btn${p.play ? " alt" : ""}" href="${esc(p.buy)}" target="_blank" rel="noopener">${esc(p.buyLabel || (isFree(p.price) ? "Get it free" : "Get it"))}</a>`);
   if (p.pin) acts.push(`<a class="btn alt" href="${esc(p.pin)}" target="_blank" rel="noopener">Preview on Pinterest</a>`);
-  if (!p.buy && !p.play) acts.push(`<span class="pill">on Gumroad soon</span>`);
+  if (!p.buy && !p.play) acts.push(`<span class="pill">link coming soon</span>`);
   if (p.extra) acts.push(p.extra);
   return `<article class="item prod">
     ${shots ? `<div class="shots${(p.shots || [1]).length > 1 ? " multi" : ""}">${shots}</div>` : ""}
@@ -53,19 +53,15 @@ function itemCard(p) {
       <div class="row">${acts.join("")}</div>
     </div></article>`;
 }
-const worldCard = w => {
-  if (w.play) return itemCard(w);
-  const single = w.id === "forest" ? "" : `<a class="btn alt" href="${esc(SITE.gumroad)}" target="_blank" rel="noopener">Single on Gumroad</a>`;
-  return itemCard({ ...w, buy: BUNDLE.buy, buyLabel: "Get all six " + BUNDLE.price, extra: single });
-};
-const soonCard = s => `<article class="item soon"><div class="thumb">${s.icon}</div><div class="txt"><span class="tag">coming soon</span><h3>${esc(s.title)}</h3><p>${esc(s.desc)}</p></div></article>`;
+const worldCard = w => w.play ? itemCard(w) : itemCard({ ...w, buy: w.itch || SITE.itch, buyLabel: "Get it on itch.io" });
+const soonCard = s => `<article class="item soon"><div class="thumb">${s.img ? `<img src="${esc(ROOT + s.img)}" alt="${esc(s.title)}">` : s.icon}</div><div class="txt"><span class="tag">coming soon</span><h3>${esc(s.title)}</h3><p>${esc(s.desc)}</p></div></article>`;
 
 /* ---- contact: links list + safe form ---- */
 const mail = () => SITE.emailParts.join("@");
 function contactLinks() {
   const rows = [];
   if (SITE.showEmail || !SITE.formKey) rows.push(["✉️", "Email", mail(), "mailto:" + mail()]);
-  rows.push(["🛒", "Gumroad", "simiyuwafula", SITE.gumroad], ["🎮", "itch.io", "larrysmyl", SITE.itch], ["📌", "Pinterest", "Larrysmyl", SITE.pinterest]);
+  rows.push(["🎮", "itch.io", "larrysmyl", SITE.itch], ["🛒", "Gumroad", "simiyuwafula", SITE.gumroad], ["📌", "Pinterest", "Larrysmyl", SITE.pinterest]);
   return rows.map(([i, n, h, u]) => `<a href="${esc(u)}"${u.startsWith("http") ? ' target="_blank" rel="noopener noreferrer"' : ""}>${i} ${n} <em>${esc(h)}</em></a>`).join("");
 }
 function wireForm(form) {
