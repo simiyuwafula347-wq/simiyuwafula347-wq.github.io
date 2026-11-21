@@ -5,9 +5,12 @@ const SITE = {
   name: "Larry Simiyu",
   tag: "Studio",
   place: "Nairobi", timezone: "Africa/Nairobi",
-  email: "waspecosystem@gmail.com",
-  whatsapp: "254115779863",
-  whatsappMsg: "Hi Larry! I found you through your website.",
+  /* Email is stored in two pieces so simple spam bots can't read it from the page. */
+  emailParts: ["waspecosystem", "gmail.com"],
+  showEmail: true,               // set to false once the contact form works, to hide your address completely
+  /* Contact form: free key from https://web3forms.com (sent to your email). Leave "" to fall back to the visitor's email app. */
+  formKey: "",
+  formEndpoint: "https://api.web3forms.com/submit",
   pinterest: "https://www.pinterest.com/Larrysmyl/",
   gumroad: "https://simiyuwafula.gumroad.com",
   itch: "https://larrysmyl.itch.io",
@@ -70,6 +73,17 @@ const KITS = [
     desc: "Out-of-focus city lights, a pixel girl in a clear raincoat and yellow gumboots who splashes into a puddle on the beat, and a ripple-ring playhead that pulses with the music." }
 ];
 
+
+/* Free things you can open and use right in the browser. */
+const FREEBIES = [
+  { title: "Bear Ambience", price: "Free", tags: ["ambience", "6 songs", "free"], shots: ["img/free-bear.jpg"], play: "free/bear-ambience/",
+    desc: "Six slow songs made live in your browser, and one soft pixel bear with headphones. Pick a colour for each song and scrub the stitched thread. Headphones on." },
+  { title: "Red Thread", price: "Free", tags: ["toy", "touch", "sound"], shots: ["img/free-thread.jpg"], play: "free/red-thread/",
+    desc: "A red thread wanders across paper and tangles itself. Touch to steer it. Tap the sound button for a soft drone and plucks that follow the turns." },
+  { title: "Deep Verse Bible", price: "Free", tags: ["reader", "offline", "KJV"], shots: ["img/free-verse.jpg"], play: "free/deep-verse/",
+    desc: "A pixel Bible reader that works offline (KJV text). Search words or jump to a verse, highlight in four colours, write reflections and notes, with optional ambient sound." }
+];
+
 /* Not released yet: shown honestly as "coming soon". */
 const SOON = [
   { icon: "🧱", title: "Website templates", desc: "Pixel-styled, single-folder website templates for artists, indie developers and music pages. Plain HTML, CSS and JS, no build step." },
@@ -94,7 +108,7 @@ const POSTS = [
 const BOARDS = [
   { name: "Ambience", color: "#7d8aa3", blurb: "Pixel worlds with live music", page: "projects/ambience.html", count: WORLDS.length + " worlds" },
   { name: "UI Kits", color: "#a8774a", blurb: "Music player kits", page: "projects/ui-kits.html", count: KITS.length + " kits" },
-  { name: "Free", color: "#5f6a52", blurb: "Take them, use them", page: "projects/free.html", count: "free + pay what you want" },
+  { name: "Free", color: "#5f6a52", blurb: "Take them, use them", page: "projects/free.html", count: (FREEBIES.length + 3) + " free things" },
   { name: "Journal", color: "#3b3a35", blurb: "Notes on making things", page: "journal.html", count: POSTS.length + " entries" },
   { name: "Templates", color: "#e6dcc0", blurb: "Start your site here", page: "projects/coming-soon.html", count: "coming soon" },
   { name: "More", color: "#8a8a72", blurb: "Games · Apps · Books", page: "projects/coming-soon.html", count: "coming soon" }

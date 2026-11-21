@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src https://api.web3forms.com; object-src 'none'; base-uri 'self'; form-action 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>About — Larry Simiyu</title>
 <meta name="description" content="About Larry Simiyu: vet by training, builder, writer and composer by habit, in Kenya.">
@@ -31,9 +33,6 @@
 <script src="data.js"></script>
 <script src="studio.js"></script>
 <script>$("#aboutText").innerHTML = SITE.about.map(p => `<p>${inl(p)}</p>`).join("");
-$("#linkList").innerHTML = [
-  ["✉️", "Email", SITE.email, "mailto:" + SITE.email], ["💬", "WhatsApp", "+" + SITE.whatsapp, waLink()],
-  ["🛒", "Gumroad", "simiyuwafula", SITE.gumroad], ["🎮", "itch.io", "larrysmyl", SITE.itch], ["📌", "Pinterest", "Larrysmyl", SITE.pinterest]
-].map(([i, n, h, u]) => `<a href="${esc(u)}"${u.startsWith("http") ? ' target="_blank" rel="noopener"' : ""}>${i} ${n} <em>${esc(h)}</em></a>`).join("");</script>
+$("#linkList").innerHTML = contactLinks();</script>
 </body>
 </html>

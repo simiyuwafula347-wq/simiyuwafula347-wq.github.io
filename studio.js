@@ -14,7 +14,6 @@ const mins = b => Math.max(1, Math.ceil(b.split(/\s+/).length / 200));
 const fmt = d => new Date(d + "T12:00:00").toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
 const isFree = p => /^free/i.test(p);
 const isPwyw = p => /pay what/i.test(p);
-const waLink = () => "https://wa.me/" + SITE.whatsapp.replace(/\D/g, "") + "?text=" + encodeURIComponent(SITE.whatsappMsg);
 
 /* ---- themes ---- */
 function setTheme(name) {
@@ -60,3 +59,36 @@ const worldCard = w => {
   return itemCard({ ...w, buy: BUNDLE.buy, buyLabel: "Get all six " + BUNDLE.price, extra: single });
 };
 const soonCard = s => `<article class="item soon"><div class="thumb">${s.icon}</div><div class="txt"><span class="tag">coming soon</span><h3>${esc(s.title)}</h3><p>${esc(s.desc)}</p></div></article>`;
+
+/* ---- contact: links list + safe form ---- */
+const mail = () => SITE.emailParts.join("@");
+function contactLinks() {
+  const rows = [];
+  if (SITE.showEmail || !SITE.formKey) rows.push(["✉️", "Email", mail(), "mailto:" + mail()]);
+  rows.push(["🛒", "Gumroad", "simiyuwafula", SITE.gumroad], ["🎮", "itch.io", "larrysmyl", SITE.itch], ["📌", "Pinterest", "Larrysmyl", SITE.pinterest]);
+  return rows.map(([i, n, h, u]) => `<a href="${esc(u)}"${u.startsWith("http") ? ' target="_blank" rel="noopener noreferrer"' : ""}>${i} ${n} <em>${esc(h)}</em></a>`).join("");
+}
+function wireForm(form) {
+  const t0 = Date.now(), msg = form.querySelector(".fmsg"), btn = form.querySelector("button[type=submit]");
+  const say = (t, ok) => { msg.textContent = t; msg.style.color = ok ? "var(--accent2)" : "#c2452d"; };
+  form.onsubmit = async e => {
+    e.preventDefault();
+    const d = Object.fromEntries(new FormData(form));
+    if (d.botcheck) return;                                              // honeypot: real people never see this field
+    if (Date.now() - t0 < 3000) return say("One moment, then try again.");   // bots submit instantly
+    const last = +safe(() => localStorage.getItem("studio-last-send")) || 0;
+    if (Date.now() - last < 60000) return say("You just sent one. Please wait a minute.");
+    if (d.message.trim().length < 5 || d.message.length > 2000) return say("Please write a message (5 to 2000 characters).");
+    const subj = `${d.topic}: message from ${d.name}`;
+    if (!SITE.formKey) { location.href = `mailto:${mail()}?subject=${encodeURIComponent(subj)}&body=${encodeURIComponent(d.message)}`; return; }
+    btn.disabled = true; say("Sending…", true);
+    try {
+      const r = await fetch(SITE.formEndpoint, { method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({ access_key: SITE.formKey, subject: subj, name: d.name, email: d.email || "no-reply@invalid.example", message: d.message }) });
+      const j = await r.json();
+      if (j.success) { say("Sent. Thank you, I will reply soon.", true); form.reset(); safe(() => localStorage.setItem("studio-last-send", Date.now())); }
+      else say("Could not send. Please try again later.");
+    } catch (_) { say("Could not send. Please check your connection."); }
+    btn.disabled = false;
+  };
+}

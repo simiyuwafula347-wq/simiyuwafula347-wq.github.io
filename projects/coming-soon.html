@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src https://api.web3forms.com; object-src 'none'; base-uri 'self'; form-action 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Coming soon — Larry Simiyu</title>
 <meta name="description" content="What is being made next: website templates, games, apps, game assets and books.">
@@ -30,6 +32,6 @@
 <script src="../data.js"></script>
 <script src="../studio.js"></script>
 <script>$("#soon").innerHTML = SOON.map(soonCard).join("");
-$("#notify").href = "mailto:" + SITE.email + "?subject=" + encodeURIComponent("Tell me when your new things are ready");</script>
+$("#notify").href = "mailto:" + mail() + "?subject=" + encodeURIComponent("Tell me when your new things are ready");</script>
 </body>
 </html>
