@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src https://api.web3forms.com; object-src 'none'; base-uri 'self'; form-action 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Templates — Larry Simiyu</title>
+<meta name="description" content="Personal website templates in plain HTML and CSS: a 5-template bundle and Orbit, a space-themed link-in-bio. Pay what you want.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23040b14'/%3E%3Cpath fill='%234deeea' d='M6 3h3v1h1v1H8v1H7v4h1v1h2v1H9v1H6v-1H5v-1H4V5h1V4h1z'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Caveat:wght@600;700&family=Press+Start+2P&family=VT323&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body data-root="../">
+<div class="wrap">
+  <nav class="topbar">
+    <a class="btn alt" href="../index.html">← Studio home</a>
+    <div class="themes-mini" role="group" aria-label="Choose a theme">
+      <button class="icon-btn" data-set-theme="paper" type="button">Paper</button>
+      <button class="icon-btn" data-set-theme="pixel" type="button">Pixel</button>
+      <button class="icon-btn" data-set-theme="muscovy" type="button">Muscovy</button>
+    </div>
+  </nav>
+  <header class="page-hero" style="--c:#e6dcc0"><div class="box" data-title="TEMPLATES.EXE"><div class="code">CODE_005 //</div><h1>Templates</h1><p>Personal website templates in plain HTML and CSS. No build step: open the folder, change the words, upload. My first ones, so they are pay what you want.</p></div></header>
+  <section><div class="cards" id="tpl"></div></section>
+  <section><h2 style="margin-bottom:10px">Inside the bundle</h2><div class="cards" id="inside"></div></section>
+  <div class="box wob greet" id="greet" data-title="HELLO.EXE"></div>
+  <footer data-footer></footer>
+</div>
+<script src="../data.js"></script>
+<script src="../studio.js"></script>
+<script>$("#tpl").innerHTML = TEMPLATES.map(itemCard).join("");
+$("#inside").innerHTML = BUNDLE_INSIDE.map(itemCard).join("");</script>
+</body>
+</html>

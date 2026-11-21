@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src https://api.web3forms.com; object-src 'none'; base-uri 'self'; form-action 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Free & pay what you want — Larry Simiyu</title>
+<meta name="description" content="Free and pay-what-you-want pixel worlds and music player kits.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23040b14'/%3E%3Cpath fill='%234deeea' d='M6 3h3v1h1v1H8v1H7v4h1v1h2v1H9v1H6v-1H5v-1H4V5h1V4h1z'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Caveat:wght@600;700&family=Press+Start+2P&family=VT323&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body data-root="../">
+<div class="wrap">
+  <nav class="topbar">
+    <a class="btn alt" href="../index.html">← Studio home</a>
+    <div class="themes-mini" role="group" aria-label="Choose a theme">
+      <button class="icon-btn" data-set-theme="paper" type="button">Paper</button>
+      <button class="icon-btn" data-set-theme="pixel" type="button">Pixel</button>
+      <button class="icon-btn" data-set-theme="muscovy" type="button">Muscovy</button>
+    </div>
+  </nav>
+  <header class="page-hero" style="--c:#5f6a52"><div class="box" data-title="FREE.EXE"><div class="code">CODE_003 //</div><h1>Free</h1><p>Take them, use them. Free things and pay-what-you-want things, so money is never the reason you can't have one.</p></div></header>
+  <section><div class="cards" id="free"></div></section>
+  <div class="box wob greet" id="greet" data-title="HELLO.EXE"></div>
+  <footer data-footer></footer>
+</div>
+<script src="../data.js"></script>
+<script src="../studio.js"></script>
+<script>const free = [...FREEBIES.map(itemCard), ...WORLDS.filter(w => isFree(w.price) || isPwyw(w.price)).map(worldCard), ...KITS.filter(k => isFree(k.price) || isPwyw(k.price)).map(itemCard)];
+$("#free").innerHTML = free.join("");</script>
+</body>
+</html>

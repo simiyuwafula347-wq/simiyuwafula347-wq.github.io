@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Pixel Beach Ambience</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%;background:#04060b;overflow:hidden;font-family:"Courier New",monospace;color:#a8ffef;
+    user-select:none;-webkit-user-select:none;touch-action:manipulation}
+  body{display:flex;align-items:center;justify-content:center}
+  #frame{width:min(96vw,calc(96vh * 1.7778));aspect-ratio:16/9;border:4px solid #1f3140;
+    box-shadow:0 0 0 4px #04060b,0 0 0 6px #14212d,0 0 40px rgba(80,170,200,.18);background:#000}
+  canvas{display:block;width:100%;height:100%;image-rendering:pixelated}
+
+  .overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:10;padding:20px;
+    background:rgba(4,6,11,.8);transition:opacity 1.2s ease}
+  .overlay.hide{opacity:0;pointer-events:none;visibility:hidden;transition:opacity 1.2s ease,visibility 0s 1.2s}
+  .box{padding:26px 36px;background:#07101a;border:4px solid #38c2f2;text-align:center;
+    box-shadow:0 0 0 4px #07101a,0 0 0 8px #1a5a6e,0 0 40px rgba(56,194,242,.4)}
+  h2{font-size:clamp(.9rem,4.4vw,1.4rem);letter-spacing:.26em;margin-bottom:20px;color:#c9f4ff;text-shadow:0 0 10px #38c2f2}
+  .sub{font-size:.7rem;letter-spacing:.2em;opacity:.55;margin-top:16px}
+  button{background:#0c2233;color:#7df9ff;border:3px solid #38c2f2;padding:10px 28px;font-family:inherit;font-size:1rem;
+    letter-spacing:.25em;cursor:pointer}
+  button:active{transform:translateY(2px)}
+
+  #home{position:fixed;left:8px;top:6px;z-index:30;color:#38c2f2;opacity:.12;font-size:18px;text-decoration:none;padding:4px 8px}
+  #home:hover{opacity:.7}
+  #devdot{position:fixed;right:6px;bottom:6px;width:12px;height:12px;border:1px solid #38c2f2;opacity:.1;cursor:pointer;z-index:30}
+  #devdot:hover{opacity:.5}
+  #dev{position:fixed;right:8px;bottom:26px;z-index:30;display:none;background:rgba(3,8,16,.9);border:1px solid #1a5a6e;
+    padding:8px 10px;font-size:11px;letter-spacing:.08em;line-height:1.7}
+  #dev.on{display:block}
+  #dev button{padding:3px 8px;font-size:11px;letter-spacing:.1em;margin:2px 2px 0 0;border-width:1px}
+  #err{position:fixed;inset:0;z-index:50;display:none;padding:20px;background:#000;color:#ff8a8a;font-size:12px;white-space:pre-wrap;overflow:auto}
+</style>
+</head>
+<body>
+
+<div id="frame"><canvas id="gl" width="160" height="90"></canvas></div>
+<a id="home" href="../index.html" title="back to the cove">&lsaquo;</a>
+
+<div id="start" class="overlay">
+  <div class="box">
+    <h2>PIXEL BEACH</h2>
+    <button id="btn-start">BEGIN</button>
+    <div class="sub">HEADPHONES RECOMMENDED</div>
+  </div>
+</div>
+
+<div id="devdot" title="dev controls (S)"></div>
+<div id="dev">
+  <div id="devinfo">--</div>
+  <button id="dev-jump">JUMP [N]</button>
+  <button id="dev-speed">SPEED x1</button>
+  <button id="dev-mute">MUTE [M]</button>
+  <button id="dev-mel">MELODY: ON</button>
+  <button id="dev-sleep">SLEEP: OFF</button>
+</div>
+<pre id="err"></pre>
+
+<script id="vs" type="x-shader/x-vertex">
+attribute vec2 a_pos;
+void main(){ gl_Position = vec4(a_pos, 0.0, 1.0); }
+</script>
+
+<script id="fs" type="x-shader/x-fragment">
+precision highp float;
+
+uniform float u_time, u_star, u_sunY, u_beam, u_beamTop, u_fade;
+uniform float u_mode, u_walk, u_gx, u_dgx, u_gph, u_dph, u_gy;
+uniform vec3 u_skyTop, u_skyBot, u_seaTop, u_seaBot, u_amb, u_sunCol;
+
+const float HZ = 52.0;      // horizon row (from the bottom)
+
+float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123); }
+float noise(vec2 p){
+  vec2 i = floor(p); vec2 f = fract(p);
+  vec2 u = f * f * (3.0 - 2.0 * f);
+  return mix(mix(hash(i), hash(i + vec2(1.0, 0.0)), u.x),
+             mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), u.x), u.y);
+}
+float fbm(vec2 p){
+  float v = 0.0; float a = 0.5;
+  for (int i = 0; i < 4; i++){ v += a * noise(p); p = p * 2.03 + vec2(1.7, 9.2); a *= 0.5; }
+  return v;
+}
+float bayer2(vec2 a){ a = floor(a); return fract(a.x / 2.0 + a.y * a.y * 0.75); }
+float bayer4(vec2 a){ return bayer2(0.5 * a) * 0.25 + bayer2(a); }
+
+// rectangle in whole-pixel coordinates (lo inclusive, size in pixels)
+float rect(vec2 q, vec2 lo, vec2 sz){
+  vec2 a = step(lo, q);
+  vec2 b = 1.0 - step(lo + sz, q);
+  return a.x * a.y * b.x * b.y;
+}
+vec4 layer(vec4 base, float m, vec3 c){ return vec4(mix(base.rgb, c, m), max(base.a, m)); }
+
+// ---------- sprites (all drawn from rectangles = true pixel art) ----------
+vec4 girlWalk(vec2 q, float sw){
+  vec4 r = vec4(0.0);
+  vec3 skin = vec3(0.96, 0.76, 0.62);
+  vec3 hair = vec3(0.30, 0.16, 0.10);
+  vec3 dress = vec3(0.95, 0.42, 0.42);
+  float sh = floor(sin(u_time * 3.0 + q.y * 0.8) * 0.8 + 0.5);
+  float hb = step(8.0, q.y) * (1.0 - step(15.0, q.y)) * step(-2.0 - sh, q.x) * (1.0 - step(0.0 - sh, q.x));
+  r = layer(r, hb, hair);
+  r = layer(r, rect(q, vec2(0.0 + sw, 0.0), vec2(2.0, 6.0)), skin);
+  r = layer(r, rect(q, vec2(2.0 - sw, 0.0), vec2(2.0, 6.0)), skin * 0.92);
+  float dr = step(5.0, q.y) * (1.0 - step(12.0, q.y)) * (1.0 - step(2.1 + (12.0 - q.y) * 0.25, abs(q.x - 1.5)));
+  r = layer(r, dr, dress);
+  r = layer(r, rect(q, vec2(3.0, 8.0), vec2(3.0, 1.0)), skin);
+  r = layer(r, rect(q, vec2(0.0, 12.0), vec2(4.0, 4.0)), skin);
+  r = layer(r, rect(q, vec2(-1.0, 15.0), vec2(6.0, 2.0)), hair);
+  r = layer(r, rect(q, vec2(-1.0, 12.0), vec2(1.0, 4.0)), hair);
+  r = layer(r, rect(q, vec2(3.0, 13.0), vec2(1.0, 1.0)), vec3(0.1));
+  return r;
+}
+
+vec4 dogWalk(vec2 q, float sw){
+  vec4 r = vec4(0.0);
+  vec3 fur = vec3(0.82, 0.58, 0.30);
+  vec3 dark = vec3(0.45, 0.28, 0.15);
+  float tw = step(0.0, sin(u_time * 16.0));
+  r = layer(r, rect(q, vec2(-2.0, 6.0 + tw), vec2(3.0, 1.0)), fur);
+  r = layer(r, rect(q, vec2(1.0 + sw, 0.0), vec2(1.0, 4.0)), dark);
+  r = layer(r, rect(q, vec2(2.0 - sw, 0.0), vec2(1.0, 4.0)), dark);
+  r = layer(r, rect(q, vec2(6.0 - sw, 0.0), vec2(1.0, 4.0)), dark);
+  r = layer(r, rect(q, vec2(7.0 + sw, 0.0), vec2(1.0, 4.0)), dark);
+  r = layer(r, rect(q, vec2(0.0, 4.0), vec2(9.0, 4.0)), fur);
+  r = layer(r, rect(q, vec2(1.0, 4.0), vec2(6.0, 1.0)), vec3(0.95, 0.85, 0.65));
+  r = layer(r, rect(q, vec2(8.0, 6.0), vec2(4.0, 4.0)), fur);
+  r = layer(r, rect(q, vec2(11.0, 6.0), vec2(2.0, 2.0)), fur);
+  r = layer(r, rect(q, vec2(12.0, 7.0), vec2(1.0, 1.0)), vec3(0.1));
+  r = layer(r, rect(q, vec2(8.0, 9.0), vec2(2.0, 2.0)), dark);
+  r = layer(r, rect(q, vec2(10.0, 8.0), vec2(1.0, 1.0)), vec3(0.05));
+  return r;
+}
+
+// seen from behind, looking out at the sea
+vec4 girlSit(vec2 q){
+  vec4 r = vec4(0.0);
+  vec3 hair = vec3(0.45, 0.24, 0.14);
+  vec3 dress = vec3(0.95, 0.42, 0.42);
+  float dr = step(0.0, q.y) * (1.0 - step(9.0, q.y)) * (1.0 - step(2.6 + (9.0 - q.y) * 0.3, abs(q.x)));
+  r = layer(r, dr, dress);
+  float sh = floor(sin(u_time * 1.6 + q.y * 0.6) * 0.6 + 0.5);
+  r = layer(r, rect(q, vec2(-2.0 + sh, 3.0), vec2(5.0, 8.0)), hair);
+  r = layer(r, rect(q, vec2(-2.0, 10.0), vec2(5.0, 4.0)), hair);
+  r = layer(r, rect(q, vec2(1.0, 12.0), vec2(1.0, 1.0)), vec3(0.95, 0.85, 0.35));
+  return r;
+}
+
+vec4 dogSit(vec2 q){
+  vec4 r = vec4(0.0);
+  vec3 fur = vec3(0.82, 0.58, 0.30);
+  vec3 dark = vec3(0.45, 0.28, 0.15);
+  float hx = floor(sin(u_time * 0.45) * 1.2 + 0.5);
+  float tw = step(0.0, sin(u_time * 9.0));
+  r = layer(r, rect(q, vec2(-3.0, 0.0), vec2(6.0, 4.0)), fur);
+  r = layer(r, rect(q, vec2(-2.0, 4.0), vec2(4.0, 3.0)), fur);
+  r = layer(r, rect(q, vec2(3.0 + tw, 0.0), vec2(2.0, 1.0)), fur);
+  r = layer(r, rect(q, vec2(-2.0 + hx, 7.0), vec2(4.0, 4.0)), fur);
+  r = layer(r, rect(q, vec2(-2.0 + hx, 10.0), vec2(1.0, 2.0)), dark);
+  r = layer(r, rect(q, vec2(1.0 + hx, 10.0), vec2(1.0, 2.0)), dark);
+  return r;
+}
+
+void main(){
+  vec2 px = floor(gl_FragCoord.xy);
+  float x = px.x;
+  float y = px.y;
+  float t = u_time;
+  vec3 col;
+
+  float sy = 21.0 + 2.5 * sin(x * 0.06 + t * 0.4) + 1.8 * sin(t * 0.27 + x * 0.025);   // shoreline
+
+  if (y >= HZ){
+    // ---------------- sky ----------------
+    float k = (y - HZ) / (90.0 - HZ);
+    col = mix(u_skyBot, u_skyTop, pow(k, 0.8));
+
+    float sd = length(px - vec2(112.0, u_sunY));
+    col += u_sunCol * (step(sd, 6.0) + exp(-sd * 0.12) * 0.6);
+
+    float md = length(px - vec2(42.0, 74.0));
+    float moon = step(md, 4.5) * (1.0 - step(length(px - vec2(43.5, 75.5)), 3.9));
+    col = mix(col, vec3(0.95, 0.95, 0.80), moon * u_star);
+    col += vec3(0.5, 0.6, 0.8) * exp(-md * 0.12) * 0.12 * u_star;
+
+    float h = hash(px);
+    float st = step(0.985, h) * (0.5 + 0.5 * sin(t * 3.0 + h * 40.0)) * u_star * smoothstep(HZ + 3.0, HZ + 22.0, y);
+    col += vec3(0.9, 0.95, 1.0) * st;
+
+    vec2 cp = floor(px / 2.0);
+    float cn = fbm(vec2(cp.x * 0.09 + t * 0.012, cp.y * 0.3));
+    float cm = step(0.60, cn) * smoothstep(58.0, 64.0, y) * (1.0 - smoothstep(80.0, 88.0, y)) * (1.0 - u_star);
+    vec3 cc = clamp((0.5 * u_skyBot + 0.6) * (0.4 + 0.6 * u_amb), 0.0, 1.0);
+    col = mix(col, cc, cm * 0.9);
+
+    for (int i = 0; i < 3; i++){
+      float fi = float(i);
+      float bx = mod(t * (4.0 + fi * 1.5) + fi * 55.0, 190.0) - 15.0;
+      float by = 64.0 + fi * 6.0 + 2.0 * sin(t * 0.8 + fi * 2.0);
+      float fl = step(0.0, sin(t * 7.0 + fi * 2.0));
+      vec2 bq = px - vec2(floor(bx), floor(by));
+      float bird = rect(bq, vec2(0.0, 0.0), vec2(1.0, 1.0)) + rect(bq, vec2(-2.0, fl), vec2(2.0, 1.0)) + rect(bq, vec2(1.0, fl), vec2(2.0, 1.0));
+      col = mix(col, vec3(0.08, 0.10, 0.15), clamp(bird, 0.0, 1.0) * (1.0 - u_star));
+    }
+  } else if (y >= sy){
+    // ---------------- sea ----------------
+    float v = HZ - y;
+    float depth = v / (HZ - 21.0);
+    vec3 base = mix(u_seaTop, u_seaBot, depth);
+    float fr = fract(sqrt(v) * 2.3 + t * 0.28 + sin(x * 0.09 + t * 0.4) * 0.12);
+    float band = step(0.84, fr);
+    float trough = step(fr, 0.15);
+    col = base * (1.0 - 0.18 * trough);
+    col = mix(col, base * 1.5 + 0.08, band);
+
+    float sv = smoothstep(HZ - 6.0, HZ + 14.0, u_sunY);
+    float refl = exp(-abs(x - 112.0 + sin(y * 0.5 + t) * 2.0) * 0.09);
+    float spk = step(0.9, hash(vec2(x, y) + floor(t * 5.0)));
+    col += u_sunCol * (spk * refl * sv * 1.4 + refl * sv * 0.18 * band);
+    float mrefl = exp(-abs(x - 42.0 + sin(y * 0.5 + t * 0.8) * 2.0) * 0.12);
+    col += vec3(0.8, 0.85, 1.0) * (spk * mrefl * 0.8 + mrefl * 0.10 * band) * u_star;
+
+    col = mix(col, mix(u_skyBot, u_seaTop, 0.5), exp(-v * 0.35) * 0.7);
+
+    float foam = step(y - sy, 1.3 + 0.8 * sin(x * 0.4 + t * 1.5));
+    col = mix(col, vec3(0.92, 0.97, 1.0) * (0.3 + 0.7 * u_amb), foam);
+  } else {
+    // ---------------- sand ----------------
+    col = vec3(0.86, 0.74, 0.52) * u_amb;
+    col *= 0.9 + 0.1 * (y / 21.0);
+    if (hash(px) > 0.93) col *= 0.86;
+    float wet = 1.0 - smoothstep(0.0, 4.0, sy - y);
+    col = mix(col, u_skyBot * 0.35 + col * 0.45, wet * 0.6);
+  }
+
+  // ---------------- the boat and the beam ----------------
+  float hull = rect(px, vec2(31.0, HZ - 1.0), vec2(7.0, 2.0)) + rect(px, vec2(34.0, HZ + 1.0), vec2(1.0, 4.0));
+  col = mix(col, vec3(0.02, 0.03, 0.06), clamp(hull, 0.0, 1.0) * smoothstep(0.05, 0.3, u_star));
+
+  float srcY = HZ + 5.0;
+  vec3 bc = mix(vec3(0.10, 1.0, 0.55), vec3(0.15, 0.60, 1.0), 0.5 + 0.5 * sin(y * 0.1 - t * 1.5));
+  float bp = 0.85 + 0.15 * sin(t * 4.0);
+  float wob = sin(y * 0.3 - t * 6.0) * 0.4;
+  float dx = abs(x - 34.0 + wob);
+  if (y >= srcY && y <= u_beamTop){
+    float pk = 0.6 + 0.4 * sin(y * 0.4 - t * 9.0);
+    col += bc * (exp(-dx * 0.9) * 1.3 * pk + exp(-dx * 0.16) * 0.5) * u_beam * bp;
+  }
+  if (y < HZ){
+    float dxr = abs(x - 34.0 + sin(y * 0.6 + t * 3.0) * 2.5);
+    float rs = 0.5 + 0.5 * step(0.4, hash(vec2(x, y) + floor(t * 6.0)));
+    col += bc * exp(-dxr * 0.25) * exp(-(HZ - y) * 0.04) * rs * 0.7 * u_beam * bp;
+  }
+  col += bc * exp(-length(px - vec2(34.0, srcY)) * 0.25) * 1.2 * u_beam * bp;
+  float lamp = rect(px, vec2(34.0, srcY), vec2(1.0, 1.0)) * step(0.3, u_star);
+  col = mix(col, vec3(1.0, 0.85, 0.4), lamp * (0.6 + 0.4 * sin(t * 2.0)));
+
+  // ---------------- the girl and the dog ----------------
+  vec4 sp = vec4(0.0);
+  float shadow = 0.0;
+  if (u_mode < 0.5){
+    vec2 gq = px - vec2(floor(u_gx), u_gy);
+    vec2 dq = px - vec2(floor(u_dgx), u_gy);
+    vec4 g = girlWalk(gq, u_walk * floor(sin(u_gph) + 0.5));
+    vec4 d = dogWalk(dq, u_walk * floor(sin(u_dph) + 0.5));
+    sp = vec4(mix(d.rgb, g.rgb, g.a), max(d.a, g.a));
+    shadow = rect(gq, vec2(-1.0, -1.0), vec2(6.0, 1.0)) + rect(dq, vec2(-2.0, -1.0), vec2(14.0, 1.0));
+    vec2 A = vec2(floor(u_gx) + 5.0, u_gy + 8.0);
+    vec2 B = vec2(floor(u_dgx) + 9.0, u_gy + 6.0);
+    vec2 pa = px - A; vec2 ba = B - A;
+    float hh = clamp(dot(pa, ba) / dot(ba, ba), 0.0, 1.0);
+    float leash = 1.0 - step(0.6, length(pa - ba * hh));
+    sp = vec4(mix(sp.rgb, vec3(0.7, 0.2, 0.2), leash * (1.0 - sp.a)), max(sp.a, leash));
+  } else {
+    vec2 gq = px - vec2(floor(u_gx), u_gy);
+    vec2 dq = px - vec2(floor(u_dgx), u_gy);
+    vec4 g = girlSit(gq);
+    vec4 d = dogSit(dq);
+    sp = vec4(mix(d.rgb, g.rgb, g.a), max(d.a, g.a));
+    shadow = rect(gq, vec2(-4.0, -1.0), vec2(9.0, 1.0)) + rect(dq, vec2(-4.0, -1.0), vec2(9.0, 1.0));
+  }
+  col *= 1.0 - 0.28 * clamp(shadow, 0.0, 1.0) * (1.0 - sp.a);
+  col = mix(col, sp.rgb * (0.25 + 0.75 * u_amb), sp.a);
+
+  vec2 p = (px + 0.5) / vec2(160.0, 90.0) - 0.5;
+  col *= 1.0 - 0.45 * dot(p, p);
+  col *= u_fade;
+
+  const float LV = 14.0;
+  col += (bayer4(px) - 0.47) / LV;
+  col = floor(clamp(col, 0.0, 1.0) * LV) / LV;
+  gl_FragColor = vec4(col, 1.0);
+}
+</script>
+
+<script>
+(function(){
+'use strict';
+
+const CYCLE = 200;                       // seconds per full day -> night -> sunrise loop
+const clamp = (x,a=0,b=1)=>Math.max(a,Math.min(b,x));
+const sstep = (a,b,x)=>{const t=clamp((x-a)/(b-a));return t*t*(3-2*t);};
+const $ = id => document.getElementById(id);
+
+// ---------- time-of-day keyframes ----------
+const NIGHT = {skyTop:[.01,.02,.08],skyBot:[.04,.08,.20],seaTop:[.01,.04,.12],seaBot:[.05,.12,.26],amb:[.26,.33,.58],sunCol:[1,.4,.2],sunY:10,star:1};
+const DAY0  = {skyTop:[.35,.65,.95],skyBot:[.72,.88,.98],seaTop:[.15,.45,.72],seaBot:[.25,.68,.82],amb:[1,1,1],sunCol:[1,.95,.7],sunY:74,star:0};
+const KEYS = [
+  Object.assign({t:0},DAY0),
+  {t:70, skyTop:[.30,.55,.90],skyBot:[.96,.86,.70],seaTop:[.14,.40,.68],seaBot:[.30,.65,.75],amb:[1,.95,.85],sunCol:[1,.9,.6],sunY:62,star:0},
+  {t:100,skyTop:[.33,.18,.48],skyBot:[1,.50,.30],  seaTop:[.28,.18,.42],seaBot:[.85,.42,.36],amb:[.95,.62,.52],sunCol:[1,.55,.25],sunY:54,star:0},
+  {t:125,skyTop:[.07,.07,.24],skyBot:[.50,.24,.40],seaTop:[.06,.09,.24],seaBot:[.22,.20,.40],amb:[.46,.40,.62],sunCol:[1,.4,.2],sunY:36,star:.45},
+  Object.assign({t:150},NIGHT),
+  Object.assign({t:185},NIGHT),
+  Object.assign({t:200},DAY0)
+];
+function sample(t){
+  let i = 0; while(i<KEYS.length-2 && t>=KEYS[i+1].t) i++;
+  const a = KEYS[i], b = KEYS[i+1], u = sstep(a.t,b.t,t), o = {};
+  for(const k in a){
+    if(k==='t') continue;
+    o[k] = Array.isArray(a[k]) ? a[k].map((v,j)=>v+(b[k][j]-v)*u) : a[k]+(b[k]-a[k])*u;
+  }
+  return o;
+}
+
+// ---------- audio: soft pads + ocean + wind + sparse bells (light, no heavy reverb) ----------
+const Aud = (function(){
+  let ctx, master, pre, echoIn, padFlt, padGain;
+  const pads = [];
+  let nextBar = 0, barIdx = 0, muted = false, on = false, night = false, vol = 1;
+  const LEVEL = 0.6;
+  const mtof = n => 440*Math.pow(2,(n-69)/12);
+  const DAYC = [[48,55,59,64,67],[45,52,57,60,67],[41,53,57,60,64],[43,50,55,59,66]];
+  const NIGHTC = [[45,52,57,60,64],[41,48,53,57,60],[48,55,60,64,67],[43,50,55,59,62]];
+  const PENT = [72,74,76,79,81,84,88];
+  // BEACH THEMES: [seconds into the bar, midi, length]. DAY (Cmaj7 - Am7 - Fmaj7 - Gmaj7) is playful and sunny;
+  // NIGHT (Am7 - Fmaj7 - C - G) is slower, lower and tender.
+  const DAYTHEME = [
+    [[0,79,1.8],[1.5,76,1.4],[3,79,1.4],[4.5,84,2.2],[7,83,1.0]],
+    [[0,81,1.8],[1.5,79,1.4],[3,76,1.8],[5,72,1.6],[6.5,76,1.4]],
+    [[0,77,1.8],[1.5,81,1.4],[3,84,1.8],[5,81,1.6],[6.5,79,1.4]],
+    [[0,83,1.8],[1.5,79,1.4],[3,78,1.4],[4.5,79,2.0],[6.5,79,1.2]]
+  ];
+  const NIGHTTHEME = [
+    [[0,76,2.6],[3,72,2.0],[5.5,69,2.4]],
+    [[0,77,2.6],[3,72,2.0],[5.5,76,2.4]],
+    [[0,79,2.6],[3,76,2.0],[5.5,72,2.4]],
+    [[0,74,2.6],[3,71,2.0],[5.5,74,2.4]]
+  ];
+  let story = {star:0,beam:0}, melodyOn = true;
+
+  function osc(type,f){ const o = ctx.createOscillator(); o.type = type; o.frequency.value = f; o.start(); return o; }
+  function noiseBuf(brown){
+    const len = ctx.sampleRate*4, b = ctx.createBuffer(1,len,ctx.sampleRate), d = b.getChannelData(0); let l = 0;
+    for(let i=0;i<len;i++){ const w = Math.random()*2-1; if(brown){ l = (l+0.02*w)/1.02; d[i] = l*3.5; } else d[i] = w; }
+    return b;
+  }
+  function loopSrc(buf,rate){ const s = ctx.createBufferSource(); s.buffer = buf; s.loop = true; s.playbackRate.value = rate; s.start(0,Math.random()*2); return s; }
+  function lfo(freq,depth,param){ const o = osc('sine',freq), g = ctx.createGain(); g.gain.value = depth; o.connect(g); g.connect(param); }
+
+  function start(){
+    ctx = new (window.AudioContext||window.webkitAudioContext)({latencyHint:'playback'});
+    if(ctx.state==='suspended') ctx.resume();
+    pre = ctx.createGain();
+    master = ctx.createGain(); master.gain.value = 0;
+    const comp = ctx.createDynamicsCompressor();
+    comp.threshold.value = -20; comp.ratio.value = 6; comp.knee.value = 20; comp.attack.value = 0.01; comp.release.value = 0.3;
+    pre.connect(master); master.connect(comp); comp.connect(ctx.destination);
+
+    echoIn = ctx.createGain();
+    const dl = ctx.createDelay(1.5); dl.delayTime.value = 0.55;
+    const fb = ctx.createGain(); fb.gain.value = 0.38;
+    const ef = ctx.createBiquadFilter(); ef.type = 'lowpass'; ef.frequency.value = 2200;
+    echoIn.connect(dl); dl.connect(ef); ef.connect(fb); fb.connect(dl); ef.connect(pre);
+
+    padFlt = ctx.createBiquadFilter(); padFlt.type = 'lowpass'; padFlt.frequency.value = 1100; padFlt.Q.value = 0.3;
+    padGain = ctx.createGain(); padGain.gain.value = 0.03;
+    padFlt.connect(padGain); padGain.connect(pre);
+    const ps = ctx.createGain(); ps.gain.value = 0.2; padGain.connect(ps); ps.connect(echoIn);
+    for(let i=0;i<5;i++){ const o = osc('triangle',110); o.detune.value = (i%2?5:-5); o.connect(padFlt); pads.push(o); }
+
+    // ocean: slow swells (brown noise) + foam hiss riding the same swell
+    const brown = noiseBuf(true), white = noiseBuf(false);
+    const sw = ctx.createBiquadFilter(); sw.type = 'lowpass'; sw.frequency.value = 700;
+    const swG = ctx.createGain(); swG.gain.value = 0.10;
+    loopSrc(brown,1.0).connect(sw); sw.connect(swG); swG.connect(pre);
+    lfo(0.09,0.07,swG.gain);
+    const hs = ctx.createBiquadFilter(); hs.type = 'bandpass'; hs.frequency.value = 2200; hs.Q.value = 0.5;
+    const hsG = ctx.createGain(); hsG.gain.value = 0.008;
+    loopSrc(white,1.0).connect(hs); hs.connect(hsG); hsG.connect(pre);
+    lfo(0.09,0.008,hsG.gain);
+    // wind
+    const wf = ctx.createBiquadFilter(); wf.type = 'bandpass'; wf.frequency.value = 400; wf.Q.value = 0.6;
+    const wG = ctx.createGain(); wG.gain.value = 0.03;
+    loopSrc(brown,0.8).connect(wf); wf.connect(wG); wG.connect(pre);
+    lfo(0.037,0.02,wG.gain);
+
+    master.gain.setTargetAtTime(LEVEL,ctx.currentTime,1.0);
+    nextBar = ctx.currentTime+0.2; on = true;
+    setInterval(tick,200);
+  }
+  function bell(f,t,vol,len,echo){
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = 'sine'; o.frequency.value = f;
+    g.gain.setValueAtTime(0.0001,t);
+    g.gain.linearRampToValueAtTime(vol,t+0.012);
+    g.gain.exponentialRampToValueAtTime(0.0001,t+len);
+    o.connect(g); g.connect(pre);
+    if(echo){ const e = ctx.createGain(); e.gain.value = echo; g.connect(e); e.connect(echoIn); }
+    o.start(t); o.stop(t+len+0.05);
+  }
+  function musicbox(f,t,v,len,echo){                                       // the beach voice: a music box with a bright little tine
+    const g = ctx.createGain(), o = ctx.createOscillator(), o2 = ctx.createOscillator(), g2 = ctx.createGain();
+    o.type = 'sine'; o.frequency.value = f; o.connect(g);
+    g.gain.setValueAtTime(0.0001,t); g.gain.linearRampToValueAtTime(v,t+0.004); g.gain.exponentialRampToValueAtTime(0.0001,t+len);
+    o2.type = 'sine'; o2.frequency.value = f*4.02;                       // slightly sharp overtone = the metal tine
+    g2.gain.setValueAtTime(v*0.22,t); g2.gain.exponentialRampToValueAtTime(0.0001,t+Math.min(len,0.3)); o2.connect(g2); g2.connect(pre);
+    g.connect(pre);
+    if(echo){ const e = ctx.createGain(); e.gain.value = echo; g.connect(e); e.connect(echoIn); }
+    o.start(t); o2.start(t); o.stop(t+len+0.05); o2.stop(t+0.4);
+  }
+  function scheduleBar(t0){
+    const set = night ? NIGHTC : DAYC, ch = set[barIdx%4];
+    pads.forEach((o,k)=>o.frequency.setTargetAtTime(mtof(ch[k]),t0,1.0));
+    padFlt.frequency.setTargetAtTime(night?650:1100,t0,2.0);
+    if(melodyOn){
+      const bar = (night ? NIGHTTHEME : DAYTHEME)[barIdx%4], loop = Math.floor(barIdx/4)%3;
+      let vel = night ? 0.03 : 0.036, dens = night ? 0.9 : 1;
+      if(!night && story.star>0.05){ vel = 0.034; dens = 0.88; }               // sunset: a little softer and slower
+      bar.forEach((n,i)=>{
+        if(i>0 && Math.random()>dens) return;
+        if(loop===1 && i>0 && Math.random()<0.2) return;                        // loop 2: a few rests
+        musicbox(mtof(n[1]),t0+n[0]+Math.random()*0.04,vel,n[2]+0.5,night?0.55:0.42);
+        if(loop===2 && i===bar.length-1) musicbox(mtof(n[1]+12),t0+n[0]+0.3,vel*0.55,n[2],0.5);   // loop 3: an octave echo
+      });
+      if(story.beam>0.5){                                                       // the lighthouse calls: two slow notes per bar
+        musicbox(mtof(83),t0+0.3,0.026,3.2,0.7); musicbox(mtof(88),t0+4.3,0.026,3.2,0.7);
+      }
+    }
+    if(Math.random()<0.4) bell(mtof(PENT[Math.floor(Math.random()*PENT.length)]),t0+0.5+Math.random()*7,0.022,2.8,0.5);   // rare spark
+    barIdx++;
+  }
+  function tick(){ while(on && nextBar < ctx.currentTime+1.5){ scheduleBar(nextBar); nextBar += 8; } }
+  function chime(){
+    if(!on) return;
+    const t = ctx.currentTime+0.1;
+    [64,67,71,76,79,83,88].forEach((n,i)=>bell(mtof(n),t+i*0.12,0.05,3,0.6));
+  }
+  function toggleMute(){ muted = !muted; if(on) master.gain.setTargetAtTime(muted?0:LEVEL*vol,ctx.currentTime,0.1); return muted; }
+  function setVol(v){ vol = v; if(on) master.gain.setTargetAtTime(muted?0:LEVEL*v,ctx.currentTime,0.4); }
+  function setStory(star,beam){ story = {star:star,beam:beam}; }
+  function toggleMelody(){ melodyOn = !melodyOn; return melodyOn; }
+  return { start, chime, toggleMute, setVol, setStory, toggleMelody, setNight:v=>{night=v;} };
+})();
+
+// ---------- WebGL ----------
+const canvas = $('gl');
+const gl = canvas.getContext('webgl',{antialias:false,alpha:false});
+function fail(m){ const e=$('err'); e.style.display='block'; e.textContent=m; }
+if(!gl){ fail('WebGL is not available in this browser.'); return; }
+function mk(type,src){
+  const s = gl.createShader(type); gl.shaderSource(s,src); gl.compileShader(s);
+  if(!gl.getShaderParameter(s,gl.COMPILE_STATUS)) fail('Shader error:\n'+gl.getShaderInfoLog(s));
+  return s;
+}
+const prog = gl.createProgram();
+gl.attachShader(prog,mk(gl.VERTEX_SHADER,$('vs').textContent));
+gl.attachShader(prog,mk(gl.FRAGMENT_SHADER,$('fs').textContent));
+gl.linkProgram(prog);
+if(!gl.getProgramParameter(prog,gl.LINK_STATUS)) fail('Link error:\n'+gl.getProgramInfoLog(prog));
+gl.useProgram(prog);
+const buf = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER,buf);
+gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1, 3,-1, -1,3]),gl.STATIC_DRAW);
+const aPos = gl.getAttribLocation(prog,'a_pos');
+gl.enableVertexAttribArray(aPos);
+gl.vertexAttribPointer(aPos,2,gl.FLOAT,false,0,0);
+gl.viewport(0,0,160,90);
+const U = n => gl.getUniformLocation(prog,n);
+const L = {};
+['u_time','u_star','u_sunY','u_beam','u_beamTop','u_fade','u_mode','u_walk','u_gx','u_dgx','u_gph','u_dph','u_gy',
+ 'u_skyTop','u_skyBot','u_seaTop','u_seaBot','u_amb','u_sunCol'].forEach(n=>L[n]=U(n));
+
+// ---------- story clock ----------
+let clk = 0, running = false, speed = 1, chimed = false, sleepLen = 0, sleepEnd = 0, lastAud = 0;
+const WALK_END = 44, SIT_AT = 50;
+
+function story(){
+  const o = {mode:0,walk:1,gx:0,dgx:0,gph:0,dph:0,gy:9};
+  if(clk < SIT_AT){
+    const x = clamp(clk/WALK_END);
+    const e = 0.85*x + 0.15*sstep(0,1,x);
+    o.gx = -18 + 88*e;
+    o.dgx = o.gx + 15 + (clk<WALK_END ? 1.5*Math.sin(clk*0.8) : 0);
+    o.walk = clk<WALK_END ? 1 : 0;
+    o.gph = o.gx*1.1; o.dph = o.dgx*1.7;
+  } else {
+    o.mode = 1; o.gx = 72; o.dgx = 82; o.gy = 8;
+  }
+  return o;
+}
+
+let last = performance.now(), lastDraw = 0;
+function frame(now){
+  const dt = Math.min(0.1,(now-last)/1000); last = now;
+  if(running) clk = (clk + dt*speed) % CYCLE;
+  if(now-lastDraw >= 33){      // 30 fps is plenty for ambience
+    lastDraw = now;
+    const k = sample(clk), s = story();
+    const beam = sstep(150,152,clk)*(1-sstep(183,190,clk));
+    if(running && clk>=150 && clk<160 && !chimed){ chimed = true; Aud.chime(); }
+    if(clk<140) chimed = false;
+    Aud.setNight(k.star>0.5); Aud.setStory(k.star,beam);
+    let sl = 1; if(sleepEnd) sl = clamp((sleepEnd-Date.now())/(sleepLen*0.3),0,1);
+    if(now-lastAud>400){ lastAud = now; Aud.setVol(sl); }
+
+    gl.uniform1f(L.u_time,now/1000);
+    gl.uniform1f(L.u_star,k.star);
+    gl.uniform1f(L.u_sunY,k.sunY);
+    gl.uniform1f(L.u_beam,beam);
+    gl.uniform1f(L.u_beamTop,57+clamp((clk-150)*45,0,80));
+    gl.uniform1f(L.u_fade,running ? Math.min(sstep(0,1.5,clk),1-sstep(198.5,200,clk))*sl : 0.9);
+    gl.uniform1f(L.u_mode,s.mode); gl.uniform1f(L.u_walk,s.walk);
+    gl.uniform1f(L.u_gx,s.gx); gl.uniform1f(L.u_dgx,s.dgx);
+    gl.uniform1f(L.u_gph,s.gph); gl.uniform1f(L.u_dph,s.dph); gl.uniform1f(L.u_gy,s.gy);
+    gl.uniform3fv(L.u_skyTop,k.skyTop); gl.uniform3fv(L.u_skyBot,k.skyBot);
+    gl.uniform3fv(L.u_seaTop,k.seaTop); gl.uniform3fv(L.u_seaBot,k.seaBot);
+    gl.uniform3fv(L.u_amb,k.amb); gl.uniform3fv(L.u_sunCol,k.sunCol);
+    gl.drawArrays(gl.TRIANGLES,0,3);
+  }
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+
+// ---------- UI / dev ----------
+$('btn-start').addEventListener('click',()=>{
+  try{ Aud.start(); }catch(e){ console.warn('audio unavailable',e); }
+  $('start').classList.add('hide');
+  running = true; clk = 0;
+});
+const dev = $('dev');
+const toggleDev = ()=>dev.classList.toggle('on');
+$('devdot').addEventListener('click',toggleDev);
+const JUMPS = [0,70,100,125,150,185];
+function jump(){ const n = JUMPS.find(t=>t>clk+1); clk = n===undefined ? 0 : n; }
+$('dev-jump').addEventListener('click',jump);
+$('dev-speed').addEventListener('click',()=>{ speed = speed===1 ? 10 : 1; $('dev-speed').textContent = 'SPEED x'+speed; });
+$('dev-mute').addEventListener('click',()=>{ $('dev-mute').textContent = Aud.toggleMute() ? 'UNMUTE [M]' : 'MUTE [M]'; });
+$('dev-mel').addEventListener('click',()=>{ $('dev-mel').textContent = 'MELODY: '+(Aud.toggleMelody()?'ON':'OFF'); });
+$('dev-sleep').addEventListener('click',()=>{
+  const opts = [0,15,30,60], i = (opts.indexOf(sleepLen/60000)+1)%opts.length, m = opts[i];
+  sleepLen = m*60000; sleepEnd = m ? Date.now()+sleepLen : 0;
+  $('dev-sleep').textContent = m ? 'SLEEP: '+m+' MIN' : 'SLEEP: OFF';
+});
+window.__seek = t=>{ running = true; $('start').classList.add('hide'); clk = t; };
+addEventListener('keydown',e=>{
+  const k = e.key.toLowerCase();
+  if(k==='s') toggleDev(); else if(k==='n') jump(); else if(k==='m') $('dev-mute').click();
+});
+setInterval(()=>{ if(dev.classList.contains('on')) $('devinfo').textContent = 'TIME '+clk.toFixed(0)+'/'+CYCLE+'s'; },250);
+
+})();
+</script>
+</body>
+</html>

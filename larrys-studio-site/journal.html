@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src https://api.web3forms.com; object-src 'none'; base-uri 'self'; form-action 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Journal — Larry Simiyu</title>
+<meta name="description" content="Notes on how the pixel worlds and music kits get made.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23040b14'/%3E%3Cpath fill='%234deeea' d='M6 3h3v1h1v1H8v1H7v4h1v1h2v1H9v1H6v-1H5v-1H4V5h1V4h1z'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Caveat:wght@600;700&family=Press+Start+2P&family=VT323&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-root="">
+<div class="wrap">
+  <nav class="topbar">
+    <a class="btn alt" href="index.html">← Studio home</a>
+    <div class="themes-mini" role="group" aria-label="Choose a theme">
+      <button class="icon-btn" data-set-theme="paper" type="button">Paper</button>
+      <button class="icon-btn" data-set-theme="pixel" type="button">Pixel</button>
+      <button class="icon-btn" data-set-theme="muscovy" type="button">Muscovy</button>
+    </div>
+  </nav>
+  <header class="page-hero" style="--c:#3b3a35"><div class="box" data-title="JOURNAL.EXE"><div class="code">CODE_004 //</div><h1>Journal</h1><p>Notes on how things get made. No schedule, no pressure.</p></div></header>
+  <section id="jm"></section>
+  <div class="box wob greet" id="greet" data-title="HELLO.EXE"></div>
+  <footer data-footer></footer>
+</div>
+<script src="data.js"></script>
+<script src="studio.js"></script>
+<script>function route() {
+  const h = location.hash.slice(1), L = [...POSTS].sort((a, b) => b.date.localeCompare(a.date));
+  const i = L.findIndex(p => p.id === h), m = $("#jm");
+  if (i > -1) {
+    const p = L[i], pv = L[i + 1], nx = L[i - 1];
+    document.title = p.title + " — Larry Simiyu";
+    m.innerHTML = `<article class="box post" data-title="${esc(p.id.toUpperCase().slice(0, 24))}.TXT"><div class="meta">${fmt(p.date)} · ${mins(p.body)} min · #${esc(p.tag)}</div><h2>${inl(p.title)}</h2>${md(p.body)}</article>
+      <div class="pn"><span>${pv ? `<a class="btn alt" href="#${pv.id}">‹ ${esc(pv.title)}</a>` : ""}</span><span>${nx ? `<a class="btn alt" href="#${nx.id}">${esc(nx.title)} ›</a>` : ""}</span></div>
+      <p style="margin-top:16px"><a href="#">← all entries</a></p>`;
+  } else {
+    const t = h.startsWith("tag-") ? h.slice(4) : "", ps = t ? L.filter(p => p.tag === t) : L;
+    document.title = "Journal — Larry Simiyu";
+    m.innerHTML = `<div class="chips"><a class="chip" href="#" ${t ? "" : 'aria-pressed="true"'}>all</a>${[...new Set(L.map(p => p.tag))].map(x => `<a class="chip" href="#tag-${x}" ${x === t ? 'aria-pressed="true"' : ""}>#${x}</a>`).join("")}</div>
+      <div class="cards">${ps.map(p => `<a class="item post-card" href="#${p.id}"><div class="txt"><span class="tag">${fmt(p.date)} · ${mins(p.body)} min · #${esc(p.tag)}</span><h3>${inl(p.title)}</h3><p>${esc(p.body.replace(/^[#>-] /gm, "").split("\n\n")[0].slice(0, 130))}…</p></div></a>`).join("")}</div>`;
+  }
+  scrollTo(0, 0);
+}
+addEventListener("hashchange", route); route();</script>
+</body>
+</html>
