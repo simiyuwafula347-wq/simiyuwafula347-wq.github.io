@@ -1,0 +1,45 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ambience — Larry Simiyu</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,500;1,600&family=Karla:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#140d24;--glow:#f6b25c;--mist:#d9c9f2;--paper:#f3e6cf}
+*{box-sizing:border-box;margin:0}
+body{background:var(--ink);color:var(--mist);font:400 1rem/1.65 Karla,system-ui,sans-serif}
+a{color:inherit}
+.back{position:absolute;z-index:3;top:1rem;left:1rem;font-size:.9rem;text-decoration:none;background:#140d24b0;padding:.4rem .8rem;border-radius:2rem}
+.hero{position:relative;height:90svh;min-height:540px;overflow:hidden;display:flex;align-items:flex-end}
+.hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;animation:drift 40s ease-in-out infinite alternate}
+@keyframes drift{to{transform:scale(1.12) translateX(-2%)}}
+@media(prefers-reduced-motion:reduce){.hero img{animation:none}}
+.hero:after{content:"";position:absolute;inset:0;background:linear-gradient(transparent 40%,var(--ink))}
+.hero div{position:relative;z-index:2;padding:0 1.25rem 2.2rem;max-width:34rem}
+h1{font:italic 600 clamp(2.8rem,12vw,5.5rem)/.95 'Cormorant Garamond',serif;color:var(--paper)}
+.hero p{margin:1rem 0 1.4rem}
+.btn{display:inline-block;background:var(--glow);color:#2a1606;font-weight:600;padding:.8rem 1.4rem;border-radius:2rem;text-decoration:none}
+.btn.ghost{background:none;color:var(--paper);border:1px solid #f3e6cf80;margin-left:.4rem}
+main{max-width:60rem;margin:auto;padding:2rem 1.25rem 4rem}
+h2{font:italic 500 2rem/1.1 'Cormorant Garamond',serif;color:var(--paper);margin-bottom:.4rem}
+.cards{display:grid;gap:1rem;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));margin:1.5rem 0 3rem}
+.card{background:var(--paper);color:#2a1606;padding:.6rem .6rem 1rem;border-radius:3px;transform:rotate(var(--r,-1deg));box-shadow:0 14px 30px #0008;text-decoration:none}
+.card:nth-child(even){--r:1.2deg}
+.card i{display:block;aspect-ratio:4/3;background:linear-gradient(160deg,var(--a),var(--b));margin-bottom:.6rem}
+.card b{font:italic 600 1.3rem 'Cormorant Garamond',serif;display:block}
+.card small{opacity:.7}
+.list{display:grid;gap:.8rem;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));list-style:none;padding:0;margin:1rem 0 2rem}
+.list li{border-left:2px solid var(--glow);padding-left:.9rem}
+.buy{background:#2a1a45;border:1px solid #f6b25c55;padding:1.5rem;border-radius:6px}
+</style></head><body>
+<a class="back" href="index.html#projects">‹ Shelf</a>
+<header class="hero"><img src="img/shop-ambience.jpg" alt="Pixel harbor at dusk with lanterns and tall ships">
+<div><h1>Ambience</h1><p>Pixel worlds that play their own music, made live in your browser. Open one, put on headphones, and stay a while.</p>
+<a class="btn" href="#worlds">Enter a world</a><a class="btn ghost" href="ambience/beach/">Try Pixel Beach free</a></div></header>
+<main>
+<h2 id="worlds">The worlds</h2><p>Each one is a single page you can run offline once you have it.</p>
+<div class="cards">
+<a class="card" href="ambience/beach/" style="--a:#f08a5d;--b:#3b2a6b"><i></i><b>Pixel Beach</b><small>Free to play</small></a>
+<a class="card" href="#" style="--a:#6a4fb3;--b:#140d24"><i></i><b>Lantern Harbor</b><small>Name your world here</small></a>
+<a class="card" href="#" style="--a:#2e7d6b;--b:#0e1f2b"><i></i><b>Next world</b><small>Add a card per world</small></a>
+</div>
+<h2>What you get</h2>
+<ul class="list"><li>Music composed live, so it never loops the same way twice</li><li>Controls for speed, mute, melody and a sleep timer</li><li>Plain HTML files: host them or run them from your desktop</li></ul>
+<div class="buy"><h2>Take the whole set</h2><p style="margin-bottom:1rem">All worlds, plus every new one I add. Pay what feels fair.</p><a class="btn" href="#">Get the Ambience pack</a></div>
+</main></body></html>

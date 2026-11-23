@@ -1,0 +1,36 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>UI Kits — Larry Simiyu</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#10171a;--teal:#3fd6c0;--amber:#f0a64a;--ink:#d8ece8;--k:#3fd6c0}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg) linear-gradient(#3fd6c014 1px,transparent 1px) 0 0/28px 28px,linear-gradient(90deg,#3fd6c014 1px,transparent 1px) 0 0/28px 28px;color:var(--ink);font:400 .95rem/1.6 'IBM Plex Mono',monospace}
+a{color:var(--amber)}
+.wrap{max-width:62rem;margin:auto;padding:1rem 1.25rem 4rem}
+h1{font:800 clamp(2.6rem,11vw,5rem)/.95 'Bricolage Grotesque',sans-serif;margin:1.2rem 0 .8rem}
+h2{font:600 1.5rem 'Bricolage Grotesque',sans-serif;margin:2.5rem 0 .8rem}
+.frame{position:relative;border:1px solid var(--teal);padding:8px;margin:1.5rem 0}
+.frame:before,.frame:after{content:"";position:absolute;width:18px;height:18px;border:2px solid var(--amber)}
+.frame:before{top:-6px;left:-6px;border-right:0;border-bottom:0}.frame:after{bottom:-6px;right:-6px;border-left:0;border-top:0}
+.frame img{width:100%;display:block}
+.demo{display:grid;gap:1.5rem;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));align-items:center}
+.player{background:#0b1013;border:2px solid var(--k);border-radius:14px;padding:1.2rem;box-shadow:0 0 30px color-mix(in srgb,var(--k) 35%,transparent);transition:.25s}
+.player b{color:var(--k);font:800 1.3rem 'Bricolage Grotesque'}
+.bar{height:6px;background:#ffffff22;margin:1rem 0;border-radius:4px}.bar i{display:block;width:42%;height:100%;background:var(--k);border-radius:4px}
+.play{width:48px;height:48px;border-radius:50%;background:var(--k);border:0}
+.sw button{width:36px;height:36px;border-radius:50%;border:2px solid #fff6;margin-right:.5rem;cursor:pointer}
+dl{display:grid;grid-template-columns:8rem 1fr;border-top:1px solid var(--teal)}
+dt,dd{padding:.6rem 0;border-bottom:1px solid #3fd6c033}dt{color:var(--teal)}
+.btn{display:inline-block;background:var(--amber);color:#201005;font-weight:500;padding:.85rem 1.4rem;text-decoration:none;margin-top:1.5rem}
+</style></head><body><div class="wrap">
+<a href="index.html#projects">‹ Shelf</a>
+<h1>UI Kits</h1>
+<p>Music player interfaces built as clean HTML, CSS and a little JavaScript. Change the colors, drop in your tracks, ship it.</p>
+<div class="frame"><img src="img/shop-uikits.jpg" alt="Pixel desk with lamp, sketchbook, swatches and a lo-fi music player"></div>
+<h2>Try the colors</h2>
+<div class="demo"><div class="player"><b>Abyss Sonar</b><div class="bar"><i></i></div><button class="play" aria-label="Play"></button></div>
+<div><p style="margin-bottom:1rem">Tap a swatch. Every kit runs on a handful of CSS variables, so a recolor takes seconds.</p>
+<div class="sw"><button style="background:#3fd6c0" onclick="c('#3fd6c0')" aria-label="Teal"></button><button style="background:#f0a64a" onclick="c('#f0a64a')" aria-label="Amber"></button><button style="background:#ff6b8b" onclick="c('#ff6b8b')" aria-label="Rose"></button><button style="background:#9b8cff" onclick="c('#9b8cff')" aria-label="Violet"></button></div></div></div>
+<h2>Spec sheet</h2>
+<dl><dt>Files</dt><dd>index.html, style.css, player.js</dd><dt>Fonts</dt><dd>Free Google Fonts only</dd><dt>Tracks</dt><dd>Your own MP3 or OGG</dd><dt>License</dt><dd>Personal and commercial projects</dd></dl>
+<a class="btn" href="#">Get a kit</a>
+</div><script>function c(v){document.documentElement.style.setProperty('--k',v)}</script></body></html>

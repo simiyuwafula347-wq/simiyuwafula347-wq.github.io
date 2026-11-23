@@ -1,0 +1,37 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Templates — Larry Simiyu</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,500&family=Public+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#f5ede0;--sand:#dcc7aa;--rust:#b4452a;--ink:#2b1b14}
+*{box-sizing:border-box;margin:0}
+body{background:var(--paper);color:var(--ink);font:400 1rem/1.65 'Public Sans',sans-serif}
+a{color:var(--rust)}
+.wrap{max-width:64rem;margin:auto;padding:1rem 1.25rem 4rem}
+.hero{display:grid;gap:1.5rem;margin:1.5rem 0 3rem;align-items:center}
+@media(min-width:760px){.hero{grid-template-columns:1fr 1.2fr}}
+h1{font:600 clamp(2.4rem,9vw,4.4rem)/1 Fraunces,serif;margin-bottom:1rem}
+h1 em{font-weight:500}
+.hero img{width:100%;border-radius:4px;transform:rotate(1.5deg);box-shadow:8px 10px 0 var(--sand)}
+.btn{display:inline-block;background:var(--rust);color:#fff;font-weight:600;padding:.8rem 1.4rem;text-decoration:none;margin-top:1.2rem;border-radius:3px}
+h2{font:italic 500 1.9rem Fraunces,serif;margin-bottom:1rem}
+.grid{display:grid;gap:1.4rem;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.win{background:#fffaf1;border:2px solid var(--ink);border-radius:8px;overflow:hidden;box-shadow:5px 5px 0 var(--ink)}
+.tab{display:flex;gap:5px;padding:.5rem .7rem;border-bottom:2px solid var(--ink);background:var(--sand)}
+.tab i{width:9px;height:9px;border-radius:50%;background:var(--rust)}
+.pv{height:150px;padding:.8rem;display:grid;gap:.5rem;align-content:start;background:var(--bg)}
+.pv span{display:block;background:var(--c);height:12px;border-radius:2px;width:60%}.pv span:first-child{height:60px;width:100%}.pv span:nth-child(3){width:80%}
+.info{padding:.9rem 1rem;display:flex;justify-content:space-between;align-items:center;gap:.5rem}
+.info b{font:600 1.1rem Fraunces,serif}
+.info a{font-size:.9rem;font-weight:600}
+.note{margin-top:3rem;border-top:2px solid var(--ink);padding-top:1rem;max-width:36rem}
+</style></head><body><div class="wrap">
+<a href="index.html#projects">‹ Shelf</a>
+<section class="hero"><div><h1>Websites that feel <em>like you</em></h1><p>Personal site templates in plain HTML and CSS. No builders, no monthly fee. Open the file, change the words, publish for free on GitHub Pages.</p><a class="btn" href="#">Browse the templates</a></div>
+<img src="img/shop-templates.jpg" alt="Paper-cut website layouts in cream and rust"></section>
+<h2>On the table</h2>
+<div class="grid">
+<div class="win"><div class="tab"><i></i><i></i><i></i></div><div class="pv" style="--bg:#f0e1cb;--c:#b4452a"><span></span><span></span><span></span></div><div class="info"><b>Portfolio</b><a href="#">Preview</a></div></div>
+<div class="win"><div class="tab"><i></i><i></i><i></i></div><div class="pv" style="--bg:#e5ddd0;--c:#2b1b14"><span></span><span></span><span></span></div><div class="info"><b>Link page</b><a href="#">Preview</a></div></div>
+<div class="win"><div class="tab"><i></i><i></i><i></i></div><div class="pv" style="--bg:#d8e0cf;--c:#4d6a3e"><span></span><span></span><span></span></div><div class="info"><b>Journal blog</b><a href="#">Preview</a></div></div>
+</div>
+<p class="note">Every template includes a mobile layout, a light and dark mode, and a one-page guide to putting it online.</p>
+</div></body></html>

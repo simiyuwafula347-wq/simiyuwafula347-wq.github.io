@@ -1,0 +1,35 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Journal and Utilities — Larry Simiyu</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Lora:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root{--desk:#241810;--page:#efe3c8;--ink:#33261b;--glow:#ffb347}
+*{box-sizing:border-box;margin:0}
+body{background:var(--desk);color:var(--ink);font:1rem/1.7 Lora,serif}
+a{color:inherit}
+.top{position:relative}
+.top img{width:100%;display:block;max-height:60svh;object-fit:cover}
+.top:after{content:"";position:absolute;inset:0;background:linear-gradient(#0000 50%,var(--desk))}
+.top a{position:absolute;z-index:2;top:1rem;left:1rem;color:#fff;background:#241810b0;padding:.3rem .8rem;border-radius:2rem;font-size:.9rem}
+h1{font:700 clamp(2.6rem,11vw,4.6rem)/1 Caveat,cursive;color:var(--glow);padding:0 1.25rem;margin-top:-2rem;position:relative;z-index:2}
+.spread{display:grid;gap:0;max-width:62rem;margin:1.5rem auto 4rem;padding:0 .75rem}
+@media(min-width:800px){.spread{grid-template-columns:1fr 1fr}}
+.pg{background:var(--page) repeating-linear-gradient(transparent 0 31px,#8a6f4a44 31px 32px);padding:1.4rem 1.5rem;line-height:32px}
+.pg:first-child{border-radius:6px 0 0 6px;border-right:2px solid #0003}.pg:last-child{border-radius:0 6px 6px 0}
+@media(max-width:799px){.pg:first-child{border-radius:6px 6px 0 0;border:0}.pg:last-child{border-radius:0 0 6px 6px}}
+h2{font:700 2rem/32px Caveat,cursive}
+.ent{display:block;text-decoration:none;font-style:italic}.ent span{font:500 1.2rem Caveat,cursive;font-style:normal;color:#8a4b1f;margin-right:.5rem}
+.tool{display:flex;justify-content:space-between;align-items:center;border:2px dashed #33261b66;padding:0 .8rem;margin:32px 0;line-height:1.3;min-height:64px}
+.tag{font:700 1rem Caveat,cursive;color:#fff;background:#b4452a;padding:0 .6rem;transform:rotate(-4deg);border-radius:2px}
+</style></head><body>
+<div class="top"><img src="img/shop-journal.jpg" alt="Open notebook beside a toolbox of small glowing pixel robots"><a href="index.html#projects">‹ Shelf</a></div>
+<h1>Journal &amp; Utilities</h1>
+<div class="spread">
+<section class="pg"><h2>Notes on making things</h2>
+<a class="ent" href="journal.html"><span>Entry</span>Replace with your latest title</a>
+<a class="ent" href="journal.html"><span>Entry</span>Replace with the one before</a>
+<a class="ent" href="journal.html"><span>Entry</span>And the one before that</a>
+<a class="ent" href="journal.html"><span>All</span>Read the full journal</a></section>
+<section class="pg"><h2>The tool drawer</h2>
+<div class="tool"><span>First free utility: name and one line on what it does</span><span class="tag">FREE</span></div>
+<div class="tool"><span>Next utility goes here</span><span class="tag">FREE</span></div>
+<div class="tool"><span>Open slot for the next one</span><span class="tag">SOON</span></div></section>
+</div></body></html>
