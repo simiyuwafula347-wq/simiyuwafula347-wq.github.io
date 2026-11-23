@@ -153,8 +153,9 @@ showDaily();
 /* ---- shelf ---- */
 const shelf = $("#shelf"), chips = $("#chips");
 const lum = h => { const n = parseInt(h.slice(1), 16); return (.299 * (n >> 16) + .587 * ((n >> 8) & 255) + .114 * (n & 255)) / 255; };
-shelf.insertAdjacentHTML("beforeend", `<div class="board cover" style="--c:#8a8a72;--i:-1;--fg:#1f2016"><span class="name">SHELF_01–${String(BOARDS.length).padStart(2, "0")}</span><span><span class="meta2">Studio files:</span><span class="meta2">Worlds · Kits · Notes</span><span class="open">FILE_01//</span></span></div>`);
+shelf.insertAdjacentHTML("beforeend", `<div class="board cover" style="--c:#8a8a72;--i:-1;--fg:#1f2016"><span class="name">SHELF_01–${String(BOARDS.filter(b => !b.tagOnly).length).padStart(2, "0")}</span><span><span class="meta2">Studio files:</span><span class="meta2">Worlds · Kits · Notes</span><span class="open">FILE_01//</span></span></div>`);
 BOARDS.forEach((b, i) => {
+  if (b.tagOnly) { const t = document.createElement("a"); t.className = "chip"; t.href = b.page; t.textContent = b.name; chips.appendChild(t); return; }
   const el = document.createElement("a");
   el.className = "board"; el.href = b.page; el.id = "board-" + i;
   el.style.cssText = `--c:${b.color};--i:${i};--off:${(i % 3) * 34}px;--fg:${lum(b.color) > .6 ? "#2a2823" : "#f4efe2"}`;

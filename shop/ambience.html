@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'none'">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ambience — Larry Simiyu</title>
+<meta name="description" content="Pixel ambience worlds with live-generated music.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Caveat:wght@600;700&family=Press+Start+2P&family=VT323&family=Quicksand:wght@500;700&family=Bebas+Neue&family=Archivo:wght@400;600&family=Playfair+Display:ital,wght@0,700;0,900;1,500&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+<style>
+.shop-pic{margin-top:18px;border:var(--bw) solid var(--ink);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);background:var(--surface2)}
+.shop-pic img{display:block;width:100%;max-height:300px;object-fit:cover}
+.shop-nav{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 4px}
+.shop-nav .chip[aria-current="page"]{background:var(--accent);color:var(--on-accent)}
+.shop-sub{margin:26px 0 6px}
+.shop-note{margin-top:26px}
+</style>
+</head>
+<body data-root="../">
+<div class="wrap">
+  <div class="topbar">
+    <a class="btn alt" href="../index.html#projects">‹ Shelf</a>
+    <div class="themes-mini" role="group" aria-label="Choose a theme">
+      <button class="btn alt" data-set-theme="paper" type="button">1</button>
+      <button class="btn alt" data-set-theme="pixel" type="button">2</button>
+      <button class="btn alt" data-set-theme="muscovy" type="button">3</button>
+      <button class="btn alt" data-set-theme="mancave" type="button">4</button>
+      <button class="btn alt" data-set-theme="magazine" type="button">5</button>
+    </div>
+  </div>
+
+  <header class="page-hero" style="--c:#7d8aa3">
+    <div class="box" data-title="AMBIENCE.EXE">
+      <div class="code">CODE_001 //</div>
+      <h1>Ambience</h1>
+      <p>Pixel worlds that play their own music, made live in your browser. Put on headphones and stay a while.</p>
+    </div>
+    <div class="shop-pic"><img src="../img/shop-ambience.jpg" alt="" loading="lazy"></div>
+  </header>
+
+  <nav class="shop-nav" id="shopNav" aria-label="Shop sections"></nav>
+
+  <main>
+    <section><div class="cards" id="list"></div></section>
+    <section class="shop-note"><div class="box" data-title="HOW_IT_WORKS.EXE"><p>Music is composed live, so it never loops the same way twice. Pixel Beach is free to play right here; the rest are on itch.io.</p></div></section>
+  </main>
+</div>
+<footer data-footer></footer>
+<script src="../data.js"></script>
+<script src="../studio.js"></script>
+<script>
+const PAGES=[["ambience","Ambience"],["utility","Utility"],["apps-games","Apps & Games"],["templates","Templates"],["ui-kits","UI Kits"],["free","Free"]];
+$("#shopNav").innerHTML=PAGES.map(([id,n])=>`<a class="chip" href="${id}.html"${id==="ambience"?' aria-current="page"':''}>${n}</a>`).join("");
+$("#list").innerHTML=WORLDS.map(worldCard).join("");
+</script>
+</body>
+</html>

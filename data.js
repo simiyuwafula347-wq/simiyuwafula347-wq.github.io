@@ -130,12 +130,12 @@ const POSTS = [
     body: "Anyone can open a web page and read its code. That is fine for a free thing, but not for something I spent weeks drawing.\n\nSo the full kits and worlds are not playable on this site. You will find short previews on Pinterest and one complete free world, **Pixel Beach**, here.\n\n> Free to enjoy, paid to keep.\n\nIf you want the whole thing, the links are in the shop." }
 ];
 
-/* Shelf on the home page. page = where the board opens. */
+/* Shelf on the home page. page = where the board opens. tagOnly = chip only, no book on the shelf. */
 const BOARDS = [
-  { name: "Ambience", color: "#7d8aa3", blurb: "Pixel worlds with live music", page: "projects/ambience.html", count: WORLDS.length + " worlds" },
-  { name: "UI Kits", color: "#a8774a", blurb: "Music player kits", page: "projects/ui-kits.html", count: KITS.length + " kits" },
-  { name: "Free", color: "#5f6a52", blurb: "Take them, use them", page: "projects/free.html", count: (FREEBIES.length + 3) + " free things" },
-  { name: "Journal", color: "#3b3a35", blurb: "Notes on making things", page: "journal.html", count: POSTS.length + " entries" },
-  { name: "Templates", color: "#e6dcc0", blurb: "Personal sites, pay what you want", page: "projects/templates.html", count: (TEMPLATES.length + BUNDLE_INSIDE.length) + " templates" },
-  { name: "More", color: "#8a8a72", blurb: "Games · Apps · Books", page: "projects/coming-soon.html", count: "coming soon" }
+  { name: "Ambience", color: "#7d8aa3", blurb: "Pixel worlds with live music", page: "shop/ambience.html", count: WORLDS.length + " worlds" },
+  { name: "Utility", color: "#3b3a35", blurb: "Tools & notes on making them", page: "shop/utility.html", count: "tools · journal" },
+  { name: "Apps & Games", color: "#5f6a52", blurb: "Small games, small apps", page: "shop/apps-games.html", count: "playable · soon" },
+  { name: "Templates", color: "#e6dcc0", blurb: "Personal sites, pay what you want", page: "shop/templates.html", count: (TEMPLATES.length + BUNDLE_INSIDE.length) + " templates" },
+  { name: "UI Kits", color: "#a8774a", blurb: "Music player kits", page: "shop/ui-kits.html", count: KITS.length + " kits" },
+  { name: "Free", tagOnly: true, page: "shop/free.html" }
 ];
