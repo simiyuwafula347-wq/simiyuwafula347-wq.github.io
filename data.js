@@ -120,13 +120,49 @@ const BUNDLE_INSIDE = [
 ].map(t => ({ ...t, price: "In the bundle", buy: "https://simiyuwafula.gumroad.com/l/guvzgy", buyLabel: "Get the bundle" }));
 
 /* Journal. "id" = link (letters, numbers, hyphens). Blank line = new paragraph.
-   "# " heading, "> " quote, "- " list. **bold** *italic* `code`. */
+   tag: "build log" | "observation" | "field note".  cover = card picture, dek = one-line standfirst, pull = quote shown on the journal grid.
+   Body: "# " heading, "> " pull quote, "- " list, ![caption](img/journal/file.jpg) picture. **bold** *italic* `code`. */
 const POSTS = [
-  { id: "welcome-to-the-cove", title: "Welcome to the cove", date: "2026-11-20", tag: "notes",
+  { id: "wasp-player-ten-skins", title: "Wasp Player: ten skins, one tiny player", date: "2026-11-23", tag: "build log", status: "Work in progress",
+    dek: "A pixel wasp eats the music bars. Fully offline, no ads, no tracking.", cover: "img/journal/wasp-wip-cover.jpg",
+    pull: "A tiny offline music player where a pixel wasp eats the music bars.",
+    body: "Wasp Player is the app I am building right now. It plays your own music, fully offline, with no ads and no tracking, and a small pixel wasp that eats the music bars as the song moves.\n\n![Wasp Player in three of its skins: the green wasp screen, the quiet cove, and the lofi teddy](img/journal/wasp-wip.jpg)\n\n# One player, ten skins\n\nThe idea was simple: the player stays the same underneath, and the skin changes everything you touch. Every skin has its own buttons, its own screen, its own progress bar and its own font.\n\n![The ten skins: Wasp Player, Lofi Teddy, Cassette Deck, FM Stereo, Early 2000s, Vinyl Hub, Monkey Arcade, Pocket Calculator, Quiet Cove and Moonwood](img/journal/wasp-skins.jpg)\n\n- Wasp Player, Lofi Teddy, Cassette Deck, FM Stereo, Early 2000s\n- Vinyl Hub, Monkey Arcade, Pocket Calculator, Quiet Cove, Moonwood\n\n# Where it stands\n\nIt is still a work in progress, so I am not selling it yet. The skins are drawn and the player works. What is left is the slow part: polishing, testing on real phones, and making sure it stays small.\n\n> Fully offline. No ads. No tracking.\n\nWhen it is ready it will go on the shelf under Apps & Games. Until then, this page is the honest status." },
+
+  { id: "from-notebook-sketch-to-live-website", title: "From notebook sketch to live website", date: "2026-11-22", tag: "build log",
+    dek: "How this site started: boxes on paper first, code second.", cover: "img/journal/sketch-to-site-cover.jpg",
+    pull: "Boxes first, no code.",
+    body: "This site began in a notebook. Before any code, I drew the zones: a photo, a hero line, a clock for Nairobi, daily words, what I do, a music bar and a few themes to switch between.\n\n![The notebook sketch redrawn clean, next to the live site it became](img/journal/sketch-to-site.jpg)\n\n# Three steps\n\n- **Draw the zones.** Hero, daily words, themes, shelf, contact. Boxes first, no code.\n- **Pick the moods.** One layout, several themes. Switching changes the whole look.\n- **Build it plain.** HTML, CSS and JS. One data file holds all the content.\n\n> One layout, many moods.\n\nI started with three themes: paper drawing, modern pixel and Muscovy. The site now has six, with man cave, retro magazine and brutalist added. The layout never changed. Only the clothes did.\n\n![The three first themes side by side: Paper drawing, Modern pixel and Muscovy](img/journal/studio-portfolio.jpg)\n\nThe music bar on the sketch became a free-to-play world, Pixel Beach. Plans change a little when they meet the real thing, and that is fine." },
+
+  { id: "projects-on-a-shelf", title: "Projects on a shelf, like a library", date: "2026-11-21", tag: "build log",
+    dek: "Why every category became a book spine you can slide through.", cover: "img/journal/shelf-cover.jpg",
+    pull: "I wanted browsing to feel like finding a book.",
+    body: "I wanted browsing to feel like finding a book in a library, or a vinyl or a cassette on a shelf, not like scrolling a boring grid.\n\n# The idea\n\nIn the notebook, every kind of thing I make was a bubble: ambience, UI kits, web templates, free projects, games, game assets, books, apps and more to come. The plan was to group them as one shelf you slide through.\n\n![The shelf: each category became a book spine with a code, a name and an open link](img/journal/shelf.jpg)\n\nEach category became a book spine with a code number, a name written sideways, and a short line about what is inside. Tap one and it opens.\n\n# It keeps changing\n\nThe shelf has already changed since the first drawing. It now holds five books, Ambience, Utility, Apps & Games, Templates and UI Kits, and Free is a tag you can jump to instead of a book of its own.\n\n> Each category became a book spine.\n\nThat is the nice thing about a shelf. You can always add a book." },
+
+  { id: "a-hello-that-reads-your-clock", title: "A hello that reads your clock", date: "2026-11-20", tag: "field note",
+    dek: "Good morning, good afternoon, good evening. Small detail, big difference.", cover: "img/journal/hello-cover.jpg",
+    pull: "Hope you have a wonderful time today.",
+    body: "There is a tiny greeting on this site that reads the visitor's own clock. Good morning, good afternoon or good evening, and then a short wish for the rest of the day, or the night.\n\n![The greeting sketch, and what visitors actually see](img/journal/hello.jpg)\n\nIt is a very small piece of code. It is also one of my favourite details, because it makes a page feel like it noticed you." },
+
+  { id: "welcome-to-the-cove", title: "Welcome to the cove", date: "2026-11-20", tag: "field note",
+    dek: "A small corner of the internet for the things I make.",
     body: "This is a small corner of the internet for the things I make: pixel worlds, music player kits and website templates.\n\n# What you will find here\n\n- the shop, with everything I sell or give away\n- this journal, for notes on how things get made\n- one free world you can play right now: Pixel Beach\n\n> Small things get finished.\n\nI will write here when something is worth saying. No schedule, no pressure." },
-  { id: "music-from-code", title: "How the worlds make their music", date: "2026-11-18", tag: "making",
+
+  { id: "small-things-get-finished", title: "Small and finished beats grand and imagined", date: "2026-11-19", tag: "observation",
+    dek: "A note to myself, which I also keep as the first daily words.",
+    pull: "Small and finished beats grand and imagined.",
+    body: "I keep a line on the front page of this site: small and finished beats grand and imagined. I wrote it for myself.\n\nA grand idea feels wonderful for about a week. It has no edges yet, so nothing in it can disappoint you. A small thing that is actually finished has edges, and mistakes, and a date. It is real, and someone else can use it.\n\n> Slow progress is still progress.\n\nMost of what is on this site started as a small thing. A beach that plays its own music. A player with a wasp in it. I would rather release the small version and make the next one better." },
+
+  { id: "music-from-code", title: "How the worlds make their music", date: "2026-11-18", tag: "build log",
+    dek: "No audio files. Every note is made live in your browser.",
     body: "None of the ambience worlds use an audio file. The pads, the bells, the rain and the little melodies are all generated live in your browser.\n\n# One voice per world\n\n- the rainy window has a soft electric piano\n- the campfire has a plucked guitar, and glass bells when the aurora appears\n- the beach has a music box, and the lighthouse calls with two slow notes\n\nEach world also follows its own story, so the music is low in the storm and brighter at dawn." },
-  { id: "why-previews-live-on-pinterest", title: "Why you only see previews on Pinterest", date: "2026-11-15", tag: "notes",
+
+  { id: "the-clock-in-the-corner", title: "The clock in the corner", date: "2026-11-17", tag: "field note",
+    dek: "Wherever you are reading this, it is a real afternoon somewhere.",
+    body: "In the top corner of the front page there is a small clock. It always shows Nairobi time.\n\nI added it so that anyone visiting could see that this is a place with a person behind it, in a real hour of a real day. Yours might be morning while mine is evening.\n\nIt is a small, quiet detail. I like that it never needs anything from you." },
+
+  { id: "why-previews-live-on-pinterest", title: "Why you only see previews on Pinterest", date: "2026-11-15", tag: "observation",
+    dek: "Free to enjoy, paid to keep.",
+    pull: "Free to enjoy, paid to keep.",
     body: "Anyone can open a web page and read its code. That is fine for a free thing, but not for something I spent weeks drawing.\n\nSo the full kits and worlds are not playable on this site. You will find short previews on Pinterest and one complete free world, **Pixel Beach**, here.\n\n> Free to enjoy, paid to keep.\n\nIf you want the whole thing, the links are in the shop." }
 ];
 

@@ -2,52 +2,130 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src https://api.web3forms.com; object-src 'none'; base-uri 'self'; form-action 'none'">
-<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Journal — Larry Simiyu</title>
-<meta name="description" content="Notes on how the pixel worlds and music kits get made.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23040b14'/%3E%3Cpath fill='%234deeea' d='M6 3h3v1h1v1H8v1H7v4h1v1h2v1H9v1H6v-1H5v-1H4V5h1V4h1z'/%3E%3C/svg%3E">
+<meta name="description" content="Build logs, observations and quiet field notes from Larry Simiyu's studio.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Caveat:wght@600;700&family=Press+Start+2P&family=VT323&family=Quicksand:wght@500;700&family=Bebas+Neue&family=Archivo:wght@400;600&family=Playfair+Display:ital,wght@0,700;0,900;1,500&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Caveat:wght@600;700&family=Press+Start+2P&family=VT323&family=Quicksand:wght@500;700&family=Bebas+Neue&family=Archivo:wght@400;600;800;900&family=IBM+Plex+Mono:wght@400;500;700&family=Playfair+Display:ital,wght@0,700;0,900;1,500&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body data-root="">
 <div class="wrap">
-  <nav class="topbar">
-    <a class="btn alt" href="index.html">← Studio home</a>
+  <div class="topbar">
+    <a class="btn alt" id="jBack" href="index.html">‹ Home</a>
     <div class="themes-mini" role="group" aria-label="Choose a theme">
-      <button class="icon-btn" data-set-theme="paper" type="button">Paper</button>
-      <button class="icon-btn" data-set-theme="pixel" type="button">Pixel</button>
-      <button class="icon-btn" data-set-theme="muscovy" type="button">Muscovy</button>
-      <button class="icon-btn" data-set-theme="mancave" type="button">Man Cave</button>
-      <button class="icon-btn" data-set-theme="magazine" type="button">Magazine</button>
+      <button class="btn alt" data-set-theme="paper" type="button">1</button>
+      <button class="btn alt" data-set-theme="pixel" type="button">2</button>
+      <button class="btn alt" data-set-theme="muscovy" type="button">3</button>
+      <button class="btn alt" data-set-theme="mancave" type="button">4</button>
+      <button class="btn alt" data-set-theme="magazine" type="button">5</button>
+      <button class="btn alt" data-set-theme="brutalist" type="button">6</button>
     </div>
-  </nav>
-  <header class="page-hero" style="--c:#3b3a35"><div class="box" data-title="JOURNAL.EXE"><div class="code">CODE_004 //</div><h1>Journal</h1><p>Notes on how things get made. No schedule, no pressure.</p></div></header>
-  <section id="jm"></section>
-  <div class="box wob greet" id="greet" data-title="HELLO.EXE"></div>
-  <footer data-footer></footer>
+  </div>
+  <main id="jMain"></main>
 </div>
+<footer data-footer></footer>
 <script src="data.js"></script>
 <script src="studio.js"></script>
-<script>function route() {
-  const h = location.hash.slice(1), L = [...POSTS].sort((a, b) => b.date.localeCompare(a.date));
-  const i = L.findIndex(p => p.id === h), m = $("#jm");
-  if (i > -1) {
-    const p = L[i], pv = L[i + 1], nx = L[i - 1];
-    document.title = p.title + " — Larry Simiyu";
-    m.innerHTML = `<article class="box post" data-title="${esc(p.id.toUpperCase().slice(0, 24))}.TXT"><div class="meta">${fmt(p.date)} · ${mins(p.body)} min · #${esc(p.tag)}</div><h2>${inl(p.title)}</h2>${md(p.body)}</article>
-      <div class="pn"><span>${pv ? `<a class="btn alt" href="#${pv.id}">‹ ${esc(pv.title)}</a>` : ""}</span><span>${nx ? `<a class="btn alt" href="#${nx.id}">${esc(nx.title)} ›</a>` : ""}</span></div>
-      <p style="margin-top:16px"><a href="#">← all entries</a></p>`;
-  } else {
-    const t = h.startsWith("tag-") ? h.slice(4) : "", ps = t ? L.filter(p => p.tag === t) : L;
-    document.title = "Journal — Larry Simiyu";
-    m.innerHTML = `<div class="chips"><a class="chip" href="#" ${t ? "" : 'aria-pressed="true"'}>all</a>${[...new Set(L.map(p => p.tag))].map(x => `<a class="chip" href="#tag-${x}" ${x === t ? 'aria-pressed="true"' : ""}>#${x}</a>`).join("")}</div>
-      <div class="cards">${ps.map(p => `<a class="item post-card" href="#${p.id}"><div class="txt"><span class="tag">${fmt(p.date)} · ${mins(p.body)} min · #${esc(p.tag)}</span><h3>${inl(p.title)}</h3><p>${esc(p.body.replace(/^[#>-] /gm, "").split("\n\n")[0].slice(0, 130))}…</p></div></a>`).join("")}</div>`;
+<script>
+const TAGS = [["all", "All"], ["build log", "Build logs"], ["observation", "Observations"], ["field note", "Field notes"]];
+const posts = POSTS.map((p, i) => ({ ...p, n: POSTS.length - i })).sort((a, b) => b.date.localeCompare(a.date) || a.n - b.n);
+posts.forEach((p, i) => p.n = posts.length - i);          // No. 01 = oldest
+const byId = id => posts.find(p => p.id === id);
+const pad = n => String(n).padStart(2, "0");
+const mm = p => mins(p.body);
+const img = (p, cls) => p.cover ? `<div class="j-pic ${cls || ""}"><img src="${esc(ROOT + p.cover)}" alt="" loading="lazy"></div>` : "";
+const SPANS = ["j-s7", "j-s5", "j-s4", "j-s4", "j-s4", "j-s5", "j-s7"];
+let filter = "all";
+
+function card(p, cls, i) {
+  return `<a class="j-card ${cls}" href="#${esc(p.id)}" data-title="ENTRY_${pad(p.n)}.EXE">
+    ${img(p)}
+    <div class="j-body">
+      <div class="j-row"><span class="j-no">No. ${pad(p.n)}</span><span class="j-tag">${esc(p.tag)}</span></div>
+      <h3>${esc(p.title)}</h3>
+      <p>${esc(p.dek || "")}</p>
+      <div class="j-foot"><span>${esc(fmt(p.date))} · ${mm(p)} min</span><span class="j-go">Read →</span></div>
+    </div></a>`;
+}
+
+function renderIndex() {
+  document.title = "Journal — Larry Simiyu";
+  $("#jBack").href = "index.html"; $("#jBack").textContent = "‹ Home";
+  const list = posts.filter(p => filter === "all" || p.tag === filter);
+  const tags = new Set(posts.map(p => p.tag)).size;
+  let html = `<header class="j-mast">
+    <div class="j-issue"><span>Issue Nº 01</span><span>${posts.length} entries · ${tags} kinds</span><span>Updated ${esc(fmt(posts[0].date))}</span></div>
+    <h1 class="j-title">The Journal</h1>
+    <p class="j-sub">Build logs, observations and quiet field notes. An honest digital notebook, written as things happen.</p>
+  </header>
+  <div class="chips j-chips" role="group" aria-label="Filter entries">${TAGS.map(([k, n]) => `<button class="chip" type="button" data-f="${k}" aria-pressed="${k === filter}">${n}</button>`).join("")}</div>`;
+  if (!list.length) html += `<p class="j-empty">Nothing here yet.</p>`;
+  else {
+    const [lead, ...rest] = list;
+    html += `<section class="j-grid">`;
+    html += `<a class="j-card j-lead" href="#${esc(lead.id)}" data-title="LATEST_ENTRY.EXE">
+      ${img(lead, "j-leadpic")}
+      <div class="j-body">
+        <div class="j-row"><span class="j-no">No. ${pad(lead.n)}</span><span class="j-tag">${esc(lead.tag)}</span>${lead.status ? `<span class="j-wip">${esc(lead.status)}</span>` : ""}</div>
+        <h2>${esc(lead.title)}</h2>
+        <p>${esc(lead.dek || "")}</p>
+        <div class="j-foot"><span>${esc(fmt(lead.date))} · ${mm(lead)} min</span><span class="j-go">Read the entry →</span></div>
+      </div></a>`;
+    const pull = rest.find(p => p.pull) || (lead.pull ? lead : null);
+    rest.forEach((p, i) => {
+      html += card(p, SPANS[i % SPANS.length], i);
+      if (i === 1 && pull) html += `<blockquote class="j-quote j-s4"><span>“</span>${esc(pull.pull)}<cite>— ${esc(pull.title)}</cite></blockquote>`;
+    });
+    html += `</section>`;
   }
+  $("#jMain").innerHTML = html;
+  $("#jMain").querySelectorAll("[data-f]").forEach(b => b.onclick = () => { filter = b.dataset.f; renderIndex(); });
+}
+
+function body(b) {
+  let first = true;
+  return b.split(/\n\n+/).map(p => {
+    const m = p.match(/^!\[([^\]]*)\]\((img\/[\w\-./]+)\)$/);
+    if (m) return `<figure class="j-fig"><img src="${esc(ROOT + m[2])}" alt="${esc(m[1])}" loading="lazy"><figcaption>${esc(m[1])}</figcaption></figure>`;
+    let h = md(p);
+    if (first && h.startsWith("<p>")) { first = false; h = '<p class="j-first">' + h.slice(3); }
+    return h;
+  }).join("");
+}
+
+function renderPost(p) {
+  document.title = p.title + " — Larry Simiyu";
+  $("#jBack").href = "#"; $("#jBack").textContent = "‹ All entries";
+  const i = posts.indexOf(p), newer = posts[i - 1], older = posts[i + 1];
+  $("#jMain").innerHTML = `<article class="j-article">
+    <aside class="j-side box" data-title="ENTRY_${pad(p.n)}.EXE">
+      <div class="j-bigno">${pad(p.n)}</div>
+      <div><b>Kind</b><span class="j-tag">${esc(p.tag)}</span></div>
+      <div><b>Date</b>${esc(fmt(p.date))}</div>
+      <div><b>Reading</b>${mm(p)} min</div>
+      ${p.status ? `<div><b>Status</b>${esc(p.status)}</div>` : ""}
+    </aside>
+    <div class="j-art">
+      <h1>${esc(p.title)}</h1>
+      <p class="j-dek">${esc(p.dek || "")}</p>
+      ${body(p.body)}
+      <nav class="j-pager">
+        ${older ? `<a href="#${esc(older.id)}"><small>‹ Older</small>${esc(older.title)}</a>` : "<span></span>"}
+        ${newer ? `<a href="#${esc(newer.id)}"><small>Newer ›</small>${esc(newer.title)}</a>` : "<span></span>"}
+      </nav>
+    </div></article>`;
+}
+
+function route() {
+  const id = decodeURIComponent(location.hash.slice(1)), p = id && byId(id);
+  if (p) renderPost(p); else renderIndex();
   scrollTo(0, 0);
 }
-addEventListener("hashchange", route); route();</script>
+addEventListener("hashchange", route);
+$("#jBack").addEventListener("click", e => { if ($("#jBack").getAttribute("href") === "#") { e.preventDefault(); history.pushState(null, "", location.pathname); route(); } });
+route();
+</script>
 </body>
 </html>
