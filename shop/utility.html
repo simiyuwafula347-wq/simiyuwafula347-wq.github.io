@@ -34,7 +34,7 @@
 
   <header class="page-hero" style="--c:#3b3a35">
     <div class="box" data-title="UTILITY.EXE">
-      <div class="code">CODE_005 //</div>
+      <div class="code">CODE_002 //</div>
       <h1>Utility</h1>
       <p>Free tools that do one thing well, plus notes on how they get made.</p>
     </div>
@@ -52,10 +52,11 @@
 <script src="../data.js"></script>
 <script src="../studio.js"></script>
 <script>
-const PAGES=[["ambience","Ambience"],["utility","Utility"],["apps-games","Apps & Games"],["templates","Templates"],["ui-kits","UI Kits"],["free","Free"]];
+const PAGES=[["ambience","Ambience"],["utility","Utility"],["apps-games","Apps & Games"],["templates","Templates"],["ui-kits","UI Kits"]];
 $("#shopNav").innerHTML=PAGES.map(([id,n])=>`<a class="chip" href="${id}.html"${id==="utility"?' aria-current="page"':''}>${n}</a>`).join("");
-$("#list").innerHTML=FREEBIES.filter(f=>/reader|offline|tool/i.test((f.tags||[]).join(" "))).map(itemCard).join("")||"<p>Tools are on the way.</p>";
-$("#posts").innerHTML=POSTS.map(p=>`<article class="item"><div class="txt"><span class="tag">${esc(p.tag)} · ${esc(fmt(p.date))}</span><h3>${esc(p.title)}</h3><p>${esc(p.body.split("\n")[0])}</p><div class="row"><a class="btn alt" href="../journal.html">Read the journal</a></div></div></article>`).join("");
+$("#list").innerHTML=FREEBIES.map(itemCard).join("")||"<p>Tools are on the way.</p>";
+$("#posts").innerHTML=POSTS.map(p=>`<article class="item post"><div class="txt"><span class="tag">${esc(p.tag)} · ${esc(fmt(p.date))}</span><h3>${esc(p.title)}</h3><p>${esc(p.body.split("\n")[0])}</p><div class="row"><a class="btn alt" href="../journal.html">Read the journal</a></div></div></article>`).join("");
+if(document.querySelector(".item.is-free")){const b=document.createElement("button");b.type="button";b.className="chip free-toggle";b.textContent="Free only";b.setAttribute("aria-pressed","false");b.onclick=()=>{const on=document.body.classList.toggle("free-only");b.setAttribute("aria-pressed",on)};$("#shopNav").appendChild(b);}
 </script>
 </body>
 </html>

@@ -34,7 +34,7 @@
 
   <header class="page-hero" style="--c:#e6dcc0">
     <div class="box" data-title="TEMPLATES.EXE">
-      <div class="code">CODE_003 //</div>
+      <div class="code">CODE_004 //</div>
       <h1>Templates</h1>
       <p>Personal website templates in plain HTML and CSS. Pay what you want, edit them in minutes.</p>
     </div>
@@ -52,10 +52,11 @@
 <script src="../data.js"></script>
 <script src="../studio.js"></script>
 <script>
-const PAGES=[["ambience","Ambience"],["utility","Utility"],["apps-games","Apps & Games"],["templates","Templates"],["ui-kits","UI Kits"],["free","Free"]];
+const PAGES=[["ambience","Ambience"],["utility","Utility"],["apps-games","Apps & Games"],["templates","Templates"],["ui-kits","UI Kits"]];
 $("#shopNav").innerHTML=PAGES.map(([id,n])=>`<a class="chip" href="${id}.html"${id==="templates"?' aria-current="page"':''}>${n}</a>`).join("");
 $("#list").innerHTML=TEMPLATES.map(itemCard).join("");
 $("#inside").innerHTML=BUNDLE_INSIDE.map(itemCard).join("");
+if(document.querySelector(".item.is-free")){const b=document.createElement("button");b.type="button";b.className="chip free-toggle";b.textContent="Free only";b.setAttribute("aria-pressed","false");b.onclick=()=>{const on=document.body.classList.toggle("free-only");b.setAttribute("aria-pressed",on)};$("#shopNav").appendChild(b);}
 </script>
 </body>
 </html>

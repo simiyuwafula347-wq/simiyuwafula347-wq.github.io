@@ -40,23 +40,23 @@ const DAILY = [
   { t: "Rise, not to be seen, but to be higher.", by: "Reminder" }
 ];
 
-/* The ambience worlds. Pixel Beach plays here; the rest are sold on itch.io.
-   Paste a world's own itch.io page into itch:"" (leave "" to link to your itch.io profile). */
+/* Ambience = things people listen to. Files live in the worlds/ folder.
+   Free ones play right here; the rest are sold on itch.io (paste a world's own itch page into itch:"" or leave "" for your profile). */
 const WORLDS = [
-  { id: "beach", title: "Pixel Beach", price: "Free", tags: ["sunset", "waves", "beam"], thumb: "ambience/thumbs/beach.png", play: "ambience/beach/",
+  { id: "beach", title: "Pixel Beach", price: "Free", tags: ["sunset", "waves", "beam"], thumb: "worlds/thumbs/beach.png", play: "worlds/beach/",
     desc: "A girl and her dog walk the shore, then watch the sun set and the stars come out. A beam rises from a boat on the horizon." },
-  { id: "pier", title: "The Pier Cove", price: "$4", tags: ["fishing", "day & night", "game"], thumb: "img/pier-cove.png", itch: "",
+  { id: "bear", title: "Bear Ambience", price: "Free", tags: ["6 songs", "headphones"], thumb: "worlds/thumbs/bear.jpg", play: "worlds/bear-ambience/",
+    desc: "Six slow songs made live in your browser, and one soft pixel bear with headphones. Pick a colour for each song and scrub the stitched thread. Headphones on." },
+  { id: "thread", title: "Red Thread", price: "Free", tags: ["touch", "sound"], thumb: "worlds/thumbs/red-thread.jpg", play: "worlds/red-thread/",
+    desc: "A red thread wanders across paper and tangles itself. Touch to steer it. Tap the sound button for a soft drone and plucks that follow the turns." },
+  { id: "pier", title: "The Pier Cove", price: "$4", tags: ["fishing", "day & night", "game"], thumb: "worlds/thumbs/pier.png", itch: "",
     desc: "One old fisherman, one pier, a whole day and night. Watch the 200-second ambience loop, or fish with him: pick a rod or a net, catch tilapia and rare Nile Perch, and let him doze off under the moon." },
-  { id: "camp", title: "Campfire Cabin", price: "$3.50", tags: ["aurora", "crickets", "guitar"], thumb: "ambience/thumbs/camp.png", itch: "https://larrysmyl.itch.io/campfire-cabin-aurora-night-scene-kit",
+  { id: "camp", title: "Campfire Cabin", price: "$3.50", tags: ["aurora", "crickets", "guitar"], thumb: "worlds/thumbs/camp.png", itch: "https://larrysmyl.itch.io/campfire-cabin-aurora-night-scene-kit",
     desc: "A camper by the fire at a lake cabin. A fox wanders in, an owl calls, fireflies drift, and the aurora dances over the pines." },
-  { id: "dungeon", title: "Firefly Dungeon", price: "$5", tags: ["fireflies", "bells", "dragon"], thumb: "ambience/thumbs/dungeon.png", itch: "",
+  { id: "dungeon", title: "Firefly Dungeon", price: "$5", tags: ["fireflies", "bells", "dragon"], thumb: "worlds/thumbs/dungeon.png", itch: "",
     desc: "A lantern-bearer and a swarm of fireflies walk a ruined corridor, open a rune door and wake a sleeping dragon on its gold." },
-  { id: "forest", title: "Magical Blue Forest", price: "$5", tags: ["antlers", "harp", "swirls"], thumb: "ambience/thumbs/forest.png", itch: "",
-    desc: "A white spirit stag walks through a quiet forest of a few great trees. Its antlers begin to glow, and magical swirls of light rise around it." },
-  { id: "rain", title: "Rainy Window", price: "On itch.io", tags: ["storm", "thunder", "lofi"], thumb: "ambience/thumbs/rain.png", itch: "",
-    desc: "A storm over the night city, a cat on the sill, a bus in the street and a distant tower pulsing light. Lightning, then a rainbow at dawn." },
-  { id: "oasis", title: "Green Sun Oasis", price: "On itch.io", tags: ["oasis", "green sun", "oud"], thumb: "ambience/thumbs/oasis.png", itch: "",
-    desc: "A man and his camel rest by a tent at a desert oasis as dusk falls. Then a green sun rises over the dunes, with a light that rings out in music." }
+  { id: "forest", title: "Magical Blue Forest", price: "$5", tags: ["antlers", "harp", "swirls"], thumb: "worlds/thumbs/forest.png", itch: "",
+    desc: "A white spirit stag walks through a quiet forest of a few great trees. Its antlers begin to glow, and magical swirls of light rise around it." }
 ];
 
 /* UI kits. cat: "ui" | "scene". price: "Free", "Pay what you want" or "$15". */
@@ -68,20 +68,12 @@ const KITS = [
   { title: "Glass Rainy Season Kit", price: "Pay what you want", tags: ["UI kit", "storm"], buy: "https://simiyuwafula.gumroad.com/l/vmlwem", pin: "https://pin.it/5O2d1ehEC",
     desc: "Frosted-glass storm player: silent lightning, a cheeky cat who tells you to close the window, a snail slime-trail progress bar and puddle buttons." },
   { title: "Puddle Day", price: "Pay what you want", tags: ["pixel scene", "ambience"], buy: "https://simiyuwafula.gumroad.com/l/olitib", pin: "https://pin.it/5O2d1ehEC",
-    desc: "A calm pixel scene in a retro window: a girl, her gold cat, an umbrella and the rain, with a synth and lofi ambience player." },
-  { title: "Muscovy Duck Kit", price: "Pay what you want", tags: ["UI kit", "feathers"], shots: ["img/muscovy-duck.png"], buy: "", pin: "",
-    desc: "A cosy player with a Muscovy duck that preens and shakes its tail when you tap it, and a progress bar made of feathers that straighten and glow as the song plays." },
-  { title: "Blurred City Puddle-Jump Kit", price: "Pay what you want", tags: ["UI kit", "lo-fi city"], buy: "", pin: "https://pin.it/5O2d1ehEC",
-    desc: "Out-of-focus city lights, a pixel girl in a clear raincoat and yellow gumboots who splashes into a puddle on the beat, and a ripple-ring playhead that pulses with the music." }
+    desc: "A calm pixel scene in a retro window: a girl, her gold cat, an umbrella and the rain, with a synth and lofi ambience player." }
 ];
 
 
-/* Free things you can open and use right in the browser. */
+/* Free things you can open and use right in the browser (utilities). Bear Ambience and Red Thread now live in WORLDS. */
 const FREEBIES = [
-  { title: "Bear Ambience", price: "Free", tags: ["ambience", "6 songs", "free"], shots: ["img/free-bear.jpg"], play: "free/bear-ambience/",
-    desc: "Six slow songs made live in your browser, and one soft pixel bear with headphones. Pick a colour for each song and scrub the stitched thread. Headphones on." },
-  { title: "Red Thread", price: "Free", tags: ["toy", "touch", "sound"], shots: ["img/free-thread.jpg"], play: "free/red-thread/",
-    desc: "A red thread wanders across paper and tangles itself. Touch to steer it. Tap the sound button for a soft drone and plucks that follow the turns." },
   { title: "Deep Verse Bible", price: "Free", tags: ["reader", "offline", "KJV"], shots: ["img/free-verse.jpg"], play: "free/deep-verse/",
     desc: "A pixel Bible reader that works offline (KJV text). Search words or jump to a verse, highlight in four colours, write reflections and notes, with optional ambient sound." }
 ];
@@ -89,6 +81,7 @@ const FREEBIES = [
 /* Not released yet: shown honestly as "coming soon". img = optional picture instead of the icon. */
 const SOON = [
   { img: "img/wasp-player.jpg", title: "Wasp Player", desc: "My offline music player with 10 pixel skins. No ads, no tracking. Still a work in progress." },
+  { img: "img/ghost-game.jpg", title: "Ghost", desc: "A small floating-ghost game. Drift through walls that let you through and walls that don't, collect the tokens and time the crushers. Level 1 is built; more on the way." },
   { icon: "🎮", title: "More games", desc: "Small playable worlds, made slowly." },
   { icon: "📱", title: "Apps & utilities", desc: "Small useful tools with one job each." },
   { icon: "🧩", title: "Game assets", desc: "Sprites, tiles and sounds you can drop into your own game." },
@@ -97,25 +90,25 @@ const SOON = [
 
 /* Personal website templates (Gumroad, pay what you want). */
 const TEMPLATES = [
-  { title: "Website Template Bundle: 5 Personal Site Templates", price: "Pay what you want", tags: ["5 templates", "HTML & CSS"], shots: ["img/tpl-bundle.jpg"],
+  { title: "Website Template Bundle: 5 Personal Site Templates", price: "Pay what you want", tags: ["5 templates", "HTML & CSS"], shots: ["img/templates/bundle/tpl-bundle.jpg"],
     buy: "https://simiyuwafula.gumroad.com/l/guvzgy", buyLabel: "Get the bundle",
     desc: "Portfolio, CV and certificates, analog clock, link-in-bio, and music & video. Five plain HTML and CSS templates in one download. Edit them in minutes." },
-  { title: "Orbit: Space-Themed Link-in-Bio", price: "Pay what you want", tags: ["template", "HTML & CSS"], shots: ["img/tpl-orbit.jpg"],
+  { title: "Orbit: Space-Themed Link-in-Bio", price: "Pay what you want", tags: ["template", "HTML & CSS"], shots: ["img/templates/tpl-orbit.jpg"],
     buy: "https://simiyuwafula.gumroad.com/l/cyoaqc", buyLabel: "Get Orbit",
     desc: "A space-themed link-in-bio template with three button styles. Add your own wallpaper. Plain HTML and CSS." }
 ];
 
 /* The five templates inside the bundle, shown as previews. */
 const BUNDLE_INSIDE = [
-  { title: "CV & Certificates", tags: ["in the bundle", "3 themes"], shots: ["img/tpl-cv.jpg"],
+  { title: "CV & Certificates", tags: ["in the bundle", "3 themes"], shots: ["img/templates/bundle/tpl-cv.jpg"],
     desc: "Experience, training and certificates with verify links, plus a print-ready CV. Three themes." },
-  { title: "Music & Video Link-in-bio", tags: ["in the bundle", "space"], shots: ["img/tpl-music.jpg"],
+  { title: "Music & Video Link-in-bio", tags: ["in the bundle", "space"], shots: ["img/templates/bundle/tpl-music.jpg"],
     desc: "A page with a built-in player for your tracks and videos, and one link for everything else." },
-  { title: "Link-in-bio Wallpaper", tags: ["in the bundle", "3 button styles"], shots: ["img/tpl-links.jpg"],
+  { title: "Link-in-bio Wallpaper", tags: ["in the bundle", "3 button styles"], shots: ["img/templates/bundle/tpl-links.jpg"],
     desc: "A link-in-bio page that doubles as a wallpaper. Three button styles." },
-  { title: "Analog Clock Portfolio", tags: ["in the bundle", "live time"], shots: ["img/tpl-clock.jpg"],
+  { title: "Analog Clock Portfolio", tags: ["in the bundle", "live time"], shots: ["img/templates/bundle/tpl-clock.jpg"],
     desc: "Your face on the dial of a live analog clock showing your local time, with an Available now badge. Porcelain, Midnight and Moss themes." },
-  { title: "Portfolio: Three Moods", tags: ["in the bundle", "3 themes"], shots: ["img/tpl-portfolio.jpg"],
+  { title: "Portfolio: Three Moods", tags: ["in the bundle", "3 themes"], shots: ["img/templates/bundle/tpl-portfolio.jpg"],
     desc: "A bold portfolio with a theme switcher (Serious, Coast, Night) and an animated wallpaper." }
 ].map(t => ({ ...t, price: "In the bundle", buy: "https://simiyuwafula.gumroad.com/l/guvzgy", buyLabel: "Get the bundle" }));
 
@@ -168,10 +161,9 @@ const POSTS = [
 
 /* Shelf on the home page. page = where the board opens. tagOnly = chip only, no book on the shelf. */
 const BOARDS = [
-  { name: "Ambience", color: "#7d8aa3", blurb: "Pixel worlds with live music", page: "shop/ambience.html", count: WORLDS.length + " worlds" },
+  { name: "Ambience", color: "#7d8aa3", blurb: "Worlds & songs to listen to", page: "shop/ambience.html", count: WORLDS.length + " worlds" },
   { name: "Utility", color: "#3b3a35", blurb: "Tools & notes on making them", page: "shop/utility.html", count: "tools · journal" },
-  { name: "Apps & Games", color: "#5f6a52", blurb: "Small games, small apps", page: "shop/apps-games.html", count: "playable · soon" },
+  { name: "Apps & Games", color: "#5f6a52", blurb: "Small games, small apps", page: "shop/apps-games.html", count: "coming soon" },
   { name: "Templates", color: "#e6dcc0", blurb: "Personal sites, pay what you want", page: "shop/templates.html", count: (TEMPLATES.length + BUNDLE_INSIDE.length) + " templates" },
-  { name: "UI Kits", color: "#a8774a", blurb: "Music player kits", page: "shop/ui-kits.html", count: KITS.length + " kits" },
-  { name: "Free", tagOnly: true, page: "shop/free.html" }
+  { name: "UI Kits", color: "#a8774a", blurb: "Music player kits", page: "shop/ui-kits.html", count: KITS.length + " kits" }
 ];

@@ -34,7 +34,7 @@
 
   <header class="page-hero" style="--c:#a8774a">
     <div class="box" data-title="UI_KITS.EXE">
-      <div class="code">CODE_002 //</div>
+      <div class="code">CODE_005 //</div>
       <h1>UI Kits</h1>
       <p>Music player interfaces in plain HTML, CSS and a little JavaScript. Recolour them, load your own tracks, ship.</p>
     </div>
@@ -51,9 +51,10 @@
 <script src="../data.js"></script>
 <script src="../studio.js"></script>
 <script>
-const PAGES=[["ambience","Ambience"],["utility","Utility"],["apps-games","Apps & Games"],["templates","Templates"],["ui-kits","UI Kits"],["free","Free"]];
+const PAGES=[["ambience","Ambience"],["utility","Utility"],["apps-games","Apps & Games"],["templates","Templates"],["ui-kits","UI Kits"]];
 $("#shopNav").innerHTML=PAGES.map(([id,n])=>`<a class="chip" href="${id}.html"${id==="ui-kits"?' aria-current="page"':''}>${n}</a>`).join("");
 $("#list").innerHTML=KITS.map(itemCard).join("");
+if(document.querySelector(".item.is-free")){const b=document.createElement("button");b.type="button";b.className="chip free-toggle";b.textContent="Free only";b.setAttribute("aria-pressed","false");b.onclick=()=>{const on=document.body.classList.toggle("free-only");b.setAttribute("aria-pressed",on)};$("#shopNav").appendChild(b);}
 </script>
 </body>
 </html>

@@ -36,7 +36,7 @@
     <div class="box" data-title="AMBIENCE.EXE">
       <div class="code">CODE_001 //</div>
       <h1>Ambience</h1>
-      <p>Pixel worlds that play their own music, made live in your browser. Put on headphones and stay a while.</p>
+      <p>Worlds and slow songs to listen to, made live in your browser. Put on headphones and stay a while.</p>
     </div>
     <div class="shop-pic"><img src="../img/shop-ambience.jpg" alt="" loading="lazy"></div>
   </header>
@@ -45,16 +45,17 @@
 
   <main>
     <section><div class="cards" id="list"></div></section>
-    <section class="shop-note"><div class="box" data-title="HOW_IT_WORKS.EXE"><p>Music is composed live, so it never loops the same way twice. Pixel Beach is free to play right here; the rest are on itch.io.</p></div></section>
+    <section class="shop-note"><div class="box" data-title="HOW_IT_WORKS.EXE"><p>Music is composed live, so it never loops the same way twice. The ones tagged Free play right here; the rest are on itch.io.</p></div></section>
   </main>
 </div>
 <footer data-footer></footer>
 <script src="../data.js"></script>
 <script src="../studio.js"></script>
 <script>
-const PAGES=[["ambience","Ambience"],["utility","Utility"],["apps-games","Apps & Games"],["templates","Templates"],["ui-kits","UI Kits"],["free","Free"]];
+const PAGES=[["ambience","Ambience"],["utility","Utility"],["apps-games","Apps & Games"],["templates","Templates"],["ui-kits","UI Kits"]];
 $("#shopNav").innerHTML=PAGES.map(([id,n])=>`<a class="chip" href="${id}.html"${id==="ambience"?' aria-current="page"':''}>${n}</a>`).join("");
 $("#list").innerHTML=WORLDS.map(worldCard).join("");
+if(document.querySelector(".item.is-free")){const b=document.createElement("button");b.type="button";b.className="chip free-toggle";b.textContent="Free only";b.setAttribute("aria-pressed","false");b.onclick=()=>{const on=document.body.classList.toggle("free-only");b.setAttribute("aria-pressed",on)};$("#shopNav").appendChild(b);}
 </script>
 </body>
 </html>

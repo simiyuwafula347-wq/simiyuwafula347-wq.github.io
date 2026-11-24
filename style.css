@@ -724,3 +724,10 @@ a.chip{text-decoration:none;display:inline-block}
 [data-theme="brutalist"] .j-pager a:hover small{color:#fff}
 [data-theme="brutalist"] .j-fig figcaption{background:#000;color:#fff;border-top:0}
 [data-theme="brutalist"] .j-side{border-radius:0}
+
+/* Free = a tag on every free item; "Free only" filter on shop pages */
+.item .tag.free{background:var(--accent2);color:var(--on-accent);border-color:var(--accent2);font-weight:700}
+[data-theme="brutalist"] .item .tag.free{background:#000;color:#fff;border-color:#000}
+[data-theme="brutalist"] .item:hover .tag.free{background:#fff;color:#000}
+.free-only .item.prod:not(.is-free),.free-only .item.soon,.free-only .item.post,.free-only .shop-sub{display:none}
+.shop-nav .free-toggle{margin-left:auto}

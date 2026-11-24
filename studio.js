@@ -37,17 +37,19 @@ document.querySelectorAll("[data-footer]").forEach(e => e.innerHTML = `© ${new 
 /* ---- product / world card ---- */
 function itemCard(p) {
   const shots = (p.shots || (p.thumb ? [p.thumb] : [])).map(s => `<img src="${esc(ROOT + s)}" alt="${esc(p.title)} preview" loading="lazy">`).join("");
-  const price = `<span class="price${isFree(p.price) ? " free" : ""}">${esc(p.price)}</span>`;
+  const free = isFree(p.price);
+  const price = /^free$/i.test(String(p.price).trim()) ? "" : `<span class="price${free ? " free" : ""}">${esc(p.price)}</span>`;
+  const tagList = [...(free ? [`<span class="tag free">Free</span>`] : []), ...(p.tags || []).filter(t => !/^free$/i.test(t)).map(t => `<span class="tag">${esc(t)}</span>`)];
   const acts = [];
   if (p.play) acts.push(`<a class="btn" href="${esc(ROOT + p.play)}">Play free</a>`);
   if (p.buy) acts.push(`<a class="btn${p.play ? " alt" : ""}" href="${esc(p.buy)}" target="_blank" rel="noopener">${esc(p.buyLabel || (isFree(p.price) ? "Get it free" : "Get it"))}</a>`);
   if (p.pin) acts.push(`<a class="btn alt" href="${esc(p.pin)}" target="_blank" rel="noopener">Preview on Pinterest</a>`);
   if (!p.buy && !p.play) acts.push(`<span class="pill">link coming soon</span>`);
   if (p.extra) acts.push(p.extra);
-  return `<article class="item prod">
+  return `<article class="item prod${free ? " is-free" : ""}">
     ${shots ? `<div class="shots${(p.shots || [1]).length > 1 ? " multi" : ""}">${shots}</div>` : ""}
     <div class="txt">
-      <div class="tags">${(p.tags || []).map(t => `<span class="tag">${esc(t)}</span>`).join("")}</div>
+      <div class="tags">${tagList.join("")}</div>
       <h3>${esc(p.title)} ${price}</h3>
       <p>${esc(p.desc)}</p>
       <div class="row">${acts.join("")}</div>

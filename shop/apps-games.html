@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Apps & Games — Larry Simiyu</title>
-<meta name="description" content="Small games and apps made slowly.">
+<meta name="description" content="Small games and apps, coming soon.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Caveat:wght@600;700&family=Press+Start+2P&family=VT323&family=Quicksand:wght@500;700&family=Bebas+Neue&family=Archivo:wght@400;600;800;900&family=IBM+Plex+Mono:wght@400;500;700&family=Playfair+Display:ital,wght@0,700;0,900;1,500&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../style.css">
@@ -34,9 +34,9 @@
 
   <header class="page-hero" style="--c:#5f6a52">
     <div class="box" data-title="APPS_GAMES.EXE">
-      <div class="code">CODE_004 //</div>
+      <div class="code">CODE_003 //</div>
       <h1>Apps & Games</h1>
-      <p>Small playable worlds and tools with one job each. Some are here now, the rest are on the way.</p>
+      <p>Small games and apps with one job each. They are still being made, slowly.</p>
     </div>
     <div class="shop-pic"><img src="../img/shop-games.jpg" alt="" loading="lazy"></div>
   </header>
@@ -44,20 +44,17 @@
   <nav class="shop-nav" id="shopNav" aria-label="Shop sections"></nav>
 
   <main>
-    <section><div class="cards" id="list"></div></section>
-    <section><h2 class="shop-sub">Coming soon</h2><div class="cards" id="soon"></div></section>
+    <section><div class="cards" id="soon"></div></section>
   </main>
 </div>
 <footer data-footer></footer>
 <script src="../data.js"></script>
 <script src="../studio.js"></script>
 <script>
-const PAGES=[["ambience","Ambience"],["utility","Utility"],["apps-games","Apps & Games"],["templates","Templates"],["ui-kits","UI Kits"],["free","Free"]];
+const PAGES=[["ambience","Ambience"],["utility","Utility"],["apps-games","Apps & Games"],["templates","Templates"],["ui-kits","UI Kits"]];
 $("#shopNav").innerHTML=PAGES.map(([id,n])=>`<a class="chip" href="${id}.html"${id==="apps-games"?' aria-current="page"':''}>${n}</a>`).join("");
-const play=FREEBIES.filter(f=>/toy|game/i.test((f.tags||[]).join(" ")));
-const pier=WORLDS.filter(w=>(w.tags||[]).includes("game"));
-$("#list").innerHTML=[...pier.map(worldCard),...play.map(itemCard)].join("")||"<p>First ones are on the way.</p>";
-$("#soon").innerHTML=SOON.filter(s=>/game|app|wasp/i.test(s.title)).map(soonCard).join("");
+$("#soon").innerHTML=SOON.filter(s=>/game|app|wasp|ghost/i.test(s.title)).map(soonCard).join("");
+if(document.querySelector(".item.is-free")){const b=document.createElement("button");b.type="button";b.className="chip free-toggle";b.textContent="Free only";b.setAttribute("aria-pressed","false");b.onclick=()=>{const on=document.body.classList.toggle("free-only");b.setAttribute("aria-pressed",on)};$("#shopNav").appendChild(b);}
 </script>
 </body>
 </html>
