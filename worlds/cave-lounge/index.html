@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; media-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'none'">
+<title>Larry’s Cove · Cave Lounge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Archivo:wght@400;600;800&display=swap">
+<style>
+:root{--bg:#0c0907;--panel:#1a130e;--ink:#f1e5d1;--mut:#a89a85;--amb:#ff9d2e;--red:#ff5a3c;
+ box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;min-height:100vh;display:grid;place-items:center;padding:14px 0;color:var(--ink);font:15px/1.45 'Archivo',system-ui,sans-serif;
+ background:radial-gradient(900px 500px at 50% 0,#2a1a0f 0,transparent 70%),repeating-linear-gradient(0deg,#120d09 0 28px,#0f0a07 28px 30px),var(--bg)}
+.card{width:min(94vw,470px);background:var(--panel);border:3px solid #0a0705;border-radius:6px;overflow:hidden;
+ box-shadow:inset 0 0 0 1px rgba(255,157,46,.3),0 0 40px rgba(255,157,46,.14),6px 6px 0 #050302}
+.hdr{display:flex;justify-content:space-between;gap:10px;padding:10px 16px;background:#0a0705;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--mut)}
+.hdr a{color:var(--amb);text-decoration:none}
+.pic{position:relative;aspect-ratio:3/2;overflow:hidden;cursor:pointer;touch-action:manipulation;background:#000}
+.pic img{width:100%;height:100%;object-fit:cover;display:block}
+.pic .glow{position:absolute;inset:0;z-index:1;background:radial-gradient(60% 70% at 50% 45%,rgba(255,157,46,.5),transparent 70%);opacity:calc(var(--pulse,0)*.55);pointer-events:none;will-change:opacity}
+.pic::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(12,9,7,.1) 40%,rgba(12,9,7,.85));pointer-events:none}
+#viz{position:absolute;left:0;right:0;bottom:0;width:100%;height:56px;z-index:2;pointer-events:none}
+.hint{position:absolute;top:10px;left:50%;transform:translateX(-50%);z-index:3;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink);background:rgba(12,9,7,.6);padding:4px 10px;border:1px solid rgba(255,157,46,.5);pointer-events:none;white-space:nowrap}
+.rip{position:absolute;width:16px;height:16px;margin:-8px;border:2px solid var(--amb);border-radius:50%;pointer-events:none;z-index:3;animation:rip .7s ease-out forwards}
+@keyframes rip{to{transform:scale(7);opacity:0}}
+.body{padding:16px 18px 18px;text-align:center}
+.now{font:400 clamp(2.4rem,11vw,3.4rem)/.95 'Bebas Neue',Impact,sans-serif;letter-spacing:.03em;text-transform:uppercase;color:var(--amb);text-shadow:0 0 8px rgba(255,157,46,.7),0 0 28px rgba(255,90,60,.4);margin:2px 0 4px}
+.sub{color:var(--mut);font-size:12px;letter-spacing:.14em;text-transform:uppercase}
+.ctl{display:flex;justify-content:center;align-items:center;gap:18px;margin:16px 0 14px}
+.ctl button{cursor:pointer;color:var(--ink);background:#0a0705;border:2px solid #3a2a1c;border-radius:50%;width:48px;height:48px;font-size:16px}
+.ctl button:hover{border-color:var(--amb)}
+.ctl .play{width:76px;height:76px;font-size:28px;color:#150d06;background:var(--amb);border-color:#0a0705;box-shadow:0 0 0 3px var(--amb),0 0 24px rgba(255,157,46,.6)}
+.ctl .play.on{background:var(--red);box-shadow:0 0 0 3px var(--red),0 0 24px rgba(255,90,60,.6)}
+.tracks{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 14px}
+.tracks button{cursor:pointer;text-align:left;color:var(--ink);background:#0a0705;border:1px solid #3a2a1c;border-radius:3px;padding:9px 12px;font:600 13px 'Archivo',sans-serif;letter-spacing:.02em}
+.tracks button small{display:block;color:var(--mut);font-weight:400;font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin-top:2px}
+.tracks button[aria-pressed="true"]{border-color:var(--amb);box-shadow:inset 0 0 0 1px var(--amb),0 0 14px rgba(255,157,46,.25);color:var(--amb)}
+.row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center;margin-bottom:12px}
+.tog{cursor:pointer;background:transparent;color:var(--mut);border:1px solid #3a2a1c;border-radius:999px;padding:5px 14px;font:600 11px 'Archivo',sans-serif;letter-spacing:.14em;text-transform:uppercase}
+.tog[aria-pressed="true"]{color:#150d06;background:var(--amb);border-color:var(--amb)}
+.vol{display:flex;align-items:center;gap:10px;justify-content:center;color:var(--mut);font-size:11px;letter-spacing:.16em;text-transform:uppercase}
+.vol input{width:min(55%,220px);accent-color:var(--amb)}
+.foot{margin-top:14px;color:var(--mut);font-size:12px}
+:focus-visible{outline:2px solid var(--amb);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){.rip{animation:none;display:none}}
+</style>
+</head>
+<body>
+<main class="card">
+  <div class="hdr"><span>Larry’s Cove · Cave Lounge</span><a href="../../index.html">‹ Studio</a></div>
+  <div class="pic" id="pic" role="button" aria-label="Tap the picture to play notes over the music" tabindex="0">
+    <img src="lounge.jpg" alt="A dim lounge with two leather chairs and a Discipline Builds Freedom sign">
+    <div class="glow"></div>
+    <canvas id="viz" width="400" height="56"></canvas>
+    <div class="hint" id="hint">Tap the room to play along</div>
+  </div>
+  <div class="body">
+    <div class="now" id="name">Night Shift</div>
+    <div class="sub" id="sub">D dorian · 74 bpm</div>
+    <div class="ctl">
+      <button id="prev" aria-label="Previous track">⏮</button>
+      <button id="play" class="play" aria-label="Play">▶</button>
+      <button id="next" aria-label="Next track">⏭</button>
+    </div>
+    <div class="tracks" id="tracks"></div>
+    <div class="row" role="group" aria-label="Room sounds">
+      <button class="tog" id="tCrackle" aria-pressed="true">Vinyl</button>
+      <button class="tog" id="tRain" aria-pressed="false">Rain</button>
+      <button class="tog" id="tFire" aria-pressed="false">Fire</button>
+    </div>
+    <label class="vol">Vol <input id="vol" type="range" min="0" max="100" value="75" aria-label="Volume"></label>
+    <div class="foot">Headphones on. Every note is made live in your browser. No files, no ads.</div>
+  </div>
+</main>
+<script>
+/* ============ the songs ============
+   Each track is 4 bars that loop. Bars have a few hand-written melody phrases:
+   [step (0-15 sixteenths), midi note, length in steps]. Each loop picks phrases, so it never repeats exactly. */
+const TRACKS = [
+ { name: "Night Shift", sub: "D dorian · 74 bpm", bpm: 74, swing: .32, rest: .18, bed: {},
+   chords: [ { keys:[53,57,60,64], bass:38, b2:7 }, { keys:[53,59,62,64], bass:43, b2:7 }, { keys:[52,59,62,67], bass:36, b2:7 }, { keys:[55,59,60,64], bass:45, b2:7 } ],
+   phr: [ [ [[0,69,3],[4,72,2],[6,74,6],[14,72,2]], [[2,74,4],[6,72,2],[8,69,4]], [[0,76,6],[8,74,2],[10,72,2],[12,69,4]] ],
+          [ [[2,74,2],[4,76,4],[8,74,2],[10,71,6]], [[0,77,4],[4,76,2],[6,74,2],[8,71,8]], [[4,71,2],[6,74,2],[8,76,6]] ],
+          [ [[0,76,4],[4,74,2],[6,71,2],[8,67,8]], [[0,79,6],[8,76,4],[12,74,4]], [[2,72,2],[4,76,4],[8,79,2],[10,76,6]] ],
+          [ [[0,76,4],[4,72,2],[6,69,6],[12,71,4]], [[0,69,2],[2,72,2],[4,76,8]], [[4,74,2],[6,72,2],[8,69,8]] ] ],
+   kick:[0,10], snare:[4,12], hat:.8, scale:[69,71,72,74,76,77,79,81] },
+ { name: "Whiskey Hour", sub: "C minor · 62 bpm", bpm: 62, swing: .36, rest: .22, bed: {},
+   chords: [ { keys:[51,58,62,67], bass:36, b2:7 }, { keys:[56,60,63,67], bass:41, b2:7 }, { keys:[53,56,60,62], bass:38, b2:6 }, { keys:[59,62,65,68], bass:43, b2:7 } ],
+   phr: [ [ [[0,67,4],[6,70,2],[8,72,8]], [[0,75,8],[8,72,4],[12,70,4]], [[2,72,2],[4,75,4],[8,77,2],[10,75,6]] ],
+          [ [[0,72,4],[4,75,4],[8,77,8]], [[0,77,6],[8,75,2],[10,72,6]], [[0,68,4],[4,72,4],[8,75,8]] ],
+          [ [[0,68,4],[4,65,4],[8,62,8]], [[0,72,2],[2,68,2],[4,65,6],[12,62,4]], [[4,74,4],[8,72,4],[12,68,4]] ],
+          [ [[0,71,4],[4,68,2],[6,65,2],[8,62,8]], [[0,74,2],[2,71,2],[4,68,4],[8,67,8]], [[0,77,4],[4,74,4],[8,71,2],[10,68,6]] ] ],
+   kick:[0], snare:[12], hat:.5, scale:[67,70,72,75,77,78,79,82] },
+ { name: "Leather & Rain", sub: "A minor · 68 bpm", bpm: 68, swing: .28, rest: .2, bed: { rain: true },
+   chords: [ { keys:[55,59,60,64], bass:45, b2:7 }, { keys:[57,60,64,67], bass:41, b2:7 }, { keys:[53,57,60,64], bass:38, b2:7 }, { keys:[56,59,62,64], bass:40, b2:7 } ],
+   phr: [ [ [[0,76,4],[4,72,4],[8,69,8]], [[0,79,2],[2,76,4],[8,72,2],[10,69,6]], [[4,69,2],[6,72,2],[8,76,8]] ],
+          [ [[0,77,4],[4,76,2],[6,72,10]], [[0,72,4],[4,76,4],[8,79,8]], [[2,69,2],[4,72,4],[8,76,4],[12,77,4]] ],
+          [ [[0,74,4],[4,72,2],[6,69,2],[8,65,8]], [[0,77,6],[8,74,4],[12,72,4]], [[0,69,2],[2,72,2],[4,74,4],[8,77,8]] ],
+          [ [[0,76,4],[4,74,2],[6,71,2],[8,68,8]], [[0,71,4],[4,74,4],[8,76,8]], [[0,80,2],[2,76,2],[4,74,4],[8,71,8]] ] ],
+   kick:[0,10], snare:[4,12], hat:.7, scale:[69,72,74,76,79,81,84] },
+ { name: "Low Fire", sub: "E minor · 56 bpm", bpm: 56, swing: .18, rest: .3, bed: { fire: true },
+   chords: [ { keys:[55,59,62,66], bass:40, b2:7 }, { keys:[55,59,62,64], bass:36, b2:7 }, { keys:[59,62,64,69], bass:43, b2:7 }, { keys:[57,62,64,66], bass:38, b2:7 } ],
+   phr: [ [ [[0,71,6],[8,74,4],[12,76,4]], [[0,76,8],[8,74,4],[12,71,4]], [[4,79,4],[8,78,2],[10,76,6]] ],
+          [ [[0,76,6],[8,74,2],[10,71,6]], [[0,79,8],[8,76,8]], [[0,71,4],[4,74,4],[8,76,8]] ],
+          [ [[0,74,4],[4,76,4],[8,79,8]], [[0,81,6],[8,79,4],[12,76,4]], [[2,71,2],[4,74,6],[12,76,4]] ],
+          [ [[0,78,4],[4,76,4],[8,74,8]], [[0,74,6],[8,71,4],[12,69,4]], [[0,76,2],[2,74,2],[4,71,12]] ] ],
+   kick:[0], snare:[], hat:.15, scale:[71,74,76,79,81,83,86] }
+];
+
+/* ============ the band (Web Audio) ============
+   Built light on purpose: drums and room sounds are pre-made once, the reverb is a few cheap delay lines,
+   and each note uses only a handful of oscillators, so phones don't run out of time (that is what causes crackle). */
+const midi = n => 440 * Math.pow(2, (n - 69) / 12);
+function buildEngine(ctx) {
+  const sr = ctx.sampleRate, TAU = Math.PI * 2;
+  const master = ctx.createGain(); master.gain.value = .7;
+  const an = ctx.createAnalyser(); an.fftSize = 64; an.smoothingTimeConstant = .8;
+  const tone = ctx.createBiquadFilter(); tone.type = "lowpass"; tone.frequency.value = 8500;
+  const comp = ctx.createDynamicsCompressor(); comp.threshold.value = -20; comp.knee.value = 20; comp.ratio.value = 3.5; comp.attack.value = .01; comp.release.value = .25;
+  const sat = ctx.createWaveShaper(); const cur = new Float32Array(512);
+  for (let i = 0; i < 512; i++) { const x = i / 256 - 1; cur[i] = Math.tanh(1.4 * x) / Math.tanh(1.4); }
+  sat.curve = cur;
+  const bus = ctx.createGain();
+  bus.connect(sat); sat.connect(comp); comp.connect(tone); tone.connect(master); master.connect(an); an.connect(ctx.destination);
+
+  // cheap room: four damped delay lines instead of a heavy convolution reverb
+  const rvIn = ctx.createGain(), rvOut = ctx.createGain(); rvOut.gain.value = .32;
+  [.0297, .0371, .0411, .0577].forEach(tm => {
+    const d = ctx.createDelay(.2), lp = ctx.createBiquadFilter(), g = ctx.createGain();
+    d.delayTime.value = tm; lp.type = "lowpass"; lp.frequency.value = 2800; g.gain.value = .62;
+    rvIn.connect(d); d.connect(lp); lp.connect(g); g.connect(d); lp.connect(rvOut);
+  });
+  rvOut.connect(comp);
+  // echo for the lead
+  const dly = ctx.createDelay(2); dly.delayTime.value = .4;
+  const fb = ctx.createGain(); fb.gain.value = .3; const dlp = ctx.createBiquadFilter(); dlp.type = "lowpass"; dlp.frequency.value = 1700;
+  const echoIn = ctx.createGain(), echoOut = ctx.createGain(); echoOut.gain.value = .38;
+  echoIn.connect(dly); dly.connect(dlp); dlp.connect(fb); fb.connect(dly); dlp.connect(echoOut); echoOut.connect(bus); dlp.connect(rvIn);
+
+  // pre-made sounds (made once, played many times)
+  const mk = (sec, fn) => { const b = ctx.createBuffer(1, Math.floor(sr * sec), sr); fn(b.getChannelData(0), b.length); return b; };
+  const hatB = mk(.06, (d, n) => { let p = 0; for (let i = 0; i < n; i++) { const x = Math.random() * 2 - 1; d[i] = (x - p) * Math.pow(1 - i / n, 3) * .6; p = x; } });
+  const snB = mk(.22, (d, n) => { let p = 0; for (let i = 0; i < n; i++) { const x = Math.random() * 2 - 1, e = Math.pow(1 - i / n, 2.2); d[i] = (x - p * .6) * .35 * e + Math.sin(TAU * 190 * i / sr) * Math.exp(-i / sr * 45) * .5; p = x; } });
+  const kkB = mk(.36, (d, n) => { let ph = 0; for (let i = 0; i < n; i++) { const t = i / sr; ph += TAU * (42 + 88 * Math.exp(-t * 28)) / sr; d[i] = Math.sin(ph) * Math.exp(-t * 11); } });
+  const vinylB = mk(7, (d, n) => { for (let i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * .004;
+    for (let c = 0; c < 38; c++) { const at = Math.floor(Math.random() * (n - 400)), a = .12 + Math.random() * .4, len = 20 + Math.floor(Math.random() * 90); for (let j = 0; j < len; j++) d[at + j] += (Math.random() * 2 - 1) * a * Math.pow(1 - j / len, 2); } });
+  const fireB = mk(6, (d, n) => { let lo = 0; for (let i = 0; i < n; i++) { lo = lo * .985 + (Math.random() * 2 - 1) * .02; d[i] = lo * .5; }
+    for (let c = 0; c < 70; c++) { const at = Math.floor(Math.random() * (n - 2500)), a = .1 + Math.random() * .5, len = 80 + Math.floor(Math.random() * 1400); let p = 0; for (let j = 0; j < len; j++) { const x = Math.random() * 2 - 1; p = p * .55 + x * .45; d[at + j] += p * a * Math.pow(1 - j / len, 3); } } });
+  const rainB = mk(4, (d, n) => { for (let i = 0; i < n; i++) d[i] = Math.random() * 2 - 1; });
+  const hit = (buf, t, v) => { const s = ctx.createBufferSource(), g = ctx.createGain(); s.buffer = buf; g.gain.value = v; s.connect(g); g.connect(bus); s.start(t); };
+
+  const osc = (type, f) => { const o = ctx.createOscillator(); o.type = type; o.frequency.value = f; return o; };
+  const adsr = (p, t, a, pk, d, sus, hold, r) => {
+    const h = Math.max(hold, a + d + .02), sv = Math.max(pk * sus, .0002);
+    p.setValueAtTime(.0001, t); p.linearRampToValueAtTime(pk, t + a); p.exponentialRampToValueAtTime(sv, t + a + d);
+    p.setValueAtTime(sv, t + h); p.exponentialRampToValueAtTime(.0001, t + h + r); return t + h + r + .05;
+  };
+  const run = (list, t, end) => list.forEach(o => { o.start(t); o.stop(end); });
+  const lfo = osc("sine", 5.2), lfoG = ctx.createGain(); lfoG.gain.value = 9; lfo.connect(lfoG); lfo.start(0);   // one shared vibrato
+
+  function keys(n, t, vel, dur) {            // soft electric piano: 3 oscillators
+    const f = midi(n), g = ctx.createGain(), lp = ctx.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 2300;
+    const car = osc("sine", f), mod = osc("sine", f), mg = ctx.createGain(), car2 = osc("sine", f * 2.003), g2 = ctx.createGain();
+    mg.gain.setValueAtTime(f * 1.1, t); mg.gain.exponentialRampToValueAtTime(f * .12, t + .6); mod.connect(mg); mg.connect(car.frequency);
+    g2.gain.value = .1; car.connect(g); car2.connect(g2); g2.connect(g); g.connect(lp); lp.connect(bus);
+    const s = ctx.createGain(); s.gain.value = .4; lp.connect(s); s.connect(rvIn);
+    run([car, mod, car2], t, adsr(g.gain, t, .006, .14 * vel, .9, .35, dur, 1.4));
+  }
+  function bass(n, t, vel, dur) {            // round bass: 2 oscillators
+    const f = midi(n), g = ctx.createGain(), lp = ctx.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 420;
+    const o1 = osc("triangle", f), o2 = osc("sine", f), g2 = ctx.createGain(); g2.gain.value = .8; o2.connect(g2); g2.connect(g);
+    o1.connect(g); g.connect(lp); lp.connect(bus);
+    run([o1, o2], t, adsr(g.gain, t, .012, .34 * vel, .3, .55, dur, .16));
+  }
+  function lead(n, t, vel, dur) {            // warm muted-horn lead: 2 oscillators
+    const f = midi(n), m = ctx.createGain(), lp = ctx.createBiquadFilter(), g = ctx.createGain();
+    lp.type = "lowpass"; lp.Q.value = .8; lp.frequency.setValueAtTime(520, t); lp.frequency.linearRampToValueAtTime(1500, t + .16);
+    const o1 = osc("sawtooth", f), o2 = osc("triangle", f * 1.004), g2 = ctx.createGain(); g2.gain.value = .7;
+    if (dur > .35) { lfoG.connect(o1.detune); lfoG.connect(o2.detune); }
+    o1.connect(m); o2.connect(g2); g2.connect(m); m.connect(lp); lp.connect(g); g.connect(bus);
+    const s = ctx.createGain(); s.gain.value = .5; g.connect(s); s.connect(rvIn);
+    const e = ctx.createGain(); e.gain.value = .5; g.connect(e); e.connect(echoIn);
+    run([o1, o2], t, adsr(g.gain, t, .05, .065 * vel, .25, .7, dur, .4));
+  }
+
+  // room beds: loops that only cost anything while switched on
+  const mkBed = (buf, filt, level) => {
+    const s = ctx.createBufferSource(), g = ctx.createGain(); s.buffer = buf; s.loop = true; g.gain.value = level;
+    if (filt) { const f = ctx.createBiquadFilter(); f.type = filt[0]; f.frequency.value = filt[1]; f.Q.value = filt[2]; s.connect(f); f.connect(g); } else s.connect(g);
+    s.start(0, Math.random()); return { g, on: false };
+  };
+  const bed = { crackle: mkBed(vinylB, null, 1), rain: mkBed(rainB, ["bandpass", 2400, .35], .11), fire: mkBed(fireB, null, 1.3) };
+  const beds = { crackle: false, rain: false, fire: false };
+  function setBeds(b) {
+    Object.assign(beds, b);
+    for (const key in bed) { const o = bed[key], want = !!beds[key]; if (want && !o.on) { o.g.connect(bus); o.on = true; } else if (!want && o.on) { o.g.disconnect(); o.on = false; } }
+  }
+
+  function scheduleStep(trk, k, t, st) {
+    const s = k % 16, bar = Math.floor(k / 16) % trk.chords.length, ch = trk.chords[bar], sd = 60 / trk.bpm / 4;
+    const tt = t + (s % 4 === 2 ? sd * trk.swing : 0);
+    if (s === 0) {
+      ch.keys.forEach((n, i) => keys(n, tt + i * .02, .95 - i * .06, sd * 14));
+      bass(ch.bass, tt, 1, sd * 6);
+      const set = trk.phr[bar]; let idx = st.last[bar];
+      if (idx === undefined || Math.random() > .5) idx = Math.floor(Math.random() * set.length);
+      st.last[bar] = idx; st.phrase = Math.random() < trk.rest ? [] : set[idx];
+    }
+    if (s === 8) bass(ch.bass + ch.b2, tt, .7, sd * 4);
+    if (s === 10 && Math.random() < .5) ch.keys.slice(1).forEach((n, i) => keys(n, tt + i * .015, .5, sd * 4));
+    if (s === 14 && Math.random() < .4) { const nx = trk.chords[(bar + 1) % trk.chords.length].bass; bass(nx + (nx > ch.bass ? -1 : 1), tt, .55, sd * 2); }
+    if (trk.kick.includes(s)) hit(kkB, tt, s === 0 ? .5 : .32);
+    if (trk.snare.includes(s)) hit(snB, tt, .45);
+    if (s % 2 === 0 && Math.random() < trk.hat) hit(hatB, tt, s % 4 === 0 ? .22 : .13);
+    (st.phrase || []).forEach(([step, n, l]) => { if (step === s) lead(n, tt, .9, l * sd * .95); });
+  }
+  const pluck = n => lead(n, ctx.currentTime + .01, .85, .7);
+  const setVolume = v => master.gain.setTargetAtTime(v, ctx.currentTime, .05);
+  return { scheduleStep, pluck, setBeds, setVolume, analyser: an, newState: () => ({ last: [], phrase: [] }) };
+}
+
+/* ============ the player ============ */
+const $ = s => document.querySelector(s);
+let ctx, eng, st, timer, sleepT, nextT = 0, k = 0, cur = 0, playing = false;
+const bedUser = { crackle: true, rain: false, fire: false };
+document.addEventListener("visibilitychange", () => { if (document.hidden && playing) toggle(); });
+
+function applyBeds() { if (eng) eng.setBeds(bedUser); ["Crackle", "Rain", "Fire"].forEach(n => $("#t" + n).setAttribute("aria-pressed", bedUser[n.toLowerCase()])); }
+function choose(i) {
+  cur = (i + TRACKS.length) % TRACKS.length; const t = TRACKS[cur];
+  $("#name").textContent = t.name; $("#sub").textContent = t.sub;
+  document.querySelectorAll("#tracks button").forEach((b, j) => b.setAttribute("aria-pressed", j === cur));
+  bedUser.rain = !!t.bed.rain; bedUser.fire = !!t.bed.fire; applyBeds();
+  if (st) { st.last = []; st.phrase = []; } k = 0; if (ctx) nextT = ctx.currentTime + .1;
+}
+function tick() { const t = TRACKS[cur]; while (nextT < ctx.currentTime + .45) { eng.scheduleStep(t, k, nextT, st); nextT += 60 / t.bpm / 4; k++; } }
+async function toggle() {
+  if (!ctx) {
+    try { ctx = new (window.AudioContext || window.webkitAudioContext)({ latencyHint: "playback" }); } catch (e) { ctx = new (window.AudioContext || window.webkitAudioContext)(); }
+    eng = buildEngine(ctx); st = eng.newState(); applyBeds(); draw();
+  }
+  playing = !playing;
+  $("#play").textContent = playing ? "❚❚" : "▶"; $("#play").classList.toggle("on", playing); $("#play").setAttribute("aria-label", playing ? "Pause" : "Play");
+  clearInterval(timer); clearTimeout(sleepT);
+  if (playing) { if (ctx.state === "suspended") await ctx.resume(); eng.setVolume($("#vol").value / 100 * 1.05); k = 0; nextT = ctx.currentTime + .15; timer = setInterval(tick, 50); }
+  else { eng.setVolume(0); sleepT = setTimeout(() => { if (!playing) ctx.suspend(); }, 700); }   // fully asleep when paused: no CPU
+}
+function jam(e) {
+  if (!ctx) { toggle().then(() => jam(e)); return; }
+  const r = $("#pic").getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height, sc = TRACKS[cur].scale;
+  if (ctx.state === 'suspended') ctx.resume(); eng.setVolume($('#vol').value / 100 * 1.05); eng.pluck(sc[Math.min(sc.length - 1, Math.floor(x * sc.length))] + (y < .3 ? 12 : 0));
+  const d = document.createElement("div"); d.className = "rip"; d.style.left = (x * 100) + "%"; d.style.top = (y * 100) + "%"; $("#pic").appendChild(d); setTimeout(() => d.remove(), 750);
+  $("#hint").style.display = "none";
+}
+function draw() {
+  const c = $("#viz"), g = c.getContext("2d"), a = eng.analyser, d = new Uint8Array(a.frequencyBinCount), pic = $("#pic");
+  let last = 0, lastP = -1;
+  (function frame(now) {
+    requestAnimationFrame(frame);
+    if (!playing || now - last < 50) return; last = now;                    // ~20 frames a second, only while playing
+    a.getByteFrequencyData(d); g.clearRect(0, 0, c.width, c.height);
+    const bars = 20, w = c.width / bars; let bassE = 0;
+    for (let i = 0; i < bars; i++) { const v = d[Math.min(d.length - 1, i + 1)] / 255; if (i < 2) bassE += v / 2; const h = Math.max(2, v * c.height * .95); g.fillStyle = `rgba(255,${130 + Math.floor(v * 80)},46,${.35 + v * .6})`; g.fillRect(i * w + 2, c.height - h, w - 4, h); }
+    const p = Math.round(bassE * 20) / 20; if (p !== lastP) { lastP = p; pic.style.setProperty("--pulse", p); }
+  })(0);
+}
+TRACKS.forEach((t, i) => { const b = document.createElement("button"); b.type = "button"; b.setAttribute("aria-pressed", i === 0); b.innerHTML = `${t.name}<small>${t.sub}</small>`; b.onclick = () => choose(i); $("#tracks").appendChild(b); });
+$("#play").onclick = toggle; $("#prev").onclick = () => choose(cur - 1); $("#next").onclick = () => choose(cur + 1);
+$("#pic").addEventListener("pointerdown", jam); $("#pic").addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); const r = $("#pic").getBoundingClientRect(); jam({ clientX: r.left + Math.random() * r.width, clientY: r.top + r.height * .5 }); } });
+$("#vol").oninput = e => { if (eng) eng.setVolume(e.target.value / 100 * 1.05); };
+[["Crackle", "crackle"], ["Rain", "rain"], ["Fire", "fire"]].forEach(([n, key]) => $("#t" + n).onclick = () => { bedUser[key] = !bedUser[key]; applyBeds(); });
+</script>
+</body>
+</html>
