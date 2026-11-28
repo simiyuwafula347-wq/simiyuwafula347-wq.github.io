@@ -50,36 +50,64 @@ function card(p, cls, i) {
     </div></a>`;
 }
 
+/* Sections of the magazine. Rename "name" / "note" here whenever you find better names. */
+const SECTIONS = [
+  { id: "workshop",   name: "Workshop",   note: "Build logs and ideas",           tags: ["build log"],                  kind: "cards" },
+  { id: "verse",      name: "Verse",      note: "Poems",                          tags: ["poem"],                       kind: "verse" },
+  { id: "sketchbook", name: "Sketchbook", note: "Pages from the notebook",        tags: ["sketch"],                     kind: "tiles" },
+  { id: "margins",    name: "Margins",    note: "Observations and field notes",   tags: ["observation", "field note"],  kind: "lines" }
+];
+
+function spans(n) {           // fills every row of the 12-column grid: 7+5, 5+7, 4+4+4, or one wide card
+  const s = []; let rem = n, flip = false;
+  while (rem > 0) {
+    if (rem === 1) { s.push("j-s12"); rem = 0; }
+    else if (rem === 3) { s.push("j-s4", "j-s4", "j-s4"); rem = 0; }
+    else { s.push(flip ? "j-s5" : "j-s7", flip ? "j-s7" : "j-s5"); flip = !flip; rem -= 2; }
+  }
+  return s;
+}
+function sectionHTML(sec, list, n) {
+  let inner = "";
+  if (sec.kind === "cards") { const sp = spans(list.length); inner = `<div class="j-grid">${list.map((p, i) => card(p, sp[i])).join("")}</div>`; }
+  else if (sec.kind === "verse") inner = `<div class="j-verses">${list.map(p => `<a class="j-verse" href="#${esc(p.id)}" data-title="VERSE_${pad(p.n)}.EXE">
+      <span class="j-no">No. ${pad(p.n)}</span>
+      <blockquote>${esc(p.pull || p.dek || "")}</blockquote>
+      <h3>${esc(p.title)}</h3>
+      <div class="j-foot"><span>${esc(fmt(p.date))} · ${mm(p)} min</span><span class="j-go">Read the poem →</span></div></a>`).join("")}</div>`;
+  else if (sec.kind === "tiles") inner = `<div class="j-tiles">${list.map(p => `<a class="j-tile" href="#${esc(p.id)}">
+      <img src="${esc(ROOT + p.cover)}" alt="" loading="lazy"><span class="j-cap"><b>${esc(p.title)}</b><small>${esc(fmt(p.date))}</small></span></a>`).join("")}${list.length < 3 ? `<div class="j-tile j-ghost"><span>More pages coming</span></div>` : ""}</div>`;
+  else inner = `<div class="j-lines">${list.map(p => `<a class="j-line" href="#${esc(p.id)}">
+      <span class="j-no">No. ${pad(p.n)}</span><span class="j-tag">${esc(p.tag)}</span>
+      <span class="j-lt"><b>${esc(p.title)}</b><small>${esc(p.dek || "")}</small></span><span class="j-ld">${esc(fmt(p.date))}</span></a>`).join("")}</div>`;
+  return `<section class="j-sec" id="sec-${sec.id}"><header class="j-sec-h"><span class="j-sec-no">§ ${pad(n)}</span><h2>${esc(sec.name)}</h2><p>${esc(sec.note)}</p><span class="j-sec-ct">${list.length} ${list.length === 1 ? "entry" : "entries"}</span></header>${inner}</section>`;
+}
+
 function renderIndex() {
   document.title = "Journal — Larry Simiyu";
   $("#jBack").href = "index.html"; $("#jBack").textContent = "‹ Home";
-  const list = posts.filter(p => filter === "all" || p.tag === filter);
-  const tags = new Set(posts.map(p => p.tag)).size;
+  const all = filter === "all";
+  const cover = all ? (posts.find(p => p.pin) || posts[0]) : null;
   let html = `<header class="j-mast">
-    <div class="j-issue"><span>Issue Nº 01</span><span>${posts.length} entries · ${tags} kinds</span><span>Updated ${esc(fmt(posts[0].date))}</span></div>
+    <div class="j-issue"><span>Issue Nº 01</span><span>${posts.length} entries · ${SECTIONS.length} sections</span><span>Updated ${esc(fmt(posts[0].date))}</span></div>
     <h1 class="j-title">The Journal</h1>
-    <p class="j-sub">Build logs, observations and quiet field notes. An honest digital notebook, written as things happen.</p>
+    <p class="j-sub">Build logs, poems, sketches and quiet notes. An honest digital notebook, written as things happen.</p>
   </header>
   <div class="chips j-chips" role="group" aria-label="Filter entries">${TAGS.map(([k, n]) => `<button class="chip" type="button" data-f="${k}" aria-pressed="${k === filter}">${n}</button>`).join("")}</div>`;
-  if (!list.length) html += `<p class="j-empty">Nothing here yet.</p>`;
-  else {
-    const [lead, ...rest] = list;
-    html += `<section class="j-grid">`;
-    html += `<a class="j-card j-lead" href="#${esc(lead.id)}" data-title="LATEST_ENTRY.EXE">
-      ${img(lead, "j-leadpic")}
+  if (cover) html += `<a class="j-card j-lead" href="#${esc(cover.id)}" data-title="COVER_STORY.EXE">
+      ${img(cover, "j-leadpic")}
       <div class="j-body">
-        <div class="j-row"><span class="j-no">No. ${pad(lead.n)}</span><span class="j-tag">${esc(lead.tag)}</span>${lead.status ? `<span class="j-wip">${esc(lead.status)}</span>` : ""}</div>
-        <h2>${esc(lead.title)}</h2>
-        <p>${esc(lead.dek || "")}</p>
-        <div class="j-foot"><span>${esc(fmt(lead.date))} · ${mm(lead)} min</span><span class="j-go">Read the entry →</span></div>
+        <div class="j-row"><span class="j-covertag">Cover story</span><span class="j-no">No. ${pad(cover.n)}</span><span class="j-tag">${esc(cover.tag)}</span>${cover.status ? `<span class="j-wip">${esc(cover.status)}</span>` : ""}</div>
+        <h2>${esc(cover.title)}</h2>
+        <p>${esc(cover.dek || "")}</p>
+        <div class="j-foot"><span>${esc(fmt(cover.date))} · ${mm(cover)} min</span><span class="j-go">Read the entry →</span></div>
       </div></a>`;
-    const pull = rest.find(p => p.pull) || (lead.pull ? lead : null);
-    rest.forEach((p, i) => {
-      html += card(p, SPANS[i % SPANS.length], i);
-      if (i === 1 && pull) html += `<blockquote class="j-quote j-s4"><span>“</span>${esc(pull.pull)}<cite>— ${esc(pull.title)}</cite></blockquote>`;
-    });
-    html += `</section>`;
-  }
+  let n = 0;
+  SECTIONS.forEach(sec => {
+    const list = posts.filter(p => sec.tags.includes(p.tag) && (all || p.tag === filter) && p !== cover);
+    if (list.length) html += sectionHTML(sec, list, ++n);
+  });
+  if (!n && !cover) html += `<p class="j-empty">Nothing here yet.</p>`;
   $("#jMain").innerHTML = html;
   $("#jMain").querySelectorAll("[data-f]").forEach(b => b.onclick = () => { filter = b.dataset.f; renderIndex(); });
 }
