@@ -29,7 +29,7 @@
 <script src="data.js"></script>
 <script src="studio.js"></script>
 <script>
-const TAGS = [["all", "All"], ["build log", "Build logs"], ["observation", "Observations"], ["field note", "Field notes"]];
+const TAGS = [["all", "All"], ["build log", "Build logs"], ["observation", "Observations"], ["field note", "Field notes"], ["poem", "Poems"], ["sketch", "Sketches"]];
 const posts = POSTS.map((p, i) => ({ ...p, n: POSTS.length - i })).sort((a, b) => b.date.localeCompare(a.date) || a.n - b.n);
 posts.forEach((p, i) => p.n = posts.length - i);          // No. 01 = oldest
 const byId = id => posts.find(p => p.id === id);
@@ -84,9 +84,23 @@ function renderIndex() {
   $("#jMain").querySelectorAll("[data-f]").forEach(b => b.onclick = () => { filter = b.dataset.f; renderIndex(); });
 }
 
+const SKETCHPAGE = `<div class="sk-page" role="group" aria-label="A page from my sketchbook">
+  <p class="sk-t sk-mont">I conceive that pleasures are to be avoided if greater pains to be coveted that will terminate greater pleasures. <b>Michel de Montaigne</b></p>
+  <p class="sk-t sk-god">Wherever God gives you a responsibility, He also gives you the ability to meet that responsibility.</p>
+  <img class="sk-garf" src="${ROOT}img/journal/sk-garfield.jpg" alt="Pen and colour drawing of Garfield in sunglasses, leaning on a table" loading="lazy">
+  <div class="sk-bugs"><img src="${ROOT}img/journal/sk-bugs.jpg" alt="Pen drawing of Bugs Bunny in pixel sunglasses" loading="lazy"><span class="sk-t sk-ref">Isaiah 3:10</span></div>
+  <p class="sk-t sk-plan">If you don’t have a plan for your life, someone else does.</p>
+  <p class="sk-t sk-perc">We don’t believe what we hear; rather, we are certain that our perceptions are accurate.</p>
+  <img class="sk-bear" src="${ROOT}img/journal/sk-bear.jpg" alt="Pen drawing of a bear in sunglasses with its arms crossed" loading="lazy">
+  <p class="sk-t sk-find">Finding myself meant trading the roar of the world for whispers within. A quiet corner in a rain-drenched café, the aroma of coffee swirling around us as we explore the depths of our conversation that unravels the universe, that’s the dream. <b>— Larry</b></p>
+  <span class="sk-t sk-sign">Larry</span>
+</div>`;
+
 function body(b) {
   let first = true;
   return b.split(/\n\n+/).map(p => {
+    if (p.trim() === "{{sketchpage}}") return SKETCHPAGE;
+    if (/^\|/.test(p)) return `<p class="j-stanza">${p.split("\n").map(l => esc(l.replace(/^\|\s?/, ""))).join("<br>")}</p>`;
     const m = p.match(/^!\[([^\]]*)\]\((img\/[\w\-./]+)\)$/);
     if (m) return `<figure class="j-fig"><img src="${esc(ROOT + m[2])}" alt="${esc(m[1])}" loading="lazy"><figcaption>${esc(m[1])}</figcaption></figure>`;
     let h = md(p);

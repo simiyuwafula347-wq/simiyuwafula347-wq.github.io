@@ -43,6 +43,8 @@ const DAILY = [
 /* Ambience = things people listen to. Files live in the worlds/ folder.
    Free ones play right here; the rest are sold on itch.io (paste a world's own itch page into itch:"" or leave "" for your profile). */
 const WORLDS = [
+  { id: "cave", title: "Cave Lounge", price: "Free", tags: ["4 tracks", "tap to play"], thumb: "worlds/thumbs/cave-lounge.jpg", play: "worlds/cave-lounge/",
+    desc: "A dim lounge, two leather chairs and four slow songs made live in your browser: Night Shift, Whiskey Hour, Leather & Rain and Low Fire. Tap the room to play notes over the music." },
   { id: "beach", title: "Pixel Beach", price: "Free", tags: ["sunset", "waves", "beam"], thumb: "worlds/thumbs/beach.png", play: "worlds/beach/",
     desc: "A girl and her dog walk the shore, then watch the sun set and the stars come out. A beam rises from a boat on the horizon." },
   { id: "bear", title: "Bear Ambience", price: "Free", tags: ["6 songs", "headphones"], thumb: "worlds/thumbs/bear.jpg", play: "worlds/bear-ambience/",
@@ -116,6 +118,22 @@ const BUNDLE_INSIDE = [
    tag: "build log" | "observation" | "field note".  cover = card picture, dek = one-line standfirst, pull = quote shown on the journal grid.
    Body: "# " heading, "> " pull quote, "- " list, ![caption](img/journal/file.jpg) picture. **bold** *italic* `code`. */
 const POSTS = [
+  { id: "sketchbook-three-in-sunglasses", title: "Sketchbook: three in sunglasses", date: "2026-11-28", tag: "sketch",
+    dek: "Garfield, Bugs and a bear, with the lines I keep close.", cover: "img/journal/sk-garfield.jpg", pull: "If you don't have a plan for your life, someone else does.",
+    body: "A page from my sketchbook: three characters in sunglasses and a few lines I keep close, written in red pen.\n\n{{sketchpage}}\n\nThe photo of this page was hard to read, so I rebuilt it with real text. The drawings are the ones from the page." },
+
+  { id: "notebook-page-website-idea", title: "A notebook page I want to turn into a website", date: "2026-11-28", tag: "build log", status: "Idea",
+    dek: "Pen sketch, handwriting, ruled lines: a personal site I want to build and sell.", cover: "img/journal/notebook-page-cover.jpg", pull: "Ink on ruled paper.",
+    body: "This is a page from my notebook. Half of it is a pen sketch, and the rest is handwriting running around the drawing, in blue and green ink on ruled paper.\n\n![A page of my notebook: a pen sketch of a girl with her hair up, surrounded by handwritten notes](img/journal/notebook-page.jpg)\n\n# The idea\n\nI want to build a personal website in this style and sell it later as a template: a sketch in the middle, handwriting around it, lines on the page.\n\n> Ink on ruled paper.\n\nIt is only an idea for now. It joins Website Template #1 on the list of things I would like to finish." },
+
+  { id: "poem-eternal-bloom", title: "Eternal Bloom", date: "2026-11-28", tag: "poem",
+    dek: "A rose among the thorns, and a flower that does not stay.", cover: "img/journal/poem-eternal-bloom-cover.jpg", pull: "Today it's crimson, embodying love. Tomorrow it's yellow, a whisper of hope.",
+    body: "| Love tarnished, bitter as bile,\n| with grown men vanished, the young left to die\n| There in the thorns, a rose still stands,\n| Young and tender, ready to rise.\n\n| It blooms, and better still, it glimmers—\n| Red, yes crimson, the king among flowers.\n| In its gaze, it exudes grace,\n| The living draw strength, the lost find their place.\n\n| Lilies, oh lilies, come and behold—\n| The King of flowers, in splendor unfolded\n| clothed in majesty, even kings will delay\n| Just to witness its beauty one more day.\n\n| Come, see it one more day, you need not pay—\n| For hope moves us forward, love lights the way,\n| Only for today, as tomorrow's unclear,\n| such beauty, we fear, cannot linger here.\n\n| so much pain, to let it wither and die,\n| so much ache, to watch beauty defy,\n| Yes still... it rises, it blooms, it glitters.\n\n| Today it's crimson, embodying love,\n| Tomorrow it's yellow, a whisper of hope.\n| Soon it's white, and we vow, enough with the fight—\n| In the tapestry woven, we find our light.\n\n![Eternal Bloom, in my handwriting](img/journal/poem-eternal-bloom.jpg)" },
+
+  { id: "poem-rewrite-the-past", title: "Rewrite the Past", date: "2026-11-28", tag: "poem",
+    dek: "If wishes were horses, which path would I decide?", cover: "img/journal/poem-rewrite-the-past-cover.jpg", pull: "With courage as my compass, I'll forge a new way.",
+    body: "| The hurt, the promises unfulfilled, a heavy toll,\n| Still, why bear the blame? It's a mystery to the soul.\n| If wishes were horses, beggars would ride,\n| I have my wishes, but which path to decide?\n\n| I long to return, to mend what was broken,\n| To face the shadows, to speak the unspoken.\n| I want to relive it, to rewrite the script,\n| To tether the moments that slipped through my grips.\n\n| In the tapestry of time, I seek to rewind,\n| To gather the pieces, leave the pain behind.\n| With every heartbeat, a chance to reclaim,\n| To mend the frayed edges, to kindle the flame.\n\n| For every fleeting moment that brought me to tears,\n| There lies a reservoir, rich with our years.\n| So grant me the wisdom to know where to start,\n| To rewrite the past, and heal my own heart.\n\n| To dance through the echoes, embrace every flaw,\n| And nourish the lessons that life has in store.\n| With courage as my compass, I'll forge a new way,\n| Rewriting my past, brightening each day.\n\n![Rewrite the Past, in my handwriting](img/journal/poem-rewrite-the-past.jpg)" },
+
   { id: "wasp-player-ten-skins", title: "Wasp Player: ten skins, one tiny player", date: "2026-11-23", tag: "build log", status: "Work in progress",
     dek: "A pixel wasp eats the music bars. Fully offline, no ads, no tracking.", cover: "img/journal/wasp-wip-cover.jpg",
     pull: "A tiny offline music player where a pixel wasp eats the music bars.",

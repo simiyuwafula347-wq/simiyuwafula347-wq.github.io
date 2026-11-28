@@ -731,3 +731,19 @@ a.chip{text-decoration:none;display:inline-block}
 [data-theme="brutalist"] .item:hover .tag.free{background:#fff;color:#000}
 .free-only .item.prod:not(.is-free),.free-only .item.soon,.free-only .item.post,.free-only .shop-sub{display:none}
 .shop-nav .free-toggle{margin-left:auto}
+
+/* poems + sketchbook page (journal) */
+.j-art .j-stanza{margin:0 0 1.5em;padding-left:1em;border-left:3px solid var(--accent2);font-style:italic;line-height:1.75}
+.sk-page{--ink-red:#b3262d;position:relative;display:grid;grid-template-columns:1.05fr 1fr;grid-template-areas:"mont god" "garf bugs" "plan perc" "bear find";gap:14px 22px;align-items:start;
+  margin:1.8em 0;padding:24px;background:#fbf7ec;border:2px solid #1d1a14;box-shadow:6px 6px 0 rgba(0,0,0,.35)}
+.sk-page img{display:block;max-width:100%;height:auto;mix-blend-mode:multiply}
+.j-art .sk-page p,.sk-page .sk-t{font:600 clamp(1.15rem,2.6vw,1.45rem)/1.25 'Caveat','Patrick Hand',cursive;color:var(--ink-red);margin:0}
+.sk-page .sk-t b{display:block;margin-top:.3em;font-weight:700;letter-spacing:.04em;text-transform:uppercase;font-size:.78em}
+.sk-mont{grid-area:mont;transform:rotate(-2deg)}.sk-god{grid-area:god;align-self:center;transform:rotate(.8deg)}
+.sk-garf{grid-area:garf;width:100%}
+.sk-bugs{grid-area:bugs;position:relative;display:flex;gap:6px;align-items:center;justify-content:center}.sk-bugs img{width:72%}
+.sk-ref{writing-mode:vertical-rl;font-size:1.1rem!important}
+.sk-plan{grid-area:plan;align-self:center}.sk-perc{grid-area:perc;align-self:center}
+.sk-bear{grid-area:bear;width:84%}.sk-find{grid-area:find;align-self:center}
+.sk-sign{position:absolute;right:26px;bottom:14px;font-size:1.5rem;opacity:.85}
+@media (max-width:700px){.sk-page{grid-template-columns:1fr;grid-template-areas:"god" "mont" "garf" "bugs" "plan" "perc" "bear" "find";padding:18px}.sk-bugs img{width:60%}.sk-bear{width:70%;margin:0 auto}.sk-sign{position:static;text-align:right}.sk-mont,.sk-god{transform:none}}
